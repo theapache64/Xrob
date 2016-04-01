@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Shifar Shifz on 10/13/2015.
+ * Created by theapache64 on 10/13/2015.
  */
 @WebServlet(urlPatterns = {"/hello"} ,name = "TestServlet")
 public class TestServlet extends HttpServlet {

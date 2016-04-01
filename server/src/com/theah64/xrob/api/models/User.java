@@ -1,7 +1,7 @@
 package com.theah64.xrob.api.models;
 
 /**
- * Created by Shifar Shifz on 10/13/2015.
+ * Created by theapache64 on 10/13/2015.
  */
 public class User {
 

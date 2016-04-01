@@ -1,8 +1,6 @@
 package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
-import com.theah64.xrob.api.database.utils.SelectQuery;
-import com.theah64.xrob.api.database.utils.UpdateQuery;
 import com.theah64.xrob.api.models.User;
 
 import java.sql.PreparedStatement;
@@ -10,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Shifar Shifz on 11/22/2015.
+ * Created by theapache64 on 11/22/2015.
  */
 public class Users extends BaseTable<User> {
 
@@ -31,7 +29,7 @@ public class Users extends BaseTable<User> {
     @Override
     public User get(String byColumn, String byValue) {
 
-        final String query = new SelectQuery()
+        final String query = "SELECT api_key,gcm_id" new SelectQuery()
                 .select("*")
                 .from(TABLE_USERS)
                 .where(byColumn)

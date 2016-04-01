@@ -1,7 +1,7 @@
 package com.theah64.xrob.api.database.tables;
 
 /**
- * Created by Shifar Shifz on 11/22/2015.
+ * Created by theapache64 on 11/22/2015.
  */
 public abstract class BaseTable<T> {
 

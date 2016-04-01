@@ -4,7 +4,7 @@ import com.theah64.xrob.api.database.utils.InsertQuery;
 import com.theah64.xrob.api.models.Delivery;
 
 /**
- * Created by Shifar Shifz on 11/29/2015.
+ * Created by theapache64 on 11/29/2015.
  */
 public class Deliveries extends BaseTable<Delivery> {
 

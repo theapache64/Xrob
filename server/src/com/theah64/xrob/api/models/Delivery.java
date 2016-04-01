@@ -1,7 +1,7 @@
 package com.theah64.xrob.api.models;
 
 /**
- * Created by Shifar Shifz on 11/29/2015.
+ * Created by theapache64 on 11/29/2015.
  */
 public class Delivery {
 

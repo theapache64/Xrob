@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by Shifar Shifz on 11/22/2015.
+ * Created by theapache64 on 11/22/2015.
  */
 public class BaseServlet extends HttpServlet {
 
