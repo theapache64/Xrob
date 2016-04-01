@@ -1,13 +1,14 @@
 server/.idea/workspace.xml
 server/.idea/tasks.xml
 
+out
+
 *.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
