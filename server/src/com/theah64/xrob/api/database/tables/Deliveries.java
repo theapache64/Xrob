@@ -1,6 +1,5 @@
 package com.theah64.xrob.api.database.tables;
 
-import com.theah64.xrob.api.database.utils.InsertQuery;
 import com.theah64.xrob.api.models.Delivery;
 
 /**
@@ -31,6 +30,8 @@ public class Deliveries extends BaseTable<Delivery> {
     @Override
     public boolean add(Delivery delivery) {
 
+        /*
+        TODO: Convert the below query to normal text query.
         final String query = new InsertQuery()
                 .insertInto(TABLE_DELIVERIES)
                 .set(COLUMN_USER_ID, delivery.getUserId())
@@ -38,7 +39,8 @@ public class Deliveries extends BaseTable<Delivery> {
                 .set(COLUMN_MESSAGE, delivery.getMessage())
                 .set(COLUMN_DATA_TYPE, delivery.getDataType())
                 .build();
-
+        */
+        final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
 
         return false;
     }

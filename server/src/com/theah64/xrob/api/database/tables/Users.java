@@ -29,12 +29,7 @@ public class Users extends BaseTable<User> {
     @Override
     public User get(String byColumn, String byValue) {
 
-        final String query = "SELECT api_key,gcm_id" new SelectQuery()
-                .select("*")
-                .from(TABLE_USERS)
-                .where(byColumn)
-                .limit(1)
-                .build();
+        final String query = String.format("SELECT api_key,gcm_id FROM users WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection connection = Connection.getConnection();
         User user = null;
@@ -106,19 +101,14 @@ public class Users extends BaseTable<User> {
     @Override
     public String get(String byColumn, String byValue, String columnToReturn) {
 
-        final SelectQuery selectQuery = new SelectQuery();
 
-        selectQuery
-                .select(columnToReturn)
-                .from(TABLE_USERS)
-                .where(byColumn)
-                .limit(1);
+        final String query = String.format("SELECT %s FROM users WHERE %s = ?", columnToReturn, byColumn);
 
         String resultValue = null;
         final java.sql.Connection connection = Connection.getConnection();
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(selectQuery.build());
+            final PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, byValue);
             final ResultSet rs = ps.executeQuery();
 
@@ -143,14 +133,7 @@ public class Users extends BaseTable<User> {
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
 
-        final UpdateQuery updateQuery = new UpdateQuery();
-
-        //Preparing query
-        final String query = updateQuery
-                .update(TABLE_USERS)
-                .set(updateColumn)
-                .where(whereColumn)
-                .build();
+        final String query = String.format("UPDATE users SET %s = ? WHERE %s = ?", updateColumn, whereColumn);
 
         boolean isUserUpdated = false;
         final java.sql.Connection connection = Connection.getConnection();
@@ -164,7 +147,7 @@ public class Users extends BaseTable<User> {
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
