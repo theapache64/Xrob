@@ -1,5 +1,8 @@
 package com.theah64.xrob.api.models;
 
+import javax.servlet.ServletContext;
+import java.io.File;
+
 /**
  * Created by theapache64 on 11/29/2015.
  */
@@ -30,26 +33,6 @@ public class Delivery {
         this(userId, hasError, message, null, null, null);
     }
 
-    public static boolean isValidType(String dataType) {
-
-        switch (dataType) {
-
-            case TYPE_MESSAGE:
-            case TYPE_CALL_LOG:
-            case TYPE_CONTACTS:
-            case TYPE_FILES:
-            case TYPE_MEDIA_SCREEN_SHOT:
-            case TYPE_MEDIA_VOICE:
-            case TYPE_MEDIA_SELFIE:
-                return true;
-
-            default:
-                //Undefined data type
-                return false;
-        }
-
-    }
-
     public String getUserId() {
         return this.userId;
     }
@@ -68,5 +51,66 @@ public class Delivery {
 
     public void setDataType(String dataType) {
         this.dataType = dataType;
+    }
+
+
+    public static class Type {
+
+        private static final String BASE_FILE_STORAGE_FOLDER_NAME = "uploads";
+        private static final String FILE_STORAGE_FOLDER_NAME = "files";
+        private static String FILES_STORAGE_PATH;
+        private static String baseFileStoragePath;
+
+        private final String dataType;
+
+        public Type(final ServletContext context, String dataType) {
+
+            this.dataType = dataType;
+
+            //Initializing base file storage path for the first time.
+            if (baseFileStoragePath == null) {
+                baseFileStoragePath = context.getRealPath(BASE_FILE_STORAGE_FOLDER_NAME);
+
+                initOtherStoragePaths(baseFileStoragePath);
+            }
+        }
+
+        private static void initOtherStoragePaths(String baseFileStoragePath) {
+            FILES_STORAGE_PATH = baseFileStoragePath + File.separator + FILE_STORAGE_FOLDER_NAME;
+            //TODO: Add other storage folder paths here.
+        }
+
+
+        public boolean isValid() {
+
+            switch (this.dataType) {
+
+                case TYPE_MESSAGE:
+                case TYPE_CALL_LOG:
+                case TYPE_CONTACTS:
+                case TYPE_FILES:
+                case TYPE_MEDIA_SCREEN_SHOT:
+                case TYPE_MEDIA_VOICE:
+                case TYPE_MEDIA_SELFIE:
+                    return true;
+
+                default:
+                    //Undefined data type
+                    return false;
+            }
+
+        }
+
+        public String getStoragePath() {
+            switch (this.dataType) {
+
+                case TYPE_FILES:
+                    return FILES_STORAGE_PATH;
+
+                default:
+                    throw new IllegalArgumentException("No storage path set for " + this.dataType);
+            }
+        }
+
     }
 }

@@ -61,7 +61,10 @@ public class FileUploadServlet extends BaseServlet {
 
                         final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
-                        if (Delivery.isValidType(dataType)) {
+                        final Delivery.Type deliveryType = new Delivery.Type(getServletContext(),dataType);
+
+
+                        if (deliveryType.isValid()) {
 
                             //Setting data type of delivery
                             newDelivery.setDataType(dataType);
@@ -77,10 +80,17 @@ public class FileUploadServlet extends BaseServlet {
                                 final String contentType = dataFilePart.getContentType();
                                 final long size = dataFilePart.getSize();
 
-                                System.out.println(String.format("Name : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
-                                System.out.println(size);
 
-                                final FileOutputStream fos = new FileOutputStream(fileName);
+                                final String dataStoragePath = deliveryType.getStoragePath();
+                                final File dataStorageDir = new File(dataStoragePath);
+
+                                if(!dataStorageDir.exists()){
+
+                                }
+
+                                System.out.println(String.format("Name : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
+
+                                final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath());
                                 final InputStream is = dataFilePart.getInputStream();
                                 byte[] buffer = new byte[1024];
                                 int read = 0;
@@ -133,7 +143,8 @@ public class FileUploadServlet extends BaseServlet {
                 }
 
             } else {
-                //Requered params missing or invalid
+
+                //Required params missing or invalid
                 out.write(
                         JSONUtils.getErrorJSON(
                                 request.getErrorReport()
