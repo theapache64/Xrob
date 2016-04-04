@@ -101,16 +101,35 @@ public class Delivery {
 
         }
 
+        /**
+         * @return storage path of the current binary data type.
+         */
         public String getStoragePath() {
+
+
+        }
+
+
+        /**
+         * @return true if the current dataType is binary, otherwise false.
+         */
+        public boolean isBinary() {
             switch (this.dataType) {
 
                 case TYPE_FILES:
-                    return FILES_STORAGE_PATH;
+                case TYPE_MEDIA_SCREEN_SHOT:
+                case TYPE_MEDIA_SELFIE:
+                case TYPE_MEDIA_VOICE:
+                    return true;
+
+                case TYPE_CONTACTS:
+                case TYPE_MESSAGE:
+                case TYPE_CALL_LOG:
+                    return false;
 
                 default:
-                    throw new IllegalArgumentException("No storage path set for " + this.dataType);
+                    throw new IllegalArgumentException(this.dataType + " data type is not managed.");
             }
         }
-
     }
 }

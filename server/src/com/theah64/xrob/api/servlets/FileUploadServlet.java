@@ -61,7 +61,7 @@ public class FileUploadServlet extends BaseServlet {
 
                         final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
-                        final Delivery.Type deliveryType = new Delivery.Type(getServletContext(),dataType);
+                        final Delivery.Type deliveryType = new Delivery.Type(getServletContext(), dataType);
 
 
                         if (deliveryType.isValid()) {
@@ -80,26 +80,35 @@ public class FileUploadServlet extends BaseServlet {
                                 final String contentType = dataFilePart.getContentType();
                                 final long size = dataFilePart.getSize();
 
+                                if(deliveryType.isBinary()){
 
-                                final String dataStoragePath = deliveryType.getStoragePath();
-                                final File dataStorageDir = new File(dataStoragePath);
+                                    //The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
 
-                                if(!dataStorageDir.exists()){
+                                    final String dataStoragePath = deliveryType.getStoragePath();
+                                    final File dataStorageDir = new File(dataStoragePath);
+
+                                    if (!dataStorageDir.exists() && !dataStorageDir.mkdirs()) {
+                                        throw new IOException("Failed to create upload directory : " + dataStorageDir.getAbsolutePath());
+                                    }
+
+                                    final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath());
+                                    final InputStream is = dataFilePart.getInputStream();
+                                    byte[] buffer = new byte[1024];
+                                    int read;
+
+                                    while ((read = is.read(buffer)) != -1) {
+                                        fos.write(buffer, 0, read);
+                                    }
+
+                                    fos.flush();
+                                    fos.close();
+                                    is.close();
+
+
+                                    System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
 
                                 }
 
-                                System.out.println(String.format("Name : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
-
-                                final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath());
-                                final InputStream is = dataFilePart.getInputStream();
-                                byte[] buffer = new byte[1024];
-                                int read = 0;
-                                while ((read = is.read(buffer)) != -1) {
-                                    fos.write(buffer, 0, read);
-                                }
-                                fos.flush();
-                                fos.close();
-                                is.close();
 
                             } else {
                                 //ERROR: No file found
