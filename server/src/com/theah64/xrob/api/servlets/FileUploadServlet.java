@@ -39,6 +39,9 @@ public class FileUploadServlet extends BaseServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE_JSON);
 
+        System.out.println("------------------------------");
+        System.out.println("New file upload request received");
+
         //Out
         final PrintWriter out = resp.getWriter();
 
@@ -76,10 +79,6 @@ public class FileUploadServlet extends BaseServlet {
 
                             if (dataFilePart != null) {
 
-                                for (final String name : dataFilePart.getHeaderNames()) {
-                                    System.out.println(name);
-                                }
-
 
                                 final String contentType = dataFilePart.getContentType();
                                 final String fileName = new FileName(dataFilePart).getRandomFileName(contentType);
@@ -92,22 +91,27 @@ public class FileUploadServlet extends BaseServlet {
                                     final File dataStorageDir = new File(dataStoragePath);
 
                                     if (!dataStorageDir.exists() && !dataStorageDir.mkdirs()) {
-                                        throw new IOException("Failed to create upload directory : " + dataStorageDir.getAbsolutePath());
+
+                                        out.write(JSONUtils.getErrorJSON(
+                                                "Failed to create upload directory : " + dataStorageDir.getAbsolutePath()
+                                        ));
+
+                                    } else {
+                                        //The directory exists,so create the file
+                                        final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
+                                        final InputStream is = dataFilePart.getInputStream();
+                                        byte[] buffer = new byte[1024];
+                                        int read;
+
+                                        while ((read = is.read(buffer)) != -1) {
+                                            fos.write(buffer, 0, read);
+                                        }
+
+                                        fos.flush();
+                                        fos.close();
+                                        is.close();
                                     }
 
-
-                                    final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
-                                    final InputStream is = dataFilePart.getInputStream();
-                                    byte[] buffer = new byte[1024];
-                                    int read;
-
-                                    while ((read = is.read(buffer)) != -1) {
-                                        fos.write(buffer, 0, read);
-                                    }
-
-                                    fos.flush();
-                                    fos.close();
-                                    is.close();
 
                                     System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
                                 }
@@ -176,6 +180,8 @@ public class FileUploadServlet extends BaseServlet {
 
         out.flush();
         out.close();
+
+        System.out.println("------------------------------");
 
     }
 

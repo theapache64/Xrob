@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
   `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') DEFAULT NULL,
   `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
+  `description` TEXT,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
