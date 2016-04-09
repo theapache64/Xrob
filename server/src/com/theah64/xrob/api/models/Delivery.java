@@ -58,6 +58,12 @@ public class Delivery {
 
         private static final String BASE_FILE_STORAGE_FOLDER_NAME = "uploads";
         private static final String FILE_STORAGE_FOLDER_NAME = "files";
+        private static final String SCREENSHOTS_STORAGE_FOLDER_NAME = "screenshots";
+        private static final String SELFIES_STORAGE_FOLDER_NAME = "selfies";
+        private static final String VOICES_STORAGE_FOLDER_NAME = "voices";
+        private static String VOICES_STORAGE_PATH;
+        private static String SELFIES_STORAGE_PATH;
+        private static String SCREENSHOTS_STORAGE_PATH;
         private static String FILES_STORAGE_PATH;
         private static String baseFileStoragePath;
 
@@ -73,11 +79,6 @@ public class Delivery {
 
                 initOtherStoragePaths(baseFileStoragePath);
             }
-        }
-
-        private static void initOtherStoragePaths(String baseFileStoragePath) {
-            FILES_STORAGE_PATH = baseFileStoragePath + File.separator + FILE_STORAGE_FOLDER_NAME;
-            //TODO: Add other storage folder paths here.
         }
 
 
@@ -101,14 +102,6 @@ public class Delivery {
 
         }
 
-        /**
-         * @return storage path of the current binary data type.
-         */
-        public String getStoragePath() {
-
-
-        }
-
 
         /**
          * @return true if the current dataType is binary, otherwise false.
@@ -129,6 +122,36 @@ public class Delivery {
 
                 default:
                     throw new IllegalArgumentException(this.dataType + " data type is not managed.");
+            }
+        }
+
+        /**
+         * Initialize the storage paths of the all binary data types.
+         *
+         * @param baseFileStoragePath Base path
+         */
+        private static void initOtherStoragePaths(String baseFileStoragePath) {
+            FILES_STORAGE_PATH = baseFileStoragePath + File.separator + FILE_STORAGE_FOLDER_NAME;
+            SCREENSHOTS_STORAGE_PATH = baseFileStoragePath + File.separator + SCREENSHOTS_STORAGE_FOLDER_NAME;
+            SELFIES_STORAGE_PATH = baseFileStoragePath + File.separator + SELFIES_STORAGE_FOLDER_NAME;
+            VOICES_STORAGE_PATH = baseFileStoragePath + File.separator + VOICES_STORAGE_FOLDER_NAME;
+        }
+
+        /**
+         * @return storage path for the current data type.
+         */
+        public String getStoragePath() {
+            switch (this.dataType) {
+                case TYPE_FILES:
+                    return FILES_STORAGE_PATH;
+                case TYPE_MEDIA_SCREEN_SHOT:
+                    return SCREENSHOTS_STORAGE_PATH;
+                case TYPE_MEDIA_SELFIE:
+                    return SELFIES_STORAGE_PATH;
+                case TYPE_MEDIA_VOICE:
+                    return VOICES_STORAGE_PATH;
+                default:
+                    return null;
             }
         }
     }

@@ -2,9 +2,7 @@ package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.models.Delivery;
-import com.theah64.xrob.api.utils.HeaderSecurity;
-import com.theah64.xrob.api.utils.JSONUtils;
-import com.theah64.xrob.api.utils.Request;
+import com.theah64.xrob.api.utils.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 11/18/2015.
@@ -26,6 +28,7 @@ public class FileUploadServlet extends BaseServlet {
             KEY_ERROR, // To track if the delivery has any error
             KEY_MESSAGE //To explain about the success or error
     };
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,7 +66,6 @@ public class FileUploadServlet extends BaseServlet {
 
                         final Delivery.Type deliveryType = new Delivery.Type(getServletContext(), dataType);
 
-
                         if (deliveryType.isValid()) {
 
                             //Setting data type of delivery
@@ -74,16 +76,18 @@ public class FileUploadServlet extends BaseServlet {
 
                             if (dataFilePart != null) {
 
-                                System.out.println("Saving file...");
+                                for (final String name : dataFilePart.getHeaderNames()) {
+                                    System.out.println(name);
+                                }
 
-                                final String fileName = dataFilePart.getName();
+
                                 final String contentType = dataFilePart.getContentType();
+                                final String fileName = new FileName(dataFilePart).getRandomFileName(contentType);
                                 final long size = dataFilePart.getSize();
 
-                                if(deliveryType.isBinary()){
+                                if (deliveryType.isBinary()) {
 
                                     //The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
-
                                     final String dataStoragePath = deliveryType.getStoragePath();
                                     final File dataStorageDir = new File(dataStoragePath);
 
@@ -91,7 +95,8 @@ public class FileUploadServlet extends BaseServlet {
                                         throw new IOException("Failed to create upload directory : " + dataStorageDir.getAbsolutePath());
                                     }
 
-                                    final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath());
+
+                                    final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
                                     final InputStream is = dataFilePart.getInputStream();
                                     byte[] buffer = new byte[1024];
                                     int read;
@@ -104,9 +109,7 @@ public class FileUploadServlet extends BaseServlet {
                                     fos.close();
                                     is.close();
 
-
                                     System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
-
                                 }
 
 
@@ -175,5 +178,6 @@ public class FileUploadServlet extends BaseServlet {
         out.close();
 
     }
+
 
 }

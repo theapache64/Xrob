@@ -3,6 +3,7 @@ package com.theah64.xrob.api.servlets;
 import com.theah64.xrob.api.database.tables.Users;
 import com.theah64.xrob.api.models.User;
 import com.theah64.xrob.api.utils.JSONUtils;
+import com.theah64.xrob.api.utils.RandomString;
 import com.theah64.xrob.api.utils.Request;
 
 import javax.servlet.ServletException;
@@ -24,6 +25,7 @@ import java.util.Random;
 public class INServlet extends BaseServlet {
 
     private static final String[] requiredParams = {Users.COLUMN_NAME, Users.COLUMN_IMEI};
+    private static final int API_KEY_LENGTH = 10;
 
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
         servletResponse.setContentType(CONTENT_TYPE_JSON);
@@ -50,7 +52,7 @@ public class INServlet extends BaseServlet {
                 }
 
                 //Preparing new api key for new user
-                final String apiKey = getNewApiKey();
+                final String apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
                 final User newUser = new User(name, imei, apiKey, gcmId);
 
@@ -92,18 +94,4 @@ public class INServlet extends BaseServlet {
     }
 
 
-    private static final int API_KEY_LENGTH = 10;
-    private static final String apiEngine = "0123456789AaBbCcDdEeFfGgHhIiJjKkLkMmNnOoPpQqRrSsTtUuVvWwXxYyZ";
-    private static Random random;
-
-    public static String getNewApiKey() {
-        if (random == null) {
-            random = new Random();
-        }
-        final StringBuilder apiKeyBuilder = new StringBuilder();
-        for (int i = 0; i < API_KEY_LENGTH; i++) {
-            apiKeyBuilder.append(apiEngine.charAt(random.nextInt(apiEngine.length())));
-        }
-        return apiKeyBuilder.toString();
-    }
 }
