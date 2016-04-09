@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Created by theapache64 on 9/4/16.
  */
-public class FileName {
+public class FilePart {
 
     private static final String KEY_CONTENT_DISPOSITION = "content-disposition";
     private static final String CONTENT_TYPE_IMAGE_JPEG = "image/jpeg";
@@ -18,9 +18,11 @@ public class FileName {
     private static final int FILE_NAME_LENGTH = 10;
     private Matcher fileNameMatcher;
 
-    private static final Pattern FILE_NAME_MATCHER = Pattern.compile("filename=\"(.+\\.(.+))\"");
+    private static final Pattern FILE_NAME_MATCHER = Pattern.compile("filename=\"(.+(\\..+))\"");
+    private final String contentType;
 
-    public FileName(Part filePart) {
+    public FilePart(Part filePart) {
+        this.contentType = filePart.getContentType();
         final String conDisHeader = filePart.getHeader(KEY_CONTENT_DISPOSITION);
         if (conDisHeader != null) {
             fileNameMatcher = FILE_NAME_MATCHER.matcher(conDisHeader);
@@ -44,13 +46,14 @@ public class FileName {
         return null;
     }
 
-    public String getRandomFileName(final String contentType) {
+    public String getRandomFileName() {
         String fileExtension = getFileExtension();
         if (fileExtension == null) {
-            fileExtension = getFileExtension(contentType);
+            fileExtension = getFileExtension(this.contentType);
         }
         return RandomString.getRandomFilename(FILE_NAME_LENGTH, fileExtension);
     }
+
 
 
     /**

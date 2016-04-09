@@ -1,8 +1,12 @@
 package com.theah64.xrob.api.servlets;
 
+import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.models.Delivery;
+import com.theah64.xrob.api.models.User;
 import com.theah64.xrob.api.utils.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -11,13 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Created by theapache64 on 11/18/2015.
+ * Created by theapache64 on 11/18/2015,12:10 AM.
  */
 
 @WebServlet(urlPatterns = {"/upload"})
@@ -28,6 +28,9 @@ public class FileUploadServlet extends BaseServlet {
             KEY_ERROR, // To track if the delivery has any error
             KEY_MESSAGE //To explain about the success or error
     };
+    private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Text data saved";
+    private static final java.lang.String SUCCESS_MESSAGE_BINARY_DATA_SAVED = "Binary data saved";
+    private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data";
 
 
     @Override
@@ -79,9 +82,8 @@ public class FileUploadServlet extends BaseServlet {
 
                             if (dataFilePart != null) {
 
-
                                 final String contentType = dataFilePart.getContentType();
-                                final String fileName = new FileName(dataFilePart).getRandomFileName(contentType);
+                                final String fileName = new FilePart(dataFilePart).getRandomFileName();
                                 final long size = dataFilePart.getSize();
 
                                 if (deliveryType.isBinary()) {
@@ -112,8 +114,29 @@ public class FileUploadServlet extends BaseServlet {
                                         is.close();
                                     }
 
-
                                     System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
+
+                                    //Success message
+                                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
+
+                                } else {
+
+                                    //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
+                                    final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+                                    final String fileContents = getFileContents(dataFilePart.getInputStream());
+
+                                    try {
+                                        if (dbTable.add(headerSecurity.getUserId(), new JSONObject(fileContents))) {
+                                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
+                                        } else {
+                                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        out.write(JSONUtils.getErrorJSON("Error in JSON Package : " + e.getMessage()));
+                                    }
+
                                 }
 
 
@@ -125,10 +148,6 @@ public class FileUploadServlet extends BaseServlet {
                                         )
                                 );
                             }
-
-                            //TODO: Check if the file has some valid data
-                            //TODO: Save the file if it's binary or the data in database if it's text.
-
 
                         } else {
                             //Invalid data type
@@ -183,6 +202,25 @@ public class FileUploadServlet extends BaseServlet {
 
         System.out.println("------------------------------");
 
+    }
+
+    /**
+     * @param inputStream is
+     * @return text content
+     * @throws IOException
+     */
+    private String getFileContents(final InputStream inputStream) throws IOException {
+        final InputStreamReader isr = new InputStreamReader(inputStream);
+        final BufferedReader br = new BufferedReader(isr);
+        final StringBuilder fileContents = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            fileContents.append(line);
+        }
+        inputStream.close();
+        isr.close();
+        br.close();
+        return fileContents.toString();
     }
 
 

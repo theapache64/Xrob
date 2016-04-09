@@ -45,13 +45,4 @@ public class Deliveries extends BaseTable<Delivery> {
         return false;
     }
 
-    @Override
-    public String get(String byColumn, String byValues, String columnToReturn) {
-        return null;
-    }
-
-    @Override
-    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        return false;
-    }
 }

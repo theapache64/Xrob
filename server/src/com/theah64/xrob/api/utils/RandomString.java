@@ -8,7 +8,7 @@ import java.util.Random;
 public class RandomString {
 
 
-    private static final String randomEngine = "0123456789AaBbCcDdEeFfGgHhIiJjKkLkMmNnOoPpQqRrSsTtUuVvWwXxYyZ";
+    private static final String randomEngine = "0123456789AaBbCcDdEeFfGgHhIiJjKkLkMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
     private static Random random;
 
     public static String getNewApiKey(final int apiKeyLength) {

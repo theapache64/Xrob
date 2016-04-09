@@ -8,7 +8,7 @@ import java.io.File;
  */
 public class Delivery {
 
-    private static final String TYPE_MESSAGE = "message";
+    public static final String TYPE_MESSAGE = "message";
     private static final String TYPE_CALL_LOG = "call_log";
     private static final String TYPE_CONTACTS = "contacts";
     private static final String TYPE_FILES = "files";
