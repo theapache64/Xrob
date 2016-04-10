@@ -14,6 +14,7 @@ import java.sql.SQLException;
  * Created by theapache64 on 9/4/16.
  */
 public class Messages extends BaseTable<Message> {
+
     private static final String KEY_INBOX = "inbox";
     private static final String KEY_OUTBOX = "outbox";
     private static final String COLUMN_PHONE = "phone";
