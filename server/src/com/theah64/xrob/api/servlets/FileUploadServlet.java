@@ -120,23 +120,9 @@ public class FileUploadServlet extends BaseServlet {
                                     out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
 
                                 } else {
-
-                                    //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
-                                    final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
-                                    final String fileContents = getFileContents(dataFilePart.getInputStream());
-
-                                    try {
-                                        if (dbTable.add(headerSecurity.getUserId(), new JSONObject(fileContents))) {
-                                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
-                                        } else {
-                                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        out.write(JSONUtils.getErrorJSON("Error in JSON Package : " + e.getMessage()));
-                                    }
-
+                                    out.write(JSONUtils.getErrorJSON(
+                                            "Only binary should be passed through this gate."
+                                    ));
                                 }
 
 
