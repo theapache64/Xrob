@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') DEFAULT NULL,
+  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie'),
   `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

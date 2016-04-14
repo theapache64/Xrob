@@ -10,6 +10,7 @@ public class JSONUtils {
 
     public static final String KEY_ERROR = "error";
     public static final String KEY_MESSAGE = "message";
+    private static final String ERROR_MESSAGE_UNAUTHORIZED_REQUEST = "Unauthorized request";
 
 
     private static String getSimpleResponse(final boolean isError, final String key, final String value) {
@@ -46,7 +47,8 @@ public class JSONUtils {
 
     /**
      * Return JSON String with error false and successKey as successValue
-     * @param successKey successKey
+     *
+     * @param successKey   successKey
      * @param successValue successValues corresponding to the given successKey
      * @return
      */
@@ -54,4 +56,7 @@ public class JSONUtils {
         return getSimpleResponse(false, successKey, successValue);
     }
 
+    public static String getUnAuthorizedRequestError() {
+        return getErrorJSON(ERROR_MESSAGE_UNAUTHORIZED_REQUEST);
+    }
 }

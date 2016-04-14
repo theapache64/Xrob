@@ -29,24 +29,8 @@ public class Delivery {
         this.createdAt = createdAt;
     }
 
-    public Delivery(String userId, boolean hasError, String message) {
-        this(userId, hasError, message, null, null, null);
-    }
-
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public String getDataType() {
-        return this.dataType;
-    }
-
-    public boolean hasError() {
-        return this.hasError;
-    }
-
-    public String getMessage() {
-        return this.message;
+    public Delivery(String userId, boolean hasError, String message,final String dataType) {
+        this(userId, hasError, message, dataType, null, null);
     }
 
     public void setDataType(String dataType) {
