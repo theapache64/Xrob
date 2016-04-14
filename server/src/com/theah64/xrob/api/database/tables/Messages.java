@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -15,13 +16,11 @@ import java.sql.SQLException;
  */
 public class Messages extends BaseTable<Message> {
 
-    private static final String KEY_INBOX = "inbox";
-    private static final String KEY_OUTBOX = "outbox";
+    private static final String KEY_TYPE_INBOX = "inbox";
+    private static final String KEY_TYPE_OUTBOX = "outbox";
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_CONTENT = "content";
     private static final String COLUMN_DELIVERED_AT = "delivered_at";
-    private static final String TYPE_INBOX = "inbox";
-    private static final String TYPE_OUTBOX = "outbox";
     private static Messages instance = new Messages();
 
     public static Messages getInstance() {
@@ -33,67 +32,66 @@ public class Messages extends BaseTable<Message> {
 
         boolean isAdded = true;
 
-        final String query = "INSERT INTO messages (user_id,phone,content,_type,delivered_at) VALUES (?,?,?,?,?);";
+        final String existenceQuery = "SELECT id FROM messages WHERE phone = ? AND content = ? AND delivered_at = ? AND _type = ? LIMIT 1";
+        final String addQuery = "INSERT INTO messages (user_id,phone,content,_type,delivered_at) VALUES (?,?,?,?,?);";
+
         final java.sql.Connection con = Connection.getConnection();
+
         try {
-            final PreparedStatement ps = con.prepareStatement(query);
+            final PreparedStatement addPs = con.prepareStatement(addQuery);
+            final PreparedStatement existancePs = con.prepareStatement(existenceQuery);
 
-            if (jOb.has(KEY_INBOX)) {
+            final String[] keyInboxOutbox = {KEY_TYPE_INBOX, KEY_TYPE_OUTBOX};
 
-                //Saving inbox message
-                try {
-                    final JSONArray jaInbox = jOb.getJSONArray(KEY_INBOX);
+            //Saving inbox message
+            try {
 
-                    for (int i = 0; i < jaInbox.length(); i++) {
+                //Looping through inbox and outbox node.
+                for (int i = 0; i < keyInboxOutbox.length; i++) {
 
-                        final JSONObject jInMessage = jaInbox.getJSONObject(i);
-                        final String phone = jInMessage.getString(COLUMN_PHONE);
-                        final String content = jInMessage.getString(COLUMN_CONTENT);
-                        final long deliveryTimestamp = jInMessage.getLong(COLUMN_DELIVERED_AT);
+                    if (jOb.has(keyInboxOutbox[i])) {
 
-                        ps.setString(1, userId);
-                        ps.setString(2, phone);
-                        ps.setString(3, content);
-                        ps.setString(4, TYPE_INBOX);
-                        ps.setLong(5, deliveryTimestamp);
+                        final JSONArray jaInboxOutbox = jOb.getJSONArray(keyInboxOutbox[i]);
 
-                        isAdded = ps.executeUpdate() == 1 && isAdded;
+                        for (int j = 0; j < jaInboxOutbox.length(); j++) {
+
+                            final JSONObject jInMessage = jaInboxOutbox.getJSONObject(j);
+                            final String phone = jInMessage.getString(COLUMN_PHONE);
+                            final String content = jInMessage.getString(COLUMN_CONTENT);
+                            final long deliveryTimestamp = jInMessage.getLong(COLUMN_DELIVERED_AT);
+
+                            //Checking existence
+                            existancePs.setString(1, phone);
+                            existancePs.setString(2, content);
+                            existancePs.setLong(3, deliveryTimestamp);
+                            existancePs.setString(4, keyInboxOutbox[i]);
+
+                            final ResultSet rs = existancePs.executeQuery();
+                            final boolean isExists = rs.first();
+                            rs.close();
+
+                            if (!isExists) {
+                                addPs.setString(1, userId);
+                                addPs.setString(2, phone);
+                                addPs.setString(3, content);
+                                addPs.setString(4, keyInboxOutbox[i]);
+                                addPs.setLong(5, deliveryTimestamp);
+
+                                isAdded = addPs.executeUpdate() == 1 && isAdded;
+                            }
+                        }
+
                     }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    isAdded = false;
                 }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                isAdded = false;
             }
 
-            if (jOb.has(KEY_OUTBOX)) {
-
-                //Saving outbox message
-                try {
-                    final JSONArray jaOutbox = jOb.getJSONArray(KEY_OUTBOX);
-
-                    for (int i = 0; i < jaOutbox.length(); i++) {
-                        final JSONObject jInMessage = jaOutbox.getJSONObject(i);
-                        final String phone = jInMessage.getString(COLUMN_PHONE);
-                        final String content = jInMessage.getString(COLUMN_CONTENT);
-                        final long deliveryTimestamp = jInMessage.getLong(COLUMN_DELIVERED_AT);
-
-                        ps.setString(1, userId);
-                        ps.setString(2, phone);
-                        ps.setString(3, content);
-                        ps.setString(4, TYPE_OUTBOX);
-                        ps.setLong(5, deliveryTimestamp);
-
-                        isAdded = ps.executeUpdate() == 1 && isAdded;
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    isAdded = false;
-                }
-            }
-
-            ps.close();
+            addPs.close();
+            existancePs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,4 +107,28 @@ public class Messages extends BaseTable<Message> {
 
         return isAdded;
     }
+
+    /**
+     * Used to check if the data already exist in the database
+     *
+     * @return true if exists,false otherwise.
+    private boolean isExist(String phone, String content, long deliveryTimestamp, String type) {
+
+    boolean isExists = false;
+    final java.sql.Connection con = Connection.getConnection();
+    try {
+
+
+    } catch (SQLException e) {
+    e.printStackTrace();
+    } finally {
+    try {
+    con.close();
+    } catch (SQLException e) {
+    e.printStackTrace();
+    }
+    }
+
+    return isExists;
+    }*/
 }
