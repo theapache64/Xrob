@@ -24,6 +24,7 @@ public class BaseServlet extends HttpServlet {
     protected static final String CONTENT_TYPE_JSON = "application/json";
     private static final String ERROR_GET_NOT_SUPPORTED = "GET method not supported";
     private static final String ERROR_POST_NOT_SUPPORTED = "POST method not supported";
+    public static final String VERSION_CODE = "/v1";
 
 
     protected static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {

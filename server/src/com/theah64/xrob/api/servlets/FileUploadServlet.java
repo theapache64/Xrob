@@ -20,12 +20,13 @@ import java.io.*;
  * Created by theapache64 on 11/18/2015,12:10 AM.
  */
 
-@WebServlet(urlPatterns = {"/upload"})
+@WebServlet(urlPatterns = {BaseServlet.VERSION_CODE + "/upload"})
 @MultipartConfig
 public class FileUploadServlet extends BaseServlet {
 
     private static final String[] requiredParams = {
             KEY_ERROR, // To track if the delivery has any error
+            KEY_DATA_TYPE, //Data type of the file
             KEY_MESSAGE //To explain about the success or error
     };
     private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Text data saved";
@@ -57,18 +58,19 @@ public class FileUploadServlet extends BaseServlet {
 
             if (request.hasAllParams()) {
 
+                final String userId = headerSecurity.getUserId();
+
                 final boolean hasError = request.getBooleanParameter(KEY_ERROR);
                 final String message = request.getStringParameter(KEY_MESSAGE);
+                final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
                 //Has all needed params, so add it to deliveries
-                final Delivery newDelivery = new Delivery(headerSecurity.getUserId(), hasError, message);
+                final Delivery newDelivery = new Delivery(userId, hasError, message, dataType);
 
                 if (!hasError) {
 
                     //No errors found
                     if (request.has(KEY_DATA_TYPE)) {
-
-                        final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
                         final Delivery.Type deliveryType = new Delivery.Type(getServletContext(), dataType);
 
@@ -115,6 +117,8 @@ public class FileUploadServlet extends BaseServlet {
                                     }
 
                                     System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
+
+                                    //TODO: Add the file details to the database
 
                                     //Success message
                                     out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
