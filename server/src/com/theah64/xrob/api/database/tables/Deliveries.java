@@ -41,6 +41,7 @@ public class Deliveries extends BaseTable<Delivery> {
                 .build();
         */
         final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
+        final java.sql
 
         return false;
     }

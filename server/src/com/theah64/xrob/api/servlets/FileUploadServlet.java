@@ -66,6 +66,8 @@ public class FileUploadServlet extends BaseServlet {
 
                 //Has all needed params, so add it to deliveries
                 final Delivery newDelivery = new Delivery(userId, hasError, message, dataType);
+                //What ever the data_type, adding delivery;
+                Deliveries.getInstance().add(newDelivery);
 
                 if (!hasError) {
 
@@ -148,8 +150,7 @@ public class FileUploadServlet extends BaseServlet {
                             );
                         }
 
-                        //What ever the data_type, adding delivery;
-                        Deliveries.getInstance().add(newDelivery);
+
 
                     } else {
                         //DATA or DATA_TYPE is missing or invalid

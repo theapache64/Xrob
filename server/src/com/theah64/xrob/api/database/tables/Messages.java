@@ -27,6 +27,13 @@ public class Messages extends BaseTable<Message> {
         return instance;
     }
 
+    /**
+     * To add new message to the database.
+     *
+     * @param userId
+     * @param jOb
+     * @return
+     */
     @Override
     public boolean add(final String userId, JSONObject jOb) {
 
@@ -39,7 +46,7 @@ public class Messages extends BaseTable<Message> {
 
         try {
             final PreparedStatement addPs = con.prepareStatement(addQuery);
-            final PreparedStatement existancePs = con.prepareStatement(existenceQuery);
+            final PreparedStatement existencePs = con.prepareStatement(existenceQuery);
 
             final String[] keyInboxOutbox = {KEY_TYPE_INBOX, KEY_TYPE_OUTBOX};
 
@@ -61,12 +68,12 @@ public class Messages extends BaseTable<Message> {
                             final long deliveryTimestamp = jInMessage.getLong(COLUMN_DELIVERED_AT);
 
                             //Checking existence
-                            existancePs.setString(1, phone);
-                            existancePs.setString(2, content);
-                            existancePs.setLong(3, deliveryTimestamp);
-                            existancePs.setString(4, keyInboxOutbox[i]);
+                            existencePs.setString(1, phone);
+                            existencePs.setString(2, content);
+                            existencePs.setLong(3, deliveryTimestamp);
+                            existencePs.setString(4, keyInboxOutbox[i]);
 
-                            final ResultSet rs = existancePs.executeQuery();
+                            final ResultSet rs = existencePs.executeQuery();
                             final boolean isExists = rs.first();
                             rs.close();
 
@@ -91,7 +98,7 @@ public class Messages extends BaseTable<Message> {
             }
 
             addPs.close();
-            existancePs.close();
+            existencePs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
