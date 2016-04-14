@@ -37,6 +37,22 @@ public class Delivery {
         this.dataType = dataType;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public boolean hasError() {
+        return hasError;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
 
     public static class Type {
 
