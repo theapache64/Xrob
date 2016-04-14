@@ -10,10 +10,14 @@ import java.io.IOException;
  */
 public class JSONPostServlet extends BaseServlet {
 
-    private static final String[] REQUIRED_PARAMS = {}
+    private static final String[] REQUIRED_PARAMS = {KEY_ERROR, KEY_MESSAGE};
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType(CONTENT_TYPE_JSON);
+
+        
+
 
     }
 
