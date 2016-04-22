@@ -2,10 +2,8 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Delivery;
-import com.theah64.xrob.api.utils.CommonUtils;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -32,10 +30,10 @@ public class Deliveries extends BaseTable<Delivery> {
     public boolean add(Delivery delivery) {
 
         boolean isAdded = false;
-        final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
+                final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
-            final PreparedStatement ps = con.prepareStatement(query);
+                            final PreparedStatement ps = con.prepareStatement(query);
 
             //Setting param
             ps.setString(1, delivery.getUserId());

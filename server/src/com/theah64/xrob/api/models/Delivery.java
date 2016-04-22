@@ -8,7 +8,7 @@ import java.io.File;
  */
 public class Delivery {
 
-    public static final String TYPE_MESSAGE = "message";
+    public static final String TYPE_MESSAGES = "messages";
     private static final String TYPE_CALL_LOG = "call_log";
     private static final String TYPE_CONTACTS = "contacts";
     private static final String TYPE_FILES = "files";
@@ -86,7 +86,7 @@ public class Delivery {
 
             switch (this.dataType) {
 
-                case TYPE_MESSAGE:
+                case TYPE_MESSAGES:
                 case TYPE_CALL_LOG:
                 case TYPE_CONTACTS:
                 case TYPE_FILES:
@@ -116,7 +116,7 @@ public class Delivery {
                     return true;
 
                 case TYPE_CONTACTS:
-                case TYPE_MESSAGE:
+                case TYPE_MESSAGES:
                 case TYPE_CALL_LOG:
                     return false;
 

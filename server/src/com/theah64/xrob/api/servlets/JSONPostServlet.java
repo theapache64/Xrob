@@ -29,6 +29,7 @@ public class JSONPostServlet extends BaseServlet {
     private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Data saved";
     private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data.";
     private static final String ERROR_MESSAGE_DATA_CANT_BE_NULL = "Data can't be null.";
+    private static final String ERROR_MESSAGE_INVALID_DATA_TYPE = "Invalid data type.";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,45 +56,52 @@ public class JSONPostServlet extends BaseServlet {
 
                 //Save delivery details
                 final Delivery newTextDelivery = new Delivery(userId, hasError, message, dataType);
-                Deliveries.getInstance().add(newTextDelivery);
 
-                if (!hasError) {
+                if (new Delivery.Type(getServletContext(), dataType).isValid()) {
 
-                    //Has valid data
-                    final String data = jsonPostRequest.getStringParameter(KEY_DATA);
+                    Deliveries.getInstance().add(newTextDelivery);
 
-                    if (data != null) {
+                    if (!hasError) {
 
-                        try {
-                            final JSONObject joData = new JSONObject(data);
+                        //Has valid data
+                        final String data = jsonPostRequest.getStringParameter(KEY_DATA);
 
-                            //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
-                            final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+                        if (data != null) {
 
-                            //Saving data
-                            if (dbTable.add(userId, joData)) {
-                                out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
-                            } else {
-                                out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                            try {
+                                final JSONObject joData = new JSONObject(data);
+
+                                //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
+                                final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+
+                                //Saving data
+                                if (dbTable.add(userId, joData)) {
+                                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
+                                } else {
+                                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                //Invalid json
+                                out.write(JSONUtils.getErrorJSON(
+                                        String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
+                                ));
                             }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            //Invalid json
-                            out.write(JSONUtils.getErrorJSON(
-                                    String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
-                            ));
+                        } else {
+                            //Data is null!
+                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
                         }
 
+
                     } else {
-                        //Data is null!
-                        out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
+                        //Error report submitted
+                        out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
                     }
-
-
                 } else {
-                    //Error report submitted
-                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
+                    //Invalid data type
+                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_INVALID_DATA_TYPE));
                 }
 
             } else {

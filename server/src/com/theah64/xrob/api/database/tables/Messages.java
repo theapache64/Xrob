@@ -111,31 +111,7 @@ public class Messages extends BaseTable<Message> {
             }
         }
 
-
         return isAdded;
     }
 
-    /**
-     * Used to check if the data already exist in the database
-     *
-     * @return true if exists,false otherwise.
-    private boolean isExist(String phone, String content, long deliveryTimestamp, String type) {
-
-    boolean isExists = false;
-    final java.sql.Connection con = Connection.getConnection();
-    try {
-
-
-    } catch (SQLException e) {
-    e.printStackTrace();
-    } finally {
-    try {
-    con.close();
-    } catch (SQLException e) {
-    e.printStackTrace();
-    }
-    }
-
-    return isExists;
-    }*/
 }
