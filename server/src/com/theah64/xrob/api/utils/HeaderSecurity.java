@@ -15,30 +15,31 @@ public final class HeaderSecurity {
     private final String authorization;
     private String userId;
 
-    public HeaderSecurity(final String authorization) {
+    public HeaderSecurity(final String authorization) throws Exception {
         //Collecting header from passed request
         this.authorization = authorization;
+        isAuthorized();
     }
 
     /**
      * Used to identify if passed API-KEY has a valid user.
      */
-    public boolean isAuthorized() {
+    private void isAuthorized() throws Exception {
 
         if (this.authorization == null) {
             //No api key passed along with request
-            return false;
+            throw new Exception("Unauthorized access");
         }
 
         final Users users = Users.getInstance();
         this.userId = users.get(Users.COLUMN_API_KEY, this.authorization, Users.COLUMN_ID);
-        return this.userId != null;
+        if (this.userId == null) {
+            throw new Exception("No user found with the api_key " + this.authorization);
+        }
+
     }
 
     public String getUserId() {
-        if (this.userId == null) {
-            throw new IllegalArgumentException("You must call isAuthorized() and return true to call getUserId()");
-        }
         return this.userId;
     }
 

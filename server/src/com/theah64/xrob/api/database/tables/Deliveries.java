@@ -29,8 +29,8 @@ public class Deliveries extends BaseTable<Delivery> {
     @Override
     public boolean add(Delivery delivery) {
 
-
         boolean isAdded = false;
+
         final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
@@ -46,7 +46,6 @@ public class Deliveries extends BaseTable<Delivery> {
 
             ps.close();
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -60,4 +59,10 @@ public class Deliveries extends BaseTable<Delivery> {
         return isAdded;
     }
 
+    @Override
+    public void addv2(Delivery delivery) throws Exception {
+        if (!add(delivery)) {
+            throw new Exception("Failed to add delivery details");
+        }
+    }
 }

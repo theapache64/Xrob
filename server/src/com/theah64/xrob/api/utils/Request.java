@@ -1,6 +1,7 @@
 package com.theah64.xrob.api.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,13 @@ public class Request {
     private final String[] requiredParams;
     private List<String> missingOrInvalidParams;
 
-    public Request(HttpServletRequest request, String[] requiredParams) {
+    public Request(HttpServletRequest request, String[] requiredParams) throws Exception {
         this.request = request;
         this.requiredParams = requiredParams;
+
+        if (!hasAllParams()) {
+            throw new Exception(getErrorReport());
+        }
     }
 
     /**
@@ -29,7 +34,7 @@ public class Request {
     }
 
 
-    public String getErrorReport() {
+    private String getErrorReport() {
 
         if (missingOrInvalidParams != null && !missingOrInvalidParams.isEmpty()) {
             final StringBuilder errorReportBuilder = new StringBuilder("Missing or empty value for ");

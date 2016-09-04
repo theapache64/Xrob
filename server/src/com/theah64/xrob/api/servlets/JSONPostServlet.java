@@ -39,83 +39,67 @@ public class JSONPostServlet extends BaseServlet {
         final PrintWriter out = resp.getWriter();
 
         //To check API key
-        final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
+        ;
+        try {
 
-        if (headerSecurity.isAuthorized()) {
+            final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
+
 
             //Checking if the request has every required parameter.
             final Request jsonPostRequest = new Request(req, REQUIRED_PARAMS);
+            final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
+            //user id
+            final String userId = headerSecurity.getUserId();
+            final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
+            final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
 
-            if (jsonPostRequest.hasAllParams()) {
+            //Save delivery details
+            Deliveries.getInstance().addv2(new Delivery(userId, hasError, message, dataType));
 
+            if (!hasError) {
 
-                final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
-                //user id
-                final String userId = headerSecurity.getUserId();
-                final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
-                final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
+                //Has valid data
+                final String data = jsonPostRequest.getStringParameter(KEY_DATA);
 
-                //Save delivery details
-                final Delivery newTextDelivery = new Delivery(userId, hasError, message, dataType);
+                if (data != null) {
 
-                if (newTextDelivery.isValid()) {
+                    try {
+                        final JSONObject joData = new JSONObject(data);
 
-                    Deliveries.getInstance().add(newTextDelivery);
+                        //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
+                        final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
 
-                    if (!hasError) {
-
-                        //Has valid data
-                        final String data = jsonPostRequest.getStringParameter(KEY_DATA);
-
-                        if (data != null) {
-
-                            try {
-                                final JSONObject joData = new JSONObject(data);
-
-                                //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
-                                final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
-
-                                //Saving data
-                                if (dbTable.add(userId, joData)) {
-                                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
-                                } else {
-                                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                //Invalid json
-                                out.write(JSONUtils.getErrorJSON(
-                                        String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
-                                ));
-                            }
-
+                        //Saving data
+                        if (dbTable.add(userId, joData)) {
+                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
                         } else {
-                            //Data is null!
-                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
+                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
                         }
 
-
-                    } else {
-                        //Error report submitted
-                        out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        //Invalid json
+                        out.write(JSONUtils.getErrorJSON(
+                                String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
+                        ));
                     }
 
                 } else {
-                    out.write(JSONUtils.getErrorJSON("Invalid data type " + dataType));
+                    //Data is null!
+                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
                 }
 
 
             } else {
-                //Missing param
-                out.write(JSONUtils.getErrorJSON(jsonPostRequest.getErrorReport()));
+                //Error report submitted
+                out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
             }
 
-
-        } else {
-            //Unauthorized request
-            out.write(JSONUtils.getUnAuthorizedRequestError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.write(JSONUtils.getErrorJSON(e.getMessage()));
         }
+
 
         out.flush();
         out.close();

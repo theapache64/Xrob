@@ -27,6 +27,10 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    public void addv2(T newInstance) throws Exception {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
     public String get(final String byColumn, final String byValues, final String columnToReturn) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }

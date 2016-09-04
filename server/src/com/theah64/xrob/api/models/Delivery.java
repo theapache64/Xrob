@@ -22,16 +22,18 @@ public class Delivery {
     private String dataType;
     private final boolean hasError;
 
-    private Delivery(String userId, boolean hasError, String message, String dataType, String id, String createdAt) {
+    private Delivery(String userId, boolean hasError, String message, String dataType, String id, String createdAt) throws Exception {
         this.id = id;
         this.userId = userId;
         this.dataType = dataType;
         this.message = message;
         this.hasError = hasError;
         this.createdAt = createdAt;
+
+        checkDataType();
     }
 
-    public Delivery(String userId, boolean hasError, String message, final String dataType) {
+    public Delivery(String userId, boolean hasError, String message, final String dataType) throws Exception {
         this(userId, hasError, message, dataType, null, null);
     }
 
@@ -39,7 +41,7 @@ public class Delivery {
         this.dataType = dataType;
     }
 
-    public boolean isValid() {
+    private void checkDataType() throws Exception {
 
         switch (this.dataType) {
 
@@ -50,11 +52,11 @@ public class Delivery {
             case TYPE_MEDIA_SCREEN_SHOT:
             case TYPE_MEDIA_VOICE:
             case TYPE_MEDIA_SELFIE:
-                return true;
+                break;
 
             default:
                 //Undefined data type
-                return false;
+                throw new Exception("Invalid data type " + this.dataType);
         }
 
     }
