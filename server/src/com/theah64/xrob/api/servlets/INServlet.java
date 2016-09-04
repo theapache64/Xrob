@@ -72,7 +72,6 @@ public class INServlet extends BaseServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             out.write(JSONUtils.getErrorJSON(e.getMessage()));
         }
 

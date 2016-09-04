@@ -31,7 +31,7 @@ public class Deliveries extends BaseTable<Delivery> {
 
         boolean isAdded = false;
 
-        final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
+        final String query = "INSERT INTO deliveries (user_id,error,message,server_error, server_error_message,data_type) VALUES (?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -40,7 +40,10 @@ public class Deliveries extends BaseTable<Delivery> {
             ps.setString(1, delivery.getUserId());
             ps.setBoolean(2, delivery.hasError());
             ps.setString(3, delivery.getMessage());
-            ps.setString(4, delivery.getDataType());
+            ps.setBoolean(4, delivery.hasServerError());
+            ps.setString(5, delivery.getServerErrorMessage());
+            ps.setString(6, delivery.getDataType());
+
 
             isAdded = ps.executeUpdate() == 1;
 

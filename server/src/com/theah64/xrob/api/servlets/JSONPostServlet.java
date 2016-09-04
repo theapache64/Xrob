@@ -51,8 +51,8 @@ public class JSONPostServlet extends BaseServlet {
             final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
             final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
 
-            //Save delivery details
-            Deliveries.getInstance().addv2(new Delivery(userId, hasError, message, dataType));
+            final Delivery delivery = new Delivery(userId, hasError, message, dataType);
+            final Deliveries deliveries = Deliveries.getInstance();
 
             if (!hasError) {
 
@@ -69,9 +69,20 @@ public class JSONPostServlet extends BaseServlet {
 
                         //Saving data
                         if (dbTable.add(userId, joData)) {
+
+                            //Save delivery details
+                            deliveries.addv2(delivery);
                             out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
+
                         } else {
+
+                            delivery.setServerError(true);
+                            delivery.setServerErrorMessage(ERROR_MESSAGE_FAILED_TO_SAVE_DATA);
+
+                            //Save delivery details
+                            deliveries.addv2(delivery);
                             throw new Exception(ERROR_MESSAGE_FAILED_TO_SAVE_DATA);
+
                         }
 
                     } catch (JSONException e) {
@@ -87,13 +98,15 @@ public class JSONPostServlet extends BaseServlet {
 
 
             } else {
+                //Save delivery details
+                deliveries.addv2(delivery);
                 //Error report submitted
                 out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             out.write(JSONUtils.getErrorJSON(e.getMessage()));
+
         }
 
 

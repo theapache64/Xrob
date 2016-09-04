@@ -20,21 +20,27 @@ public class Delivery {
 
     private final String id, userId, message, createdAt;
     private String dataType;
-    private final boolean hasError;
+    private boolean hasError;
 
-    private Delivery(String userId, boolean hasError, String message, String dataType, String id, String createdAt) throws Exception {
+    private boolean hasServerError;
+    private String serverErrorMessage;
+
+
+    private Delivery(String userId, boolean hasError, String message, boolean hasServerError, String serverErrorMessage, String dataType, String id, String createdAt) throws Exception {
         this.id = id;
         this.userId = userId;
         this.dataType = dataType;
-        this.message = message;
         this.hasError = hasError;
+        this.message = message;
+        this.hasServerError = hasServerError;
+        this.serverErrorMessage = serverErrorMessage;
         this.createdAt = createdAt;
 
         checkDataType();
     }
 
     public Delivery(String userId, boolean hasError, String message, final String dataType) throws Exception {
-        this(userId, hasError, message, dataType, null, null);
+        this(userId, hasError, message, false, null, dataType, null, null);
     }
 
     public void setDataType(String dataType) {
@@ -76,6 +82,23 @@ public class Delivery {
     public String getDataType() {
         return dataType;
     }
+
+    public boolean hasServerError() {
+        return hasServerError;
+    }
+
+    public String getServerErrorMessage() {
+        return serverErrorMessage;
+    }
+
+    public void setServerError(boolean hasServerError) {
+        this.hasServerError = hasServerError;
+    }
+
+    public void setServerErrorMessage(String serverErrorMessage) {
+        this.serverErrorMessage = serverErrorMessage;
+    }
+
 
     public static class Type {
 
