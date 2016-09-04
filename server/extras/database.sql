@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie'),
+  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') NOT NULL,
   `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -138,6 +138,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `imei` (`imei`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+  INSERT INTO users (name,api_key,imei) VALUES ('Shifar','ApiKey',12345678);
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

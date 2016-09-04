@@ -7,15 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * To manage server data deliveries
  * Created by theapache64 on 11/29/2015.
  */
 public class Deliveries extends BaseTable<Delivery> {
-
-
-    public static final String COLUMN_ERROR = "error";
-    public static final String COLUMN_MESSAGE = "message";
-    public static final String COLUMN_DATA_TYPE = "data_type";
-    private static final String TABLE_DELIVERIES = "deliveries";
 
     private static Deliveries instance = new Deliveries();
 
@@ -33,12 +28,14 @@ public class Deliveries extends BaseTable<Delivery> {
 
     @Override
     public boolean add(Delivery delivery) {
-        
+
+
         boolean isAdded = false;
         final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
+
 
             ps.setString(1, delivery.getUserId());
             ps.setBoolean(2, delivery.hasError());
@@ -46,7 +43,9 @@ public class Deliveries extends BaseTable<Delivery> {
             ps.setString(4, delivery.getDataType());
 
             isAdded = ps.executeUpdate() == 1;
+
             ps.close();
+
 
         } catch (SQLException e) {
             e.printStackTrace();

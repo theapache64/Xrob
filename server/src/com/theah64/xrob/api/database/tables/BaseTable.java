@@ -40,7 +40,7 @@ public class BaseTable<T> {
             switch (deliveryType) {
 
                 //Returning message table
-                case Delivery.TYPE_MESSAGE:
+                case Delivery.TYPE_MESSAGES:
                     return Messages.getInstance();
 
                 default:

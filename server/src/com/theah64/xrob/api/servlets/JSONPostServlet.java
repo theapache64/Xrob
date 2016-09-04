@@ -29,6 +29,7 @@ public class JSONPostServlet extends BaseServlet {
     private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Data saved";
     private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data.";
     private static final String ERROR_MESSAGE_DATA_CANT_BE_NULL = "Data can't be null.";
+    private static final String ERROR_MESSAGE_INVALID_DATA_TYPE = "Invalid data type.";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
