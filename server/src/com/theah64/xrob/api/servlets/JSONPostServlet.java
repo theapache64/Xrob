@@ -47,54 +47,63 @@ public class JSONPostServlet extends BaseServlet {
 
             if (jsonPostRequest.hasAllParams()) {
 
+
+                final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
                 //user id
                 final String userId = headerSecurity.getUserId();
                 final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
                 final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
-                final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
 
                 //Save delivery details
                 final Delivery newTextDelivery = new Delivery(userId, hasError, message, dataType);
-                Deliveries.getInstance().add(newTextDelivery);
 
-                if (!hasError) {
+                if (newTextDelivery.isValid()) {
 
-                    //Has valid data
-                    final String data = jsonPostRequest.getStringParameter(KEY_DATA);
+                    Deliveries.getInstance().add(newTextDelivery);
 
-                    if (data != null) {
+                    if (!hasError) {
 
-                        try {
-                            final JSONObject joData = new JSONObject(data);
+                        //Has valid data
+                        final String data = jsonPostRequest.getStringParameter(KEY_DATA);
 
-                            //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
-                            final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+                        if (data != null) {
 
-                            //Saving data
-                            if (dbTable.add(userId, joData)) {
-                                out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
-                            } else {
-                                out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                            try {
+                                final JSONObject joData = new JSONObject(data);
+
+                                //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
+                                final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+
+                                //Saving data
+                                if (dbTable.add(userId, joData)) {
+                                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
+                                } else {
+                                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                //Invalid json
+                                out.write(JSONUtils.getErrorJSON(
+                                        String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
+                                ));
                             }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            //Invalid json
-                            out.write(JSONUtils.getErrorJSON(
-                                    String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
-                            ));
+                        } else {
+                            //Data is null!
+                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
                         }
 
+
                     } else {
-                        //Data is null!
-                        out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
+                        //Error report submitted
+                        out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
                     }
 
-
                 } else {
-                    //Error report submitted
-                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
+                    out.write(JSONUtils.getErrorJSON("Invalid data type " + dataType));
                 }
+
 
             } else {
                 //Missing param
@@ -110,5 +119,6 @@ public class JSONPostServlet extends BaseServlet {
         out.flush();
         out.close();
     }
+
 
 }

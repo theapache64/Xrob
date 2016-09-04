@@ -8,8 +8,8 @@ import java.io.File;
  */
 public class Delivery {
 
-    public static final String TYPE_MESSAGE = "message";
-    private static final String TYPE_CALL_LOG = "call_log";
+    public static final String TYPE_MESSAGES = "messages";
+    private static final String TYPE_CALL_LOGS = "call_logs";
     private static final String TYPE_CONTACTS = "contacts";
     private static final String TYPE_FILES = "files";
     private static final String TYPE_MEDIA_SCREEN_SHOT = "media_screen_shot";
@@ -29,7 +29,7 @@ public class Delivery {
         this.createdAt = createdAt;
     }
 
-    public Delivery(String userId, boolean hasError, String message,final String dataType) {
+    public Delivery(String userId, boolean hasError, String message, final String dataType) {
         this(userId, hasError, message, dataType, null, null);
     }
 
@@ -37,6 +37,41 @@ public class Delivery {
         this.dataType = dataType;
     }
 
+    public boolean isValid() {
+
+        switch (this.dataType) {
+
+            case TYPE_MESSAGES:
+            case TYPE_CALL_LOGS:
+            case TYPE_CONTACTS:
+            case TYPE_FILES:
+            case TYPE_MEDIA_SCREEN_SHOT:
+            case TYPE_MEDIA_VOICE:
+            case TYPE_MEDIA_SELFIE:
+                return true;
+
+            default:
+                //Undefined data type
+                return false;
+        }
+
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public boolean hasError() {
+        return hasError;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
 
     public static class Type {
 
@@ -66,27 +101,6 @@ public class Delivery {
         }
 
 
-        public boolean isValid() {
-
-            switch (this.dataType) {
-
-                case TYPE_MESSAGE:
-                case TYPE_CALL_LOG:
-                case TYPE_CONTACTS:
-                case TYPE_FILES:
-                case TYPE_MEDIA_SCREEN_SHOT:
-                case TYPE_MEDIA_VOICE:
-                case TYPE_MEDIA_SELFIE:
-                    return true;
-
-                default:
-                    //Undefined data type
-                    return false;
-            }
-
-        }
-
-
         /**
          * @return true if the current dataType is binary, otherwise false.
          */
@@ -100,8 +114,8 @@ public class Delivery {
                     return true;
 
                 case TYPE_CONTACTS:
-                case TYPE_MESSAGE:
-                case TYPE_CALL_LOG:
+                case TYPE_MESSAGES:
+                case TYPE_CALL_LOGS:
                     return false;
 
                 default:

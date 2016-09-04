@@ -1,6 +1,10 @@
 package com.theah64.xrob.api.database.tables;
 
+import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Delivery;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * Created by theapache64 on 11/29/2015.
@@ -29,21 +33,32 @@ public class Deliveries extends BaseTable<Delivery> {
 
     @Override
     public boolean add(Delivery delivery) {
-
-        /*
-        TODO: Convert the below query to normal text query.
-        final String query = new InsertQuery()
-                .insertInto(TABLE_DELIVERIES)
-                .set(COLUMN_USER_ID, delivery.getUserId())
-                .set(COLUMN_ERROR, delivery.hasError())
-                .set(COLUMN_MESSAGE, delivery.getMessage())
-                .set(COLUMN_DATA_TYPE, delivery.getDataType())
-                .build();
-        */
+        
+        boolean isAdded = false;
         final String query = "INSERT INTO deliveries (user_id,error,message,data_type) VALUES (?,?,?,?);";
-        final java.sql
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
 
-        return false;
+            ps.setString(1, delivery.getUserId());
+            ps.setBoolean(2, delivery.hasError());
+            ps.setString(3, delivery.getMessage());
+            ps.setString(4, delivery.getDataType());
+
+            isAdded = ps.executeUpdate() == 1;
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isAdded;
     }
 
 }
