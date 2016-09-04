@@ -33,8 +33,8 @@ public class INServlet extends BaseServlet {
         //Preparing writer
         final PrintWriter out = servletResponse.getWriter();
 
-        final Request request = new Request(servletRequest, requiredParams);
-        if (request.hasAllParams()) {
+        try {
+            final Request request = new Request(servletRequest, requiredParams);
 
             final String imei = request.getStringParameter(Users.COLUMN_IMEI);
             final Users usersTable = Users.getInstance();
@@ -56,13 +56,8 @@ public class INServlet extends BaseServlet {
 
                 final User newUser = new User(name, imei, apiKey, gcmId);
 
-                final boolean isAdded = usersTable.add(newUser);
-
-                if (isAdded) {
-                    out.write(JSONUtils.getSuccessJSON(Users.COLUMN_API_KEY, apiKey));
-                } else {
-                    out.write(JSONUtils.getErrorJSON("Unexpected error while adding new user"));
-                }
+                usersTable.addv2(newUser);
+                out.write(JSONUtils.getSuccessJSON(Users.COLUMN_API_KEY, apiKey));
 
             } else {
 
@@ -70,17 +65,17 @@ public class INServlet extends BaseServlet {
                 if (gcmId != null && !gcmId.isEmpty() && !oldUser.getGCMId().equals(gcmId)) {
                     //New GCM ID so update
                     usersTable.update(Users.COLUMN_IMEI, imei, Users.COLUMN_GCM_ID, gcmId);
-                    System.out.println("Updating GCM");
                 }
 
                 //Old user!
                 out.write(JSONUtils.getSuccessJSON(Users.COLUMN_API_KEY, oldUser.getApiKey()));
             }
 
-        } else {
-            //Missing or invalid params
-            out.write(JSONUtils.getErrorJSON(request.getErrorReport()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.write(JSONUtils.getErrorJSON(e.getMessage()));
         }
+
 
         //Closing writer
         out.flush();

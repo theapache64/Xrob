@@ -95,6 +95,13 @@ public class Users extends BaseTable<User> {
         return isUserAdded;
     }
 
+    @Override
+    public void addv2(User user) throws Exception {
+        if (!add(user)) {
+            throw new Exception("Unexpected error while adding new user");
+        }
+    }
+
     /**
      * Used to get a specific column by the {byColumn} and {byValue}
      */
