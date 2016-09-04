@@ -21,7 +21,7 @@ import java.util.Random;
  * 2) Imei
  * 3) GCM ID - Optional
  */
-@WebServlet(name = "IN Servlet", urlPatterns = {BaseServlet.VERSION_CODE + "/IN"})
+@WebServlet(name = "IN Servlet", urlPatterns = {BaseServlet.VERSION_CODE + "/in"})
 public class INServlet extends BaseServlet {
 
     private static final String[] requiredParams = {Users.COLUMN_NAME, Users.COLUMN_IMEI};
