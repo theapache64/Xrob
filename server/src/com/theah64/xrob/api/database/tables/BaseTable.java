@@ -2,6 +2,8 @@ package com.theah64.xrob.api.database.tables;
 
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.models.Delivery;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -23,6 +25,10 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    public void addv2(@Nullable final String userId, final JSONArray jsonArray) throws RuntimeException {
+        throw new RuntimeException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
     public boolean add(T newInstance) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
@@ -42,6 +48,9 @@ public class BaseTable<T> {
     public static class Factory {
         public static BaseTable getTable(String deliveryType) {
             switch (deliveryType) {
+
+                case Delivery.TYPE_CONTACTS:
+                    return Contacts.
 
                 //Returning message table
                 case Delivery.TYPE_MESSAGES:

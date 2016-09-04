@@ -6,6 +6,7 @@ import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.JSONUtils;
 import com.theah64.xrob.api.utils.Request;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,11 +25,6 @@ import java.io.PrintWriter;
 public class JSONPostServlet extends BaseServlet {
 
     private static final String[] REQUIRED_PARAMS = {KEY_ERROR, KEY_DATA_TYPE, KEY_MESSAGE};
-    private static final java.lang.String SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED = "Error report submitted";
-    private static final String ERROR_MESSAGE_INVALID_JSON_DATA_S = "Invalid JSON data : %s";
-    private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Data saved";
-    private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data.";
-    private static final String ERROR_MESSAGE_DATA_CANT_BE_NULL = "Data can't be null.";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,7 +33,7 @@ public class JSONPostServlet extends BaseServlet {
         //out
         final PrintWriter out = resp.getWriter();
 
-        ;
+
         try {
 
             final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
@@ -54,59 +50,59 @@ public class JSONPostServlet extends BaseServlet {
             final Delivery delivery = new Delivery(userId, hasError, message, dataType);
             final Deliveries deliveries = Deliveries.getInstance();
 
-            if (!hasError) {
+            try {
 
-                //Has valid data
-                final String data = jsonPostRequest.getStringParameter(KEY_DATA);
+                if (!hasError) {
 
-                if (data != null) {
+                    //Has valid data
+                    final String data = jsonPostRequest.getStringParameter(KEY_DATA);
 
-                    try {
-                        final JSONObject joData = new JSONObject(data);
+                    if (data != null) {
 
-                        //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
-                        final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+                        try {
+                            final JSONArray jaData = new JSONArray(data);
 
-                        //Saving data
-                        if (dbTable.add(userId, joData)) {
+                            //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
+                            final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
 
+
+                            dbTable.addv2(userId, jaData);
                             //Save delivery details
                             deliveries.addv2(delivery);
-                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
 
-                        } else {
+                            out.write(JSONUtils.getSuccessJSON("Data saved"));
 
-                            delivery.setServerError(true);
-                            delivery.setServerErrorMessage(ERROR_MESSAGE_FAILED_TO_SAVE_DATA);
 
-                            //Save delivery details
-                            deliveries.addv2(delivery);
-                            throw new Exception(ERROR_MESSAGE_FAILED_TO_SAVE_DATA);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
 
+                            //Invalid json
+                            throw new Delivery.DamagedPackageException(String.format("Invalid JSON data : %s", e.getMessage()));
                         }
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        //Invalid json
-                        throw new Exception(String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage()));
+                    } else {
+                        //Data is null!
+                        throw new Delivery.DamagedPackageException("Data can't be null");
                     }
 
+
                 } else {
-                    //Data is null!
-                    throw new Exception(ERROR_MESSAGE_DATA_CANT_BE_NULL);
+                    //Save delivery details
+                    deliveries.addv2(delivery);
+                    //Error report submitted
+                    out.write(JSONUtils.getSuccessJSON("Error report submitted"));
                 }
 
-
-            } else {
-                //Save delivery details
+            } catch (Delivery.DamagedPackageException e) {
+                e.printStackTrace();
+                delivery.setServerError(true);
+                delivery.setServerErrorMessage(e.getMessage());
                 deliveries.addv2(delivery);
-                //Error report submitted
-                out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_ERROR_REPORT_SUBMITTED));
+                throw new Exception(e.getMessage());
             }
 
         } catch (Exception e) {
             out.write(JSONUtils.getErrorJSON(e.getMessage()));
-
         }
 
 
