@@ -65,8 +65,8 @@ public class JSONPostServlet extends BaseServlet {
                             //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
                             final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
 
-
                             dbTable.addv2(userId, jaData);
+
                             //Save delivery details
                             deliveries.addv2(delivery);
 
@@ -102,6 +102,7 @@ public class JSONPostServlet extends BaseServlet {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             out.write(JSONUtils.getErrorJSON(e.getMessage()));
         }
 

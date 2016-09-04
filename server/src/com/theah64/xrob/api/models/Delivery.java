@@ -8,7 +8,7 @@ import java.io.File;
  */
 public class Delivery {
 
-    public static class DamagedPackageException extends Exception {
+    public static class DamagedPackageException extends RuntimeException {
         public DamagedPackageException(final String message) {
             super(message);
         }

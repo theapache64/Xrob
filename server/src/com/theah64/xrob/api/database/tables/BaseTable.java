@@ -1,10 +1,13 @@
 package com.theah64.xrob.api.database.tables;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.models.Delivery;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by theapache64 on 11/22/2015.
@@ -12,9 +15,7 @@ import org.json.JSONObject;
 public class BaseTable<T> {
 
     public static final String COLUMN_ID = "id";
-    protected static final String COLUMN_USER_ID = "user_id";
     public static final String COLUMN_NAME = "name";
-    protected static final String COLUMN_CREATED_AT = "created_at";
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
 
     public T get(final String column, final String value) {
@@ -25,7 +26,7 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public void addv2(@Nullable final String userId, final JSONArray jsonArray) throws RuntimeException {
+    public void addv2(@Nullable final String userId, final JSONArray jsonArray) throws RuntimeException, JSONException {
         throw new RuntimeException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
@@ -33,7 +34,7 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public void addv2(T newInstance) throws Exception {
+    public void addv2(T newInstance) throws RuntimeException {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
@@ -45,12 +46,20 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    protected List<T> parse(final String userId, @NotNull JSONArray jsonArray) throws JSONException {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
+    protected boolean isExist(final T t) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
     public static class Factory {
         public static BaseTable getTable(String deliveryType) {
             switch (deliveryType) {
 
                 case Delivery.TYPE_CONTACTS:
-                    return Contacts.
+                    return Contacts.getInstance();
 
                 //Returning message table
                 case Delivery.TYPE_MESSAGES:

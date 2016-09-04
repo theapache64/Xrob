@@ -44,7 +44,6 @@ public class Deliveries extends BaseTable<Delivery> {
             ps.setString(5, delivery.getServerErrorMessage());
             ps.setString(6, delivery.getDataType());
 
-
             isAdded = ps.executeUpdate() == 1;
 
             ps.close();
@@ -63,9 +62,9 @@ public class Deliveries extends BaseTable<Delivery> {
     }
 
     @Override
-    public void addv2(Delivery delivery) throws Exception {
+    public void addv2(Delivery delivery) throws RuntimeException {
         if (!add(delivery)) {
-            throw new Exception("Failed to add delivery details");
+            throw new RuntimeException("Failed to add delivery details");
         }
     }
 }

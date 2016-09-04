@@ -96,9 +96,9 @@ public class Users extends BaseTable<User> {
     }
 
     @Override
-    public void addv2(User user) throws Exception {
+    public void addv2(User user) throws RuntimeException {
         if (!add(user)) {
-            throw new Exception("Unexpected error while adding new user");
+            throw new RuntimeException("Unexpected error while adding new user");
         }
     }
 
