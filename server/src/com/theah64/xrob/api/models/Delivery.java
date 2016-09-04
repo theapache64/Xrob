@@ -105,7 +105,7 @@ public class Delivery {
         }
 
 
-        public boolean isValid() {
+        /*private boolean isValid() {
 
             switch (this.dataType) {
 
@@ -123,7 +123,7 @@ public class Delivery {
                     return false;
             }
 
-        }
+        }*/
 
         /**
          * @return true if the current dataType is binary, otherwise false.

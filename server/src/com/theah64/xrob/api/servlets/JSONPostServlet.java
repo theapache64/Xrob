@@ -29,7 +29,6 @@ public class JSONPostServlet extends BaseServlet {
     private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Data saved";
     private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data.";
     private static final String ERROR_MESSAGE_DATA_CANT_BE_NULL = "Data can't be null.";
-    private static final String ERROR_MESSAGE_INVALID_DATA_TYPE = "Invalid data type.";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,16 +37,15 @@ public class JSONPostServlet extends BaseServlet {
         //out
         final PrintWriter out = resp.getWriter();
 
-        //To check API key
         ;
         try {
 
             final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
 
-
             //Checking if the request has every required parameter.
             final Request jsonPostRequest = new Request(req, REQUIRED_PARAMS);
             final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
+
             //user id
             final String userId = headerSecurity.getUserId();
             final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
@@ -73,20 +71,18 @@ public class JSONPostServlet extends BaseServlet {
                         if (dbTable.add(userId, joData)) {
                             out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_TEXT_DATA_SAVED));
                         } else {
-                            out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_FAILED_TO_SAVE_DATA));
+                            throw new Exception(ERROR_MESSAGE_FAILED_TO_SAVE_DATA);
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                         //Invalid json
-                        out.write(JSONUtils.getErrorJSON(
-                                String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage())
-                        ));
+                        throw new Exception(String.format(ERROR_MESSAGE_INVALID_JSON_DATA_S, e.getMessage()));
                     }
 
                 } else {
                     //Data is null!
-                    out.write(JSONUtils.getErrorJSON(ERROR_MESSAGE_DATA_CANT_BE_NULL));
+                    throw new Exception(ERROR_MESSAGE_DATA_CANT_BE_NULL);
                 }
 
 

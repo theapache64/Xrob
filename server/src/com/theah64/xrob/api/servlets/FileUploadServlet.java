@@ -49,142 +49,101 @@ public class FileUploadServlet extends BaseServlet {
         //Out
         final PrintWriter out = resp.getWriter();
 
-        final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
+        try {
 
-        if (headerSecurity.isAuthorized()) {
+            final HeaderSecurity headerSecurity = new HeaderSecurity(req.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
 
             //Building request
             final Request request = new Request(req, requiredParams);
 
-            if (request.hasAllParams()) {
 
-                final String userId = headerSecurity.getUserId();
+            final String userId = headerSecurity.getUserId();
 
-                final boolean hasError = request.getBooleanParameter(KEY_ERROR);
-                final String message = request.getStringParameter(KEY_MESSAGE);
-                final String dataType = request.getStringParameter(KEY_DATA_TYPE);
+            final boolean hasError = request.getBooleanParameter(KEY_ERROR);
+            final String message = request.getStringParameter(KEY_MESSAGE);
+            final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
-                //Has all needed params, so add it to deliveries
-                final Delivery newDelivery = new Delivery(userId, hasError, message, dataType);
-                //What ever the data_type, adding delivery;
-                Deliveries.getInstance().add(newDelivery);
+            //Has all needed params, so add it to deliveries
+            final Delivery newDelivery = new Delivery(userId, hasError, message, dataType);
+            //What ever the data_type, adding delivery;
+            Deliveries.getInstance().addv2(newDelivery);
 
-                if (!hasError) {
+            if (!hasError) {
 
-                    //No errors found
-                    if (request.has(KEY_DATA_TYPE)) {
+                //No errors found
+                if (request.has(KEY_DATA_TYPE)) {
 
-                        final Delivery.Type deliveryType = new Delivery.Type(getServletContext(), dataType);
+                    final Delivery.Type deliveryType = new Delivery.Type(getServletContext(), dataType);
 
-                        if (deliveryType.isValid()) {
+                    //Yes,it's a valid data type
+                    final Part dataFilePart = req.getPart(KEY_DATA);
 
-                            //Setting data type of delivery
-                            newDelivery.setDataType(dataType);
+                    if (dataFilePart != null) {
 
-                            //Yes,it's a valid data type
-                            final Part dataFilePart = req.getPart(KEY_DATA);
+                        final String contentType = dataFilePart.getContentType();
+                        final String fileName = new FilePart(dataFilePart).getRandomFileName();
+                        final long size = dataFilePart.getSize();
 
-                            if (dataFilePart != null) {
+                        if (deliveryType.isBinary()) {
 
-                                final String contentType = dataFilePart.getContentType();
-                                final String fileName = new FilePart(dataFilePart).getRandomFileName();
-                                final long size = dataFilePart.getSize();
+                            //The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
+                            final String dataStoragePath = deliveryType.getStoragePath();
+                            final File dataStorageDir = new File(dataStoragePath);
 
-                                if (deliveryType.isBinary()) {
+                            if (!dataStorageDir.exists() && !dataStorageDir.mkdirs()) {
 
-                                    //The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
-                                    final String dataStoragePath = deliveryType.getStoragePath();
-                                    final File dataStorageDir = new File(dataStoragePath);
-
-                                    if (!dataStorageDir.exists() && !dataStorageDir.mkdirs()) {
-
-                                        out.write(JSONUtils.getErrorJSON(
-                                                "Failed to create upload directory : " + dataStorageDir.getAbsolutePath()
-                                        ));
-
-                                    } else {
-                                        //The directory exists,so create the file
-                                        final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
-                                        final InputStream is = dataFilePart.getInputStream();
-                                        byte[] buffer = new byte[1024];
-                                        int read;
-
-                                        while ((read = is.read(buffer)) != -1) {
-                                            fos.write(buffer, 0, read);
-                                        }
-
-                                        fos.flush();
-                                        fos.close();
-                                        is.close();
-                                    }
-
-                                    System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
-
-                                    //TODO: Add the file details to the database
-
-                                    //Success message
-                                    out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
-
-                                } else {
-                                    out.write(JSONUtils.getErrorJSON(
-                                            "Only binary should be passed through this gate."
-                                    ));
-                                }
-
+                                throw new Exception("Failed to create upload directory : " + dataStorageDir.getAbsolutePath());
 
                             } else {
-                                //ERROR: No file found
-                                out.write(
-                                        JSONUtils.getErrorJSON(
-                                                String.format("%s file is missing", KEY_DATA)
-                                        )
-                                );
+                                //The directory exists,so create the file
+                                final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
+                                final InputStream is = dataFilePart.getInputStream();
+                                byte[] buffer = new byte[1024];
+                                int read;
+
+                                while ((read = is.read(buffer)) != -1) {
+                                    fos.write(buffer, 0, read);
+                                }
+
+                                fos.flush();
+                                fos.close();
+                                is.close();
                             }
 
+                            System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
+
+                            //TODO: Add the file details to the database
+
+                            //Success message
+                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
+
+
                         } else {
-                            //Invalid data type
-                            out.write(
-                                    JSONUtils.getErrorJSON(
-                                            String.format("Invalid data type %s", dataType)
-                                    )
-                            );
+                            throw new Exception("Only binary should be passed through this gate.");
                         }
 
 
-
                     } else {
-                        //DATA or DATA_TYPE is missing or invalid
-                        out.write(
-                                JSONUtils.getErrorJSON(
-                                        String.format("%s is missing or invalid", KEY_DATA_TYPE)
-                                )
-                        );
+                        //ERROR: No file found
+                        throw new Exception(String.format("%s file is missing", KEY_DATA));
                     }
 
+
                 } else {
-                    //Has error
-                    out.write(
-                            request.getStringParameter(KEY_MESSAGE)
-                    );
+                    //DATA or DATA_TYPE is missing or invalid
+                    throw new Exception(String.format("%s is missing or invalid", KEY_DATA_TYPE));
                 }
 
             } else {
-
-                //Required params missing or invalid
+                //Has error
                 out.write(
-                        JSONUtils.getErrorJSON(
-                                request.getErrorReport()
-                        )
+                        JSONUtils.getSuccessJSON("Error report added")
                 );
             }
 
-        } else {
-            //Failed to authorize the request
-            out.write(
-                    JSONUtils.getErrorJSON(
-                            headerSecurity.getFailureReason()
-                    )
-            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.write(JSONUtils.getErrorJSON(e.getMessage()));
         }
 
 
