@@ -31,7 +31,7 @@ public class Contacts extends BaseTable<Contact> {
     @Override
     public List<Contact> getAll() {
         List<Contact> contacts = null;
-        
+
         return contacts;
     }
 }
