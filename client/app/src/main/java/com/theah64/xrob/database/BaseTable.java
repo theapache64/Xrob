@@ -25,7 +25,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
-    private static final String DATABASE_NAME = "xrob.sqlite";
+    private static final String DATABASE_NAME = "xrob.db";
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";
@@ -51,8 +51,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
                 }
             }
 
-            db.execSQL("CREATE TRIGGER after_contacts_update AFTER UPDATE ON contacts FOR EACH ROW BEGIN UPDATE contacts SET is_synced = 0 WHERE id = OLD.id; END;");
-            db.execSQL("CREATE TRIGGER after_phone_numbers_update AFTER UPDATE ON phone_numbers FOR EACH ROW BEGIN UPDATE contacts SET is_synced = 0 WHERE id = OLD.contact_id; END;");
+            db.execSQL("CREATE TRIGGER after_phone_numbers_insert AFTER INSERT ON phone_numbers BEGIN UPDATE contacts SET is_synced = 0 WHERE is_synced = 1 AND id = NEW.contact_id; END;");
 
         } catch (IOException e) {
             e.printStackTrace();

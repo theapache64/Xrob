@@ -52,7 +52,7 @@ public class APIRequestBuilder {
         } else {
             //value must be not null.
             if (value != null) {
-                this.params.add(key, value);
+                this.params.add(key,    value);
                 appendLog(key, value);
             }
         }

@@ -48,7 +48,10 @@ public class ContactsWatcherService extends Service {
             //To prevent double call
             if ((System.currentTimeMillis() - lastTimeOfUpdate) > MIN_THRESHOLD) {
                 System.out.println("Real code works here");
-                ContactUtils.refreshContacts(getApplicationContext());
+                final boolean isUpdateNeeded = ContactUtils.refreshContacts(getApplicationContext());
+                if (isUpdateNeeded) {
+                    ContactUtils.push(getApplicationContext());
+                }
                 lastTimeOfUpdate = System.currentTimeMillis();
             } else {
                 System.out.println("Not now!");

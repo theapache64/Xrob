@@ -64,7 +64,7 @@ public class Contacts extends BaseTable<Contact> {
                 final List<Contact.PhoneNumber> phoneNumbers = phoneNumbersTable.getNonSyncedPhoneNumbers(id);
 
                 //adding contact to the list
-                contacts.add(new Contact(id, , name, , false));
+                contacts.add(new Contact(id, androidContactId, name, phoneNumbers, false));
 
             } while (cursor.moveToNext());
 
@@ -112,6 +112,20 @@ public class Contacts extends BaseTable<Contact> {
 
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        return update(TABLE_NAME_CONTACTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
+        boolean isEdited;
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final ContentValues cv = new ContentValues(2);
+        cv.put(updateColumn, newUpdateColumnValue);
+        cv.put(COLUMN_IS_SYNCED, "0");
+        isEdited = db.update(TABLE_NAME_CONTACTS, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
+        db.close();
+        return isEdited;
+    }
+
+    public void setAllContactsAndNumbersSynced() {
+        final SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE contacts SET is_synced = 1 WHERE is_synced = 0;");
+        db.execSQL("UPDATE phone_numbers SET is_synced = 1 WHERE is_synced = 0;");
+        db.close();
     }
 }

@@ -3,6 +3,7 @@ package com.theah64.xrob.utils;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -15,7 +16,10 @@ public class OkHttpUtils {
 
     public static final String METHOD_GET = "GET";
 
-    private static final OkHttpClient okHttpClient = new OkHttpClient();
+    private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.MINUTES)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .build();
 
     private static final String X = OkHttpUtils.class.getSimpleName();
     private static OkHttpUtils instance = new OkHttpUtils();

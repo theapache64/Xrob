@@ -73,11 +73,14 @@ public class Victim {
             public void onResponse(Call call, Response response) throws IOException {
 
                 try {
+
                     final APIResponse inResp = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
                     final String apiKey = inResp.getJSONObjectData().getString(KEY_API_KEY);
                     setApiKey(apiKey);
+
                     //Saving in preference
                     PrefUtils.getInstance(context).getEditor().putString(Victim.KEY_API_KEY, apiKey).commit();
+                    Victim.setApiKey(apiKey);
 
                     if (jobListener != null) {
                         jobListener.onJobFinish(apiKey);

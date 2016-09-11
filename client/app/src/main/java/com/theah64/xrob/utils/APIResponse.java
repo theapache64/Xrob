@@ -10,27 +10,23 @@ import org.json.JSONObject;
  */
 public class APIResponse {
 
-    private static final String KEY_ERROR = "error";
-    private static final String KEY_MESSAGE = "message";
-    private static final String KEY_DATA = "data";
-    private static final String KEY_ERROR_CODE = "error_code";
     private final String message;
     private final JSONObject joMain;
 
     public APIResponse(final String stringResp) throws JSONException, APIException {
 
         joMain = new JSONObject(stringResp);
-        this.message = joMain.getString(KEY_MESSAGE);
+        this.message = joMain.getString(Xrob.KEY_MESSAGE);
 
-        if (joMain.getBoolean(KEY_ERROR)) {
-            final int errorCode = joMain.getInt(KEY_ERROR_CODE);
+        if (joMain.getBoolean(Xrob.KEY_ERROR)) {
+            final int errorCode = joMain.getInt(Xrob.KEY_ERROR_CODE);
             throw new APIException(errorCode, message);
         }
 
     }
 
     public JSONObject getJSONObjectData() throws JSONException {
-        return joMain.getJSONObject(KEY_DATA);
+        return joMain.getJSONObject(Xrob.KEY_DATA);
     }
 
 
