@@ -69,19 +69,19 @@ public class INServlet extends BaseServlet {
             } else {
 
                 //Setting new values to old victim.
-                if (fcmId != null) {
+                if (isUpdateFeasible(oldVictim.getFCMId(), fcmId)) {
                     victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_FCM_ID, fcmId);
                 }
 
-                if (name != null && !name.isEmpty() && oldVictim.getName(),e) {
+                if (isUpdateFeasible(oldVictim.getName(), name)) {
                     victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_NAME, name);
                 }
 
-                if (email != null && !email.isEmpty()) {
+                if (isUpdateFeasible(oldVictim.getEmail(), email)) {
                     victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_EMAIL, email);
                 }
 
-                if (phone != null && !phone.isEmpty()) {
+                if (isUpdateFeasible(oldVictim.getPhone(), phone)) {
                     victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_PHONE, phone);
                 }
 
@@ -103,6 +103,10 @@ public class INServlet extends BaseServlet {
         out.flush();
         out.close();
 
+    }
+
+    private static boolean isUpdateFeasible(final String oldValue, String newValue) {
+        return (newValue != null && !newValue.isEmpty() && ((oldValue != null && !oldValue.equals(newValue)) || oldValue == null));
     }
 
     //GET METHOD NOT SUPPORTED ###
