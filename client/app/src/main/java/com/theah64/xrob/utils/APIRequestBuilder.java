@@ -1,9 +1,7 @@
 package com.theah64.xrob.utils;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.rh.paparazziestudio.models.User;
 import com.theah64.xrob.models.Victim;
 
 import okhttp3.FormBody;

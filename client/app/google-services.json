@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "375927084770",
+    "firebase_url": "https://xrob-b455e.firebaseio.com",
+    "project_id": "xrob-b455e",
+    "storage_bucket": "xrob-b455e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375927084770:android:37b6474888b21080",
+        "android_client_info": {
+          "package_name": "com.theah64.xrob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375927084770-n9j0t8e4fe5tb7vmu5q9rpg2kaq871qi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theah64.xrob",
+            "certificate_hash": "92DF39EC4D337203AB40DEBD7529A1E951B9D5A7"
+          }
+        },
+        {
+          "client_id": "375927084770-6nso56dmt8bd985vom6tmu2cc0fjsmk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSBQtMX0psGO-aqufVh8KxXHQ_p1kzlbc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375927084770-6nso56dmt8bd985vom6tmu2cc0fjsmk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

