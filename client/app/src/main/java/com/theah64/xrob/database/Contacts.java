@@ -71,15 +71,12 @@ public class Contacts extends BaseTable<Contact> {
     }
 
     @Override
-    public String add(Contact contact) {
-        String newContactId = null;
+    public long add(Contact contact) {
+        long newContactId;
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(COLUMN_NAME, contact.getName());
-        final long rowId = db.insert(TABLE_NAME_CONTACTS, null, cv);
-        if (rowId != -1) {
-            newContactId = String.valueOf(rowId);
-        }
+        newContactId = db.insert(TABLE_NAME_CONTACTS, null, cv);
         db.close();
         return newContactId;
     }

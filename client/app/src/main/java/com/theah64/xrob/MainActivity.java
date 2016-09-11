@@ -1,14 +1,10 @@
 package com.theah64.xrob;
 
-import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.models.Contact;
@@ -44,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Contact> downloadContacts() {
 
         List<Contact> contacts = null;
+
         final Cursor cCur = this.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         if (cCur != null && cCur.moveToFirst()) {
 
@@ -53,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
                 final String id = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts._ID));
                 final String name = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                Contact contact = contactsTable.
 
-                final Contact contact = new Contact(null, name, null, false);
+                final Contact contact = new Contact(null, id, name, null, false);
                 final String contactId = contactsTable.add(contact);
 
                 if (contactId != null) {
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     throw new IllegalArgumentException("Failed to add contact " + contact);
                 }
-
 
 
             } while (cCur.moveToNext());

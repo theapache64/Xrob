@@ -23,7 +23,7 @@ public class Contacts extends BaseTable<Contact> {
     private static final String COLUMN_PHONE_TYPE = "phone_type";
     private static final String COLUMN_USER_ID = "user_id";
     private static final String KEY_PHONE_NUMBERS = "phone_numbers";
-    
+
     private static Contacts instance = new Contacts();
 
     private Contacts() {

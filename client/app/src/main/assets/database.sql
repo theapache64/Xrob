@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS contacts;
 CREATE TABLE contacts(
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	android_contact_id INTEGER NOT NULL,
 	name VARCHAR(30)
 );
 

@@ -10,12 +10,14 @@ import java.util.List;
 public class Contact {
 
     private String id;
+    private final String androidContactId;
     private final String name;
     private List<PhoneNumber> phoneNumbers;
     private final boolean isSynced;
 
-    public Contact(String id, String name, List<PhoneNumber> phoneNumbers, boolean isSynced) {
+    public Contact(String id, String androidContactId, String name, List<PhoneNumber> phoneNumbers, boolean isSynced) {
         this.id = id;
+        this.androidContactId = androidContactId;
         this.name = name;
         this.phoneNumbers = phoneNumbers;
         this.isSynced = isSynced;
@@ -23,6 +25,10 @@ public class Contact {
 
     public String getId() {
         return id;
+    }
+
+    public String getAndroidContactId() {
+        return androidContactId;
     }
 
     public String getName() {
@@ -86,6 +92,17 @@ public class Contact {
             this.phoneType = phoneType;
         }
 
+        public String getPhoneType() {
+            return phoneType;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getContactId() {
+            return contactId;
+        }
 
         /**
          * To return string type from ContactsContract.CommonDataKinds.Phone.TYPE

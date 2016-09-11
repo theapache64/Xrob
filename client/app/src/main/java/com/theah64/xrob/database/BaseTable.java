@@ -3,6 +3,7 @@ package com.theah64.xrob.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 
@@ -66,7 +67,32 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         onUpgrade(this.getWritableDatabase(), 0, 0);
     }
 
-    public String add(final Contact contact) {
+    public T get(final String column, final String value) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public boolean add(@Nullable final String userId, final JSONObject jsonObject) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+
+    public boolean add(T newInstance) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public void addv2(T newInstance) throws RuntimeException {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public String get(final String byColumn, final String byValues, final String columnToReturn) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public T get(final String column1, final String value1, final String column2, final String value2) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
