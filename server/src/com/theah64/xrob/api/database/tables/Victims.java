@@ -2,7 +2,6 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Victim;
-import com.theah64.xrob.api.utils.PreparedUpdateQueryBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
