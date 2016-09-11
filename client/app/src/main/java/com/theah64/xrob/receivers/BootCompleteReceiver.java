@@ -17,6 +17,8 @@ public class BootCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(X, "Boot completed, starting initial jobs.");
+
+        Log.i(X, "Starting contact change listener service...");
         context.startService(new Intent(context, ContactsService.class));
     }
 

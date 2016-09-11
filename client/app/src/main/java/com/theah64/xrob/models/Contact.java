@@ -5,13 +5,14 @@ package com.theah64.xrob.models;
  */
 public class Contact {
 
-    private final String id, name, phone;
+    private final String id, name, phone, phoneType;
     private final boolean isSynced;
 
-    public Contact(String id, String name, String phone, boolean isSynced) {
+    public Contact(String id, String name, String phone, String phoneType, boolean isSynced) {
         this.id = id;
         this.name = name;
         this.phone = phone;
+        this.phoneType = phoneType;
         this.isSynced = isSynced;
     }
 
@@ -25,6 +26,10 @@ public class Contact {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getPhoneType() {
+        return phoneType;
     }
 
     public boolean isSynced() {

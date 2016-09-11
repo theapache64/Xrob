@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) NOT NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -49,6 +48,16 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+DROP TABLE IF EXISTS `phone_numbers`;
+CREATE TABLE IF NOT EXISTS `phone_numbers`(
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `contact_id` INT NOT NULL,
+  `phone` VARCHAR(20) NOT NULL,
+  `phone_type` VARCHAR (20) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (contact_id) REFERENCES contacts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 -- Data exporting was unselected.
 
 

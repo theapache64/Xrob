@@ -50,6 +50,10 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    public T get(final String column1, final String value1, final String column2, final String value2) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
     protected boolean isExist(final T t) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }

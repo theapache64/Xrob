@@ -1,15 +1,20 @@
 package com.theah64.xrob.api.models;
 
+import java.util.List;
+
 /**
  * Created by theapache64 on 4/9/16,11:39 AM.
  */
 public class Contact {
-    private final String userId, name, phone;
 
-    public Contact(String userId, String name, String phone) {
+    private final String userId, id, name;
+    private List<PhoneNumber> phoneNumbers;
+
+    public Contact(String userId, String id, String name, List<PhoneNumber> phone) {
         this.userId = userId;
+        this.id = id;
         this.name = name;
-        this.phone = phone;
+        this.phoneNumbers = phone;
     }
 
     public String getUserId() {
@@ -20,8 +25,8 @@ public class Contact {
         return name;
     }
 
-    public String getPhone() {
-        return phone;
+    public List<PhoneNumber> getPhone() {
+        return phoneNumbers;
     }
 
     @Override
@@ -29,7 +34,11 @@ public class Contact {
         return "Contact{" +
                 "userId='" + userId + '\'' +
                 ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
+                ", phoneNumbers='" + phoneNumbers + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
     }
 }
