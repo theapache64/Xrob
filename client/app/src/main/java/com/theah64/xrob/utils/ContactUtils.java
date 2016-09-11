@@ -99,12 +99,19 @@ public class ContactUtils {
                             final boolean isExist = phoneNumbersTable.get(PhoneNumbers.COLUMN_PHONE_NUMBER, phone, PhoneNumbers.COLUMN_CONTACT_ID, contact.getId()) != null;
 
                             if (!isExist) {
+
                                 Log.d(X, "Phone number doesn't exist : " + contact + " # " + phone);
                                 totalAddedNumbers++;
                                 final boolean isAdded = phoneNumbersTable.add(new Contact.PhoneNumber(contact.getId(), phone, phoneType)) != -1;
+
+                                //Contact need to be synced
+                                contactsTable.update(Contacts.COLUMN_ID, contact.getId(), Contacts.COLUMN_IS_SYNCED, "0");
+
                                 if (!isAdded) {
                                     throw new IllegalArgumentException("Failed to add phone number of " + name + " - " + phone);
                                 }
+
+
                             } else {
                                 Log.d(X, "Phone number exist : " + contact + " # " + phone);
                             }
@@ -138,12 +145,12 @@ public class ContactUtils {
     }
 
     public static void push(Context context) {
+
         final Contacts contactsTable = Contacts.getInstance(context);
-        final List<Contact> unSyncedContacts = contactsTable.getUnSyncedContacts();
+        final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
+
         if (unSyncedContacts != null) {
             Log.d(X, unSyncedContacts.size() + " need to be synced!");
-
-
 
         }
     }

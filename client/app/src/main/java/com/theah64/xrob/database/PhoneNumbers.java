@@ -75,6 +75,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
      * @return
      */
     public List<Contact.PhoneNumber> getNonSyncedPhoneNumbers(final String contactId) {
+        List<Contact.PhoneNumber> contacts 
         return null;
     }
 
