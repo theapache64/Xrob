@@ -25,7 +25,7 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public boolean add(@Nullable final String userId, final JSONObject jsonObject) {
+    public boolean add(@Nullable final String victimId, final JSONObject jsonObject) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
@@ -50,11 +50,11 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public void addv2(@Nullable final String userId, final JSONArray jsonArray) throws RuntimeException, JSONException {
+    public void addv2(@Nullable final String victimId, final JSONArray jsonArray) throws RuntimeException, JSONException {
         throw new RuntimeException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    protected List<T> parse(final String userId, @NotNull JSONArray jsonArray) throws JSONException {
+    protected List<T> parse(final String victimId, @NotNull JSONArray jsonArray) throws JSONException {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 

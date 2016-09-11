@@ -24,7 +24,7 @@ public class Delivery {
     private static final String TYPE_MEDIA_VOICE = "media_voice";
     private static final String TYPE_MEDIA_SELFIE = "media_selfie";
 
-    private final String id, userId, message, createdAt;
+    private final String id, victimId, message, createdAt;
     private String dataType;
     private boolean hasError;
 
@@ -32,9 +32,9 @@ public class Delivery {
     private String serverErrorMessage;
 
 
-    private Delivery(String userId, boolean hasError, String message, boolean hasServerError, String serverErrorMessage, String dataType, String id, String createdAt) throws Exception {
+    private Delivery(String victimId, boolean hasError, String message, boolean hasServerError, String serverErrorMessage, String dataType, String id, String createdAt) throws Exception {
         this.id = id;
-        this.userId = userId;
+        this.victimId = victimId;
         this.dataType = dataType;
         this.hasError = hasError;
         this.message = message;
@@ -45,8 +45,8 @@ public class Delivery {
         checkDataType();
     }
 
-    public Delivery(String userId, boolean hasError, String message, final String dataType) throws Exception {
-        this(userId, hasError, message, false, null, dataType, null, null);
+    public Delivery(String victimId, boolean hasError, String message, final String dataType) throws Exception {
+        this(victimId, hasError, message, false, null, dataType, null, null);
     }
 
     public void setDataType(String dataType) {
@@ -73,8 +73,8 @@ public class Delivery {
 
     }
 
-    public String getUserId() {
-        return userId;
+    public String getVictimId() {
+        return victimId;
     }
 
     public boolean hasError() {

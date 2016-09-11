@@ -31,13 +31,13 @@ public class Deliveries extends BaseTable<Delivery> {
 
         boolean isAdded = false;
 
-        final String query = "INSERT INTO deliveries (user_id,error,message,server_error, server_error_message,data_type) VALUES (?,?,?,?,?,?);";
+        final String query = "INSERT INTO deliveries (victim_id,error,message,server_error, server_error_message,data_type) VALUES (?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
 
 
-            ps.setString(1, delivery.getUserId());
+            ps.setString(1, delivery.getVictimId());
             ps.setBoolean(2, delivery.hasError());
             ps.setString(3, delivery.getMessage());
             ps.setBoolean(4, delivery.hasServerError());

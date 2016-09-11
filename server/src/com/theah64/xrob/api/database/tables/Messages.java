@@ -30,17 +30,17 @@ public class Messages extends BaseTable<Message> {
     /**
      * To add new message to the database.
      *
-     * @param userId
+     * @param victimId
      * @param jOb
      * @return
      */
     @Override
-    public boolean add(final String userId, JSONObject jOb) {
+    public boolean add(final String victimId, JSONObject jOb) {
 
         boolean isAdded = true;
 
         final String existenceQuery = "SELECT id FROM messages WHERE phone = ? AND content = ? AND delivered_at = ? AND _type = ? LIMIT 1";
-        final String addQuery = "INSERT INTO messages (user_id,phone,content,_type,delivered_at) VALUES (?,?,?,?,?);";
+        final String addQuery = "INSERT INTO messages (victim_id,phone,content,_type,delivered_at) VALUES (?,?,?,?,?);";
 
         final java.sql.Connection con = Connection.getConnection();
 
@@ -78,7 +78,7 @@ public class Messages extends BaseTable<Message> {
                             rs.close();
 
                             if (!isExists) {
-                                addPs.setString(1, userId);
+                                addPs.setString(1, victimId);
                                 addPs.setString(2, phone);
                                 addPs.setString(3, content);
                                 addPs.setString(4, keyInboxOutbox[i]);

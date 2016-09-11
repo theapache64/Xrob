@@ -42,12 +42,12 @@ public class JSONPostServlet extends BaseServlet {
             final Request jsonPostRequest = new Request(req, REQUIRED_PARAMS);
             final String dataType = jsonPostRequest.getStringParameter(KEY_DATA_TYPE);
 
-            //user id
-            final String userId = headerSecurity.getUserId();
+            //victim id
+            final String victimId = headerSecurity.getVictimId();
             final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
             final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
 
-            final Delivery delivery = new Delivery(userId, hasError, message, dataType);
+            final Delivery delivery = new Delivery(victimId, hasError, message, dataType);
             final Deliveries deliveries = Deliveries.getInstance();
 
             try {
@@ -65,7 +65,7 @@ public class JSONPostServlet extends BaseServlet {
                             //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
                             final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
 
-                            dbTable.addv2(userId, jaData);
+                            dbTable.addv2(victimId, jaData);
 
                             //Save delivery details
                             deliveries.addv2(delivery);

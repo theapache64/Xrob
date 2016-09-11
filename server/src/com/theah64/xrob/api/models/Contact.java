@@ -7,11 +7,11 @@ import java.util.List;
  */
 public class Contact {
 
-    private final String userId, androidContactId, id, name;
+    private final String victimId, androidContactId, id, name;
     private List<PhoneNumber> phoneNumbers;
 
-    public Contact(String userId, String androidContactId, String id, String name, List<PhoneNumber> phone) {
-        this.userId = userId;
+    public Contact(String victimId, String androidContactId, String id, String name, List<PhoneNumber> phone) {
+        this.victimId = victimId;
         this.androidContactId = androidContactId;
         this.id = id;
         this.name = name;
@@ -22,8 +22,8 @@ public class Contact {
         return id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getVictimId() {
+        return victimId;
     }
 
     public String getName() {
@@ -37,7 +37,7 @@ public class Contact {
     @Override
     public String toString() {
         return "Contact{" +
-                "userId='" + userId + '\'' +
+                "victimId='" + victimId + '\'' +
                 ", androidContactId='" + androidContactId + '\'' +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +

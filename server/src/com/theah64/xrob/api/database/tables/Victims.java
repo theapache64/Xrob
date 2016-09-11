@@ -1,7 +1,7 @@
 package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
-import com.theah64.xrob.api.models.User;
+import com.theah64.xrob.api.models.Victim;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,29 +10,29 @@ import java.sql.SQLException;
 /**
  * Created by theapache64 on 11/22/2015.
  */
-public class Users extends BaseTable<User> {
+public class Victims extends BaseTable<Victim> {
 
     public static final String COLUMN_IMEI = "imei";
     public static final String COLUMN_GCM_ID = "gcm_id";
     public static final java.lang.String COLUMN_API_KEY = "api_key";
-    private static final String TABLE_USERS = "users";
+    private static final String TABLE_VICTIMS = "victims";
 
-    private Users() {
+    private Victims() {
     }
 
-    private static final Users instance = new Users();
+    private static final Victims instance = new Victims();
 
-    public static Users getInstance() {
+    public static Victims getInstance() {
         return instance;
     }
 
     @Override
-    public User get(String byColumn, String byValue) {
+    public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT api_key,gcm_id FROM users WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT api_key,gcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection connection = Connection.getConnection();
-        User user = null;
+        Victim victim = null;
 
         try {
 
@@ -41,10 +41,10 @@ public class Users extends BaseTable<User> {
 
             final ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                //Collecting user
+                //Collecting victim
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String gcmId = rs.getString(COLUMN_GCM_ID);
-                user = new User(null, null, apiKey, gcmId);
+                victim = new Victim(null, null, apiKey, gcmId);
             }
 
             rs.close();
@@ -59,28 +59,28 @@ public class Users extends BaseTable<User> {
             }
         }
 
-        return user;
+        return victim;
     }
 
     /**
-     * Used to add new user to the database
+     * Used to add new victim to the database
      */
     @Override
-    public boolean add(User user) {
+    public boolean add(Victim victim) {
 
-        final String addUserQuery = "INSERT INTO users (name,gcm_id,api_key,imei) VALUES (?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,gcm_id,api_key,imei) VALUES (?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
-        boolean isUserAdded = false;
+        boolean isVictimAdded = false;
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addUserQuery);
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getGCMId());
-            ps.setString(3, user.getApiKey());
-            ps.setString(4, user.getIMEI());
-            isUserAdded = ps.executeUpdate() == 1;
+            final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
+            ps.setString(1, victim.getName());
+            ps.setString(2, victim.getGCMId());
+            ps.setString(3, victim.getApiKey());
+            ps.setString(4, victim.getIMEI());
+            isVictimAdded = ps.executeUpdate() == 1;
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,13 +92,13 @@ public class Users extends BaseTable<User> {
             }
         }
 
-        return isUserAdded;
+        return isVictimAdded;
     }
 
     @Override
-    public void addv2(User user) throws RuntimeException {
-        if (!add(user)) {
-            throw new RuntimeException("Unexpected error while adding new user");
+    public void addv2(Victim victim) throws RuntimeException {
+        if (!add(victim)) {
+            throw new RuntimeException("Unexpected error while adding new victim");
         }
     }
 
@@ -109,7 +109,7 @@ public class Users extends BaseTable<User> {
     public String get(String byColumn, String byValue, String columnToReturn) {
 
 
-        final String query = String.format("SELECT %s FROM users WHERE %s = ?", columnToReturn, byColumn);
+        final String query = String.format("SELECT %s FROM victims WHERE %s = ?", columnToReturn, byColumn);
 
         String resultValue = null;
         final java.sql.Connection connection = Connection.getConnection();
@@ -140,9 +140,9 @@ public class Users extends BaseTable<User> {
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
 
-        final String query = String.format("UPDATE users SET %s = ? WHERE %s = ?", updateColumn, whereColumn);
+        final String query = String.format("UPDATE victims SET %s = ? WHERE %s = ?", updateColumn, whereColumn);
 
-        boolean isUserUpdated = false;
+        boolean isVictimUpdated = false;
         final java.sql.Connection connection = Connection.getConnection();
 
 
@@ -150,7 +150,7 @@ public class Users extends BaseTable<User> {
             final PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, newUpdateColumnValue);
             ps.setString(2, whereColumnValue);
-            isUserUpdated = ps.executeUpdate() == 1;
+            isVictimUpdated = ps.executeUpdate() == 1;
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -162,6 +162,6 @@ public class Users extends BaseTable<User> {
             }
         }
 
-        return isUserUpdated;
+        return isVictimUpdated;
     }
 }

@@ -3,7 +3,7 @@ package com.theah64.xrob.api.models;
 /**
  * Created by theapache64 on 10/13/2015.
  */
-public class User {
+public class Victim {
 
     private final String id;
     private final String name;
@@ -14,7 +14,7 @@ public class User {
     private final String createdAt;
     private final boolean isActive;
 
-    private User(final String name, final String imei, final String apiKey, String gcmId, final String actions, final String createdAt, boolean isActive, final String id) {
+    private Victim(final String name, final String imei, final String apiKey, String gcmId, final String actions, final String createdAt, boolean isActive, final String id) {
         this.id = id;
         this.name = name;
         this.apiKey = apiKey;
@@ -25,7 +25,7 @@ public class User {
         this.isActive = isActive;
     }
 
-    public User(final String name, final String imei, final String apiKey, final String gcmId) {
+    public Victim(final String name, final String imei, final String apiKey, final String gcmId) {
         this(name, imei, apiKey, gcmId, null, null, true, null);
     }
 

