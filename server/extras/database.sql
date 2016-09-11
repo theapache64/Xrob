@@ -152,6 +152,8 @@ DROP TABLE IF EXISTS `victims`;
 CREATE TABLE IF NOT EXISTS `victims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100),
+  `email` VARCHAR (150),
+  `phone` VARCHAR (20),
   `fcm_id` text,
   `fcm_updated_at` timestamp NULL,
   `api_key` varchar(10) NOT NULL,

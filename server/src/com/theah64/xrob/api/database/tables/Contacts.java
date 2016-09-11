@@ -83,7 +83,7 @@ public class Contacts extends BaseTable<Contact> {
                 final JSONArray jaPhoneNumbers = joContact.getJSONArray(KEY_PHONE_NUMBERS);
                 phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
             }
-            
+
             contactList.add(new Contact(victimId, androidContactId, null, name, phoneNumbers));
 
         }

