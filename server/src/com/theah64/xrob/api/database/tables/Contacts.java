@@ -23,6 +23,8 @@ public class Contacts extends BaseTable<Contact> {
     private static final String COLUMN_PHONE_TYPE = "phone_type";
     private static final String COLUMN_USER_ID = "user_id";
     private static final String KEY_PHONE_NUMBERS = "phone_numbers";
+    private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
+    private static final String TABLE_NAME_CONTACTS = "contacts";
 
     private static Contacts instance = new Contacts();
 
@@ -73,11 +75,12 @@ public class Contacts extends BaseTable<Contact> {
 
             final JSONObject joContact = jaContacts.getJSONObject(i);
 
+            final String androidContactId = joContact.getString(COLUMN_ANDROID_CONTACT_ID);
             final String name = joContact.getString(COLUMN_NAME);
 
             final JSONArray jaPhoneNumbers = joContact.getJSONArray(KEY_PHONE_NUMBERS);
             final List<Contact.PhoneNumber> phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
-            contactList.add(new Contact(userId, null, name, phoneNumbers));
+            contactList.add(new Contact(userId, androidContactId, null, name, phoneNumbers));
 
         }
 
@@ -115,7 +118,7 @@ public class Contacts extends BaseTable<Contact> {
     @Override
     public Contact get(String column1, String value1, String column2, String value2) {
         Contact contact = null;
-        final String query = String.format("SELECT id FROM contacts WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
+        final String query = String.format("SELECT id,name FROM contacts WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -127,7 +130,8 @@ public class Contacts extends BaseTable<Contact> {
 
             if (rs.first()) {
                 final String id = rs.getString(COLUMN_ID);
-                contact = new Contact(null, id, null, null);
+                final String name = rs.getString(COLUMN_NAME);
+                contact = new Contact(null, null, id, name, null);
             }
 
             rs.close();
@@ -160,7 +164,7 @@ public class Contacts extends BaseTable<Contact> {
         //Preparing list
         final List<Contact> contactList = parse(userId, jsonArray);
 
-        final String insertContactQuery = "INSERT INTO contacts (user_id, name) VALUES (?,?);";
+        final String insertContactQuery = "INSERT INTO contacts (user_id,android_contact_id, name) VALUES (?,?,?);";
 
         final java.sql.Connection con = Connection.getConnection();
 
@@ -171,12 +175,13 @@ public class Contacts extends BaseTable<Contact> {
             for (final Contact contact : contactList) {
 
                 String contactId = null;
-                final Contact exContact = get(Contacts.COLUMN_USER_ID, userId, Contacts.COLUMN_NAME, contact.getName());
+                final Contact exContact = get(Contacts.COLUMN_USER_ID, userId, Contacts.COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId());
 
                 if (exContact == null) {
 
                     //Adding new contact
-                    psAddContact.setString(2, contact.getName());
+                    psAddContact.setString(2, contact.getAndroidContactId());
+                    psAddContact.setString(3, contact.getName());
                     isAdded = isAdded && psAddContact.executeUpdate() == 1;
 
                     if (isAdded) {
@@ -188,6 +193,20 @@ public class Contacts extends BaseTable<Contact> {
                     }
 
                 } else {
+
+                    if (!exContact.getName().equals(contact.getName())) {
+
+                        System.out.println(exContact);
+
+                        //Name changed, so update the contacts table
+                        final boolean isUpdated = update(COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId(), COLUMN_NAME, contact.getName());
+
+                        if (!isUpdated) {
+                            throw new RuntimeException("Failed to edit the contact name");
+                        }
+
+                    }
+
                     contactId = exContact.getId();
                 }
 
@@ -242,5 +261,8 @@ public class Contacts extends BaseTable<Contact> {
 
     }
 
-
+    @Override
+    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
+        return update(TABLE_NAME_CONTACTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
+    }
 }

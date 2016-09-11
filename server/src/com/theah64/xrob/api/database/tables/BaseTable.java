@@ -2,11 +2,14 @@ package com.theah64.xrob.api.database.tables;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Delivery;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -25,7 +28,6 @@ public class BaseTable<T> {
     public boolean add(@Nullable final String userId, final JSONObject jsonObject) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
-
 
 
     public boolean add(T newInstance) {
@@ -56,6 +58,31 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    protected boolean update(String tableName, String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
+
+        boolean isEdited = false;
+        final String query = String.format("UPDATE %s SET %s = ? WHERE %s = ?;", tableName, columnToUpdate, whereColumn);
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, valueToUpdate);
+            ps.setString(2, whereColumnValue);
+
+            isEdited = ps.executeUpdate() == 1;
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isEdited;
+    }
 
 
     protected boolean isExist(final T t) {

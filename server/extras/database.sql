@@ -40,6 +40,7 @@ DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `android_contact_id`  INTEGER  NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -48,6 +49,17 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `contact_names_audit`;
+CREATE TABLE IF NOT EXISTS `contact_names_audit` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `contact_id` INT(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id),
+  FOREIGN KEY (contact_id) REFERENCES contacts(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 
 DROP TABLE IF EXISTS `phone_numbers`;
 CREATE TABLE IF NOT EXISTS `phone_numbers`(
@@ -55,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `phone_numbers`(
   `contact_id` INT NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
   `phone_type` VARCHAR (20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   FOREIGN KEY (contact_id) REFERENCES contacts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -150,7 +163,24 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `imei` (`imei`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-  INSERT INTO users (name,api_key,imei) VALUES ('Shifar','ApiKey',12345678);
+  INSERT INTO users (name,api_key,imei) VALUES ('Shifar','YRxxhK7pIi',12345678);
+
+  /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
+    DELIMITER $$
+
+    CREATE TRIGGER after_contacts_update
+    AFTER UPDATE ON contacts
+    FOR EACH ROW BEGIN
+    IF OLD.name <> NEW.name THEN
+    INSERT INTO contact_names_audit
+    SET contact_id = OLD.id,
+    name = OLD.name;
+    END IF;
+    END$$
+    /* This is now "END$$" not "END;" */
+
+    /* Reset the delimiter back to ";" */
+    DELIMITER ;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

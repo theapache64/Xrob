@@ -1,5 +1,6 @@
 package com.theah64.xrob.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,7 +24,7 @@ import java.util.List;
 public class BaseTable<T> extends SQLiteOpenHelper {
 
     public static final String COLUMN_ID = "id";
-    protected static final String COLUMN_NAME = "name";
+    public static final String COLUMN_NAME = "name";
     private static final String DATABASE_NAME = "xrob.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
@@ -76,7 +77,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
 
-    public boolean add(T newInstance) {
+    public long add(T newInstance) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
@@ -90,6 +91,17 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+
+    protected boolean update(String tableName, String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
+        boolean isEdited = false;
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final ContentValues cv = new ContentValues(1);
+        cv.put(columnToUpdate, valueToUpdate);
+        isEdited = db.update(tableName, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
+        db.close();
+        return isEdited;
     }
 
     public T get(final String column1, final String value1, final String column2, final String value2) {

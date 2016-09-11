@@ -18,6 +18,7 @@ public class Contacts extends BaseTable<Contact> {
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_PHONE_TYPE = "phone_type";
     private static final String TABLE_NAME_CONTACTS = "contacts";
+    public static final String COLUMN_ANDRIOD_CONTACT_ID = "android_contact_id";
     private static Contacts instance;
 
     public static Contacts getInstance(final Context context) {
@@ -76,8 +77,36 @@ public class Contacts extends BaseTable<Contact> {
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(COLUMN_NAME, contact.getName());
+        cv.put(COLUMN_ANDRIOD_CONTACT_ID, contact.getAndroidContactId());
         newContactId = db.insert(TABLE_NAME_CONTACTS, null, cv);
         db.close();
         return newContactId;
+    }
+
+    @Override
+    public Contact get(String column, String value) {
+        Contact contact = null;
+
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final Cursor cCur = db.query(TABLE_NAME_CONTACTS, new String[]{COLUMN_ID, COLUMN_NAME}, column + " = ? ", new String[]{value}, null, null, null, "1");
+
+        if (cCur != null) {
+
+            if (cCur.moveToFirst()) {
+                final String id = cCur.getString(cCur.getColumnIndex(COLUMN_ID));
+                final String name = cCur.getString(cCur.getColumnIndex(COLUMN_NAME));
+                contact = new Contact(id, null, name, null, false);
+            }
+
+            cCur.close();
+
+        }
+
+        return contact;
+    }
+
+    @Override
+    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
+        return update(TABLE_NAME_CONTACTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
     }
 }
