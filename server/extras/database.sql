@@ -151,7 +151,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
 DROP TABLE IF EXISTS `victims`;
 CREATE TABLE IF NOT EXISTS `victims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `client_id` INT NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `gcm_id` text,
   `gcm_updated_at` timestamp NULL,
@@ -161,7 +160,6 @@ CREATE TABLE IF NOT EXISTS `victims` (
   `is_active` tinyint(4)   NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
   UNIQUE KEY `imei` (`imei`),
   UNIQUE KEY `api_key` (`api_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -174,6 +172,7 @@ CREATE TABLE IF NOT EXISTS `clients`(
   `api_key` varchar(10) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `is_verified_email` TINYINT(4) NOT NULL DEFAULT 0,
+  `is_premium_client` TINYINT(4) NOT NULL DEFAULT 0,
   `is_active` tinyint(4)   NOT NULL DEFAULT 1,
   `client_code` VARCHAR (20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -184,7 +183,18 @@ CREATE TABLE IF NOT EXISTS `clients`(
   UNIQUE KEY (client_code)
 );
 
-INSERT INTO victims (name,api_key,imei) VALUES ('Shifar','YRxxhK7pIi',12345678);
+DROP TABLE IF EXISTS `client_victim_relation`;
+CREATE TABLE IF NOT EXISTS `client_victim_relation`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_id` INT NOT NULL,
+  `victim_id` INT NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id),
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (victim_id) REFERENCES victims(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
 
 /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
   DELIMITER $$

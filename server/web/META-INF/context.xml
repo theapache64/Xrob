@@ -10,7 +10,7 @@
               removeAbandonedTimeout="10"
               maxIdle="30"
               maxWait="10000"
-              victimname="root" password="mike" driverClassName="com.mysql.jdbc.Driver"
+              username="root" password="mike" driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/xrob"/>
 
 </Context>

