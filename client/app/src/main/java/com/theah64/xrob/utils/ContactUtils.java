@@ -143,7 +143,7 @@ public class ContactUtils {
         if (unSyncedContacts != null) {
             Log.d(X, unSyncedContacts.size() + " need to be synced!");
 
-            
+
 
         }
     }

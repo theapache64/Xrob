@@ -11,12 +11,12 @@ import android.util.Log;
 
 import com.theah64.xrob.utils.ContactUtils;
 
-public class ContactsService extends Service {
+public class ContactsWatcherService extends Service {
 
     private static final int MIN_THRESHOLD = 1000;
     private static long lastTimeOfUpdate = 0;
 
-    public ContactsService() {
+    public ContactsWatcherService() {
 
     }
 
