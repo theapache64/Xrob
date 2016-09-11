@@ -24,10 +24,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".services.ContactsService"
-            android:enabled="true"
-            android:exported="false"></service>
+        <service android:name=".services.ContactsService" />
 
         <receiver android:name=".receivers.BootCompleteReceiver">
             <intent-filter>

@@ -1,6 +1,7 @@
 package com.theah64.xrob;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.util.Log;
 import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
+import com.theah64.xrob.services.ContactsService;
 import com.theah64.xrob.utils.ContactUtils;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(this, ContactsService.class));
         ContactUtils.refreshContacts(this);
     }
 

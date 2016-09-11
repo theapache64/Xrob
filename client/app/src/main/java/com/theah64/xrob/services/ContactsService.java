@@ -11,6 +11,10 @@ import android.util.Log;
 
 public class ContactsService extends Service {
 
+    private static final int MIN_THRESHOLD = 1000;
+    private static long lastTimeOfUpdate = 0;
+
+
     public ContactsService() {
     }
 
@@ -36,9 +40,19 @@ public class ContactsService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            System.out.println("Contact changed");
             super.onChange(selfChange, uri);
+            System.out.println("Contact changed");
+
+            //To prevent double call
+            if ((System.currentTimeMillis() - lastTimeOfUpdate) > MIN_THRESHOLD) {
+                System.out.println("Real code works here");
+                lastTimeOfUpdate = System.currentTimeMillis();
+            } else {
+                System.out.println("Not now!");
+            }
+
         }
+
     }
 
     @Override

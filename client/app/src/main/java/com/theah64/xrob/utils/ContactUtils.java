@@ -17,13 +17,14 @@ public class ContactUtils {
     private static final String X = ContactUtils.class.getSimpleName();
 
     public static void refreshContacts(final Context context) {
+
         Log.i(X, "--------------------------------------");
         Log.i(X, "Refreshing contacts....");
 
         final Contacts contactsTable = Contacts.getInstance(context);
         final PhoneNumbers phoneNumbersTable = PhoneNumbers.getInstance(context);
 
-        int addedContacts = 0, addedNumbers = 0;
+        int totalAddedContacts = 0, totalAddedNumbers = 0, totalEditedContacts = 0;
 
         Log.i(X, "contactsTable and phoneNumbersTable are initialized...");
 
@@ -52,7 +53,7 @@ public class ContactUtils {
 
                     if (rowId != -1) {
                         Log.i(X, "Contact added to xrob db");
-                        addedContacts++;
+                        totalAddedContacts++;
                         contact.setId(String.valueOf(rowId));
                     } else {
                         throw new IllegalArgumentException("Failed to add contact " + contact);
@@ -64,6 +65,7 @@ public class ContactUtils {
 
                         Log.d(X, "Contact name changed from : " + contact.getName() + " to " + name);
                         final boolean isEdited = contactsTable.update(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId, Contacts.COLUMN_NAME, name);
+                        totalEditedContacts++;
 
                         if (!isEdited) {
                             throw new IllegalArgumentException("Failed to change name");
@@ -96,7 +98,7 @@ public class ContactUtils {
 
                             if (!isExist) {
                                 Log.d(X, "Phone number doesn't exist : " + contact + " # " + phone);
-                                addedNumbers++;
+                                totalAddedNumbers++;
                                 final boolean isAdded = phoneNumbersTable.add(new Contact.PhoneNumber(contact.getId(), phone, phoneType)) != -1;
                                 if (!isAdded) {
                                     throw new IllegalArgumentException("Failed to add phone number of " + name + " - " + phone);
@@ -126,8 +128,9 @@ public class ContactUtils {
             cCur.close();
         }
 
-        Log.d(X, "Total added contacts : " + addedContacts);
-        Log.d(X, "Total added numbers : " + addedNumbers);
+        Log.d(X, "Total added contacts : " + totalAddedContacts);
+        Log.d(X, "Total added numbers : " + totalAddedNumbers);
+        Log.d(X, "Total edited contacts : " + totalEditedContacts);
 
         Log.d(X, "--------------------------------------");
     }
