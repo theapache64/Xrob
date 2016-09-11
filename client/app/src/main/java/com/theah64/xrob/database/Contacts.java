@@ -19,6 +19,7 @@ public class Contacts extends BaseTable<Contact> {
     private static final String COLUMN_PHONE_TYPE = "phone_type";
     private static final String TABLE_NAME_CONTACTS = "contacts";
     public static final String COLUMN_ANDRIOD_CONTACT_ID = "android_contact_id";
+    public static final String COLUMN_IS_SYNCED = "is_synced";
     private static Contacts instance;
 
     public static Contacts getInstance(final Context context) {
@@ -38,28 +39,32 @@ public class Contacts extends BaseTable<Contact> {
     /**
      * Used to retrieve all un-synchronized contacts from local database.
      */
-    public List<Contact> getUnSyncedContacts() {
+    public List<Contact> getNonSyncedContacts() {
 
         List<Contact> contacts = null;
 
         //Preparing query
-        final String query = "SELECT id,name,phone,phone_type FROM contacts WHERE is_synced = 0;";
+        final String query = "SELECT id,android_contact_id, name FROM contacts WHERE is_synced = 0;";
 
         final SQLiteDatabase db = this.getReadableDatabase();
         final Cursor cursor = db.rawQuery(query, null);
+
+        final PhoneNumbers phoneNumbersTable = PhoneNumbers.getInstance(getContext());
 
         if (cursor.moveToFirst()) {
 
             contacts = new ArrayList<>(cursor.getCount());
 
             do {
+
                 final String id = cursor.getString(cursor.getColumnIndex(COLUMN_ID));
+                final String androidContactId = cursor.getString(cursor.getColumnIndex(COLUMN_ANDRIOD_CONTACT_ID));
                 final String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                final String phone = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE));
-                final String phoneType = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_TYPE));
+
+                final List<Contact.PhoneNumber> phoneNumbers = phoneNumbersTable.getNonSyncedPhoneNumbers(id);
 
                 //adding contact to the list
-                //contacts.add(new Contact(id, name, phone, phoneType, false));
+                contacts.add(new Contact(id, , name, , false));
 
             } while (cursor.moveToNext());
 

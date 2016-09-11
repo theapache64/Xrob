@@ -13,7 +13,7 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    public static final String BASE_URL = "http:/google.com";
+    public static final String BASE_URL = "http://192.168.43.234:8080/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String KEY_AUTHORIZATION = "Authorization";
