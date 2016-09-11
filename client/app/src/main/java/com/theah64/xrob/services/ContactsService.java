@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.theah64.xrob.utils.ContactUtils;
+
 public class ContactsService extends Service {
 
     private static final int MIN_THRESHOLD = 1000;
@@ -16,6 +18,7 @@ public class ContactsService extends Service {
 
 
     public ContactsService() {
+
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ContactsService extends Service {
             //To prevent double call
             if ((System.currentTimeMillis() - lastTimeOfUpdate) > MIN_THRESHOLD) {
                 System.out.println("Real code works here");
+                ContactUtils.refreshContacts(getApplicationContext());
                 lastTimeOfUpdate = System.currentTimeMillis();
             } else {
                 System.out.println("Not now!");
