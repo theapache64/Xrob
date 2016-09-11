@@ -115,7 +115,7 @@ public class FileUploadServlet extends BaseServlet {
                             //TODO: Add the file details to the database
 
                             //Success message
-                            out.write(JSONUtils.getSuccessJSON(SUCCESS_MESSAGE_BINARY_DATA_SAVED));
+                            out.write(new APIResponse(SUCCESS_MESSAGE_BINARY_DATA_SAVED, null).getResponse());
 
 
                         } else {
@@ -137,12 +137,12 @@ public class FileUploadServlet extends BaseServlet {
             } else {
                 //Has error
                 out.write(
-                        JSONUtils.getSuccessJSON("Error report added")
+                        new APIResponse("Error report added", null).getResponse()
                 );
             }
 
         } catch (Exception e) {
-            out.write(JSONUtils.getErrorJSON(e.getMessage()));
+            out.write(new APIResponse(e.getMessage()).getResponse());
         }
 
 

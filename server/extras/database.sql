@@ -151,9 +151,9 @@ CREATE TABLE IF NOT EXISTS `messages` (
 DROP TABLE IF EXISTS `victims`;
 CREATE TABLE IF NOT EXISTS `victims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `gcm_id` text,
-  `gcm_updated_at` timestamp NULL,
+  `name` varchar(100),
+  `fcm_id` text,
+  `fcm_updated_at` timestamp NULL,
   `api_key` varchar(10) NOT NULL,
   `imei` varchar(16) NOT NULL,
   `actions` varchar(100) DEFAULT NULL,

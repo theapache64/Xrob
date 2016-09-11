@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class Victims extends BaseTable<Victim> {
 
     public static final String COLUMN_IMEI = "imei";
-    public static final String COLUMN_GCM_ID = "gcm_id";
+    public static final String COLUMN_FCM_ID = "fcm_id";
     public static final java.lang.String COLUMN_API_KEY = "api_key";
     private static final String TABLE_VICTIMS = "victims";
     public static final String COLUMN_CLIENT_ID = "client_id";
@@ -30,7 +30,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT api_key,gcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT api_key,fcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection connection = Connection.getConnection();
         Victim victim = null;
@@ -44,8 +44,8 @@ public class Victims extends BaseTable<Victim> {
             if (rs.next()) {
                 //Collecting victim
                 final String apiKey = rs.getString(COLUMN_API_KEY);
-                final String gcmId = rs.getString(COLUMN_GCM_ID);
-                victim = new Victim(null, null, apiKey, gcmId);
+                final String fcmId = rs.getString(COLUMN_FCM_ID);
+                victim = new Victim(null, null, apiKey, fcmId);
             }
 
             rs.close();
@@ -69,7 +69,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public boolean add(Victim victim) {
 
-        final String addVictimQuery = "INSERT INTO victims (name,gcm_id,api_key,imei) VALUES (?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,fcm_id,api_key,imei) VALUES (?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -79,7 +79,7 @@ public class Victims extends BaseTable<Victim> {
             final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
 
             ps.setString(1, victim.getName());
-            ps.setString(2, victim.getGCMId());
+            ps.setString(2, victim.getFCMId());
             ps.setString(3, victim.getApiKey());
             ps.setString(4, victim.getIMEI());
 

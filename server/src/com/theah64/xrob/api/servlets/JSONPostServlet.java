@@ -3,6 +3,7 @@ package com.theah64.xrob.api.servlets;
 import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.models.Delivery;
+import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.JSONUtils;
 import com.theah64.xrob.api.utils.Request;
@@ -70,7 +71,7 @@ public class JSONPostServlet extends BaseServlet {
                             //Save delivery details
                             deliveries.addv2(delivery);
 
-                            out.write(JSONUtils.getSuccessJSON("Data saved"));
+                            out.write(new APIResponse("success", null).getResponse());
 
 
                         } catch (JSONException e) {
@@ -90,7 +91,7 @@ public class JSONPostServlet extends BaseServlet {
                     //Save delivery details
                     deliveries.addv2(delivery);
                     //Error report submitted
-                    out.write(JSONUtils.getSuccessJSON("Error report submitted"));
+                    out.write(new APIResponse("Error report submitted", null).getResponse());
                 }
 
             } catch (Delivery.DamagedPackageException e) {
@@ -103,7 +104,7 @@ public class JSONPostServlet extends BaseServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            out.write(JSONUtils.getErrorJSON(e.getMessage()));
+            out.write(new APIResponse(e.getMessage()).getResponse());
         }
 
 

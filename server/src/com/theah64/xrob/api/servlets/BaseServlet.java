@@ -1,5 +1,6 @@
 package com.theah64.xrob.api.servlets;
 
+import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.JSONUtils;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,7 @@ public class BaseServlet extends HttpServlet {
         final PrintWriter out = response.getWriter();
 
         //GET Method not supported
-        out.write(JSONUtils.getErrorJSON(methodErrorMessage));
+        out.write(new APIResponse(methodErrorMessage).getResponse());
 
         out.flush();
         out.close();
