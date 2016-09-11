@@ -47,11 +47,13 @@ public class BaseTable<T> extends SQLiteOpenHelper {
             for (final String stmt : createStatements) {
                 if (!stmt.trim().isEmpty()) {
                     Log.d(X, "Statement : " + stmt);
-                    db.execSQL(stmt);
+                    db.execSQL(stmt + ";");
                 }
             }
 
-
+            db.execSQL("CREATE TRIGGER after_contacts_update AFTER UPDATE ON contacts FOR EACH ROW BEGIN UPDATE contacts SET is_synced = 0 WHERE id = OLD.id; END;");
+            db.execSQL("CREATE TRIGGER after_phone_numbers_update AFTER UPDATE ON phone_numbers FOR EACH ROW BEGIN UPDATE phone_numbers SET is_synced = 0 WHERE id = OLD.id; END;");
+            
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());

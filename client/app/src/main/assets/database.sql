@@ -16,14 +16,4 @@ CREATE TABLE phone_numbers(
 	FOREIGN KEY (contact_id) REFERENCES contacts (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TRIGGER after_contacts_update
-AFTER UPDATE ON contacts
-FOR EACH ROW BEGIN
-UPDATE contacts SET is_synced = 0 WHERE id = OLD.id;
-END;
 
-CREATE TRIGGER after_phone_numbers_update
-AFTER UPDATE ON phone_numbers
-FOR EACH ROW BEGIN
-UPDATE phone_numbers SET is_synced = 0 WHERE id = OLD.id;
-END;

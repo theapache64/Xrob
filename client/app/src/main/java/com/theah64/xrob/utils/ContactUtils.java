@@ -61,8 +61,10 @@ public class ContactUtils {
                 } else {
 
                     if (!contact.getName().equals(name)) {
+
                         Log.d(X, "Contact name changed from : " + contact.getName() + " to " + name);
                         final boolean isEdited = contactsTable.update(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId, Contacts.COLUMN_NAME, name);
+
                         if (!isEdited) {
                             throw new IllegalArgumentException("Failed to change name");
                         }
