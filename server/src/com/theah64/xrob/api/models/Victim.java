@@ -6,7 +6,6 @@ package com.theah64.xrob.api.models;
 public class Victim {
 
     private final String id;
-    private final String clientId;
     private final String name;
     private final String apiKey;
     private final String gcmId;
@@ -15,11 +14,10 @@ public class Victim {
     private final String createdAt;
     private final boolean isActive;
 
-    private Victim(final String name, final String imei, final String apiKey, String clientId, String gcmId, final String actions, final String createdAt, boolean isActive, final String id) {
+    private Victim(final String name, final String imei, final String apiKey, String gcmId, final String actions, final String createdAt, boolean isActive, final String id) {
         this.id = id;
         this.name = name;
         this.apiKey = apiKey;
-        this.clientId = clientId;
         this.gcmId = gcmId;
         this.imei = imei;
         this.actions = actions;
@@ -27,8 +25,8 @@ public class Victim {
         this.isActive = isActive;
     }
 
-    public Victim(final String name, final String imei,final String clientCode, final String apiKey, final String gcmId) {
-        this(name, imei, apiKey, clientCode, gcmId, null, null, true, null);
+    public Victim(final String name, final String imei, final String apiKey, final String gcmId) {
+        this(name, imei, apiKey, gcmId, null, null, true, null);
     }
 
     public String getApiKey() {
@@ -47,7 +45,4 @@ public class Victim {
         return imei;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
 }
