@@ -1,5 +1,6 @@
 package com.theah64.xrob.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +17,7 @@ public class Contacts extends BaseTable<Contact> {
 
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_PHONE_TYPE = "phone_type";
+    private static final String TABLE_NAME_CONTACTS = "contacts";
     private static Contacts instance;
 
     public static Contacts getInstance(final Context context) {
@@ -31,12 +33,14 @@ public class Contacts extends BaseTable<Contact> {
         super(context);
     }
 
+
     /**
      * Used to retrieve all un-synchronized contacts from local database.
      */
-    public List<Contact> getAllUnSynced() {
+    public List<Contact> getUnSyncedContacts() {
 
         List<Contact> contacts = null;
+
         //Preparing query
         final String query = "SELECT id,name,phone,phone_type FROM contacts WHERE is_synced = 0;";
 
@@ -53,9 +57,8 @@ public class Contacts extends BaseTable<Contact> {
                 final String phone = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE));
                 final String phoneType = cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_TYPE));
 
-
                 //adding contact to the list
-                contacts.add(new Contact(id, name, phone, phoneType, false));
+                //contacts.add(new Contact(id, name, phone, phoneType, false));
 
             } while (cursor.moveToNext());
 
@@ -65,6 +68,19 @@ public class Contacts extends BaseTable<Contact> {
         db.close();
 
         return contacts;
+    }
 
+    @Override
+    public String add(Contact contact) {
+        String newContactId = null;
+        final SQLiteDatabase db = this.getWritableDatabase();
+        final ContentValues cv = new ContentValues(1);
+        cv.put(COLUMN_NAME, contact.getName());
+        final long rowId = db.insert(TABLE_NAME_CONTACTS, null, cv);
+        if (rowId != -1) {
+            newContactId = String.valueOf(rowId);
+        }
+        db.close();
+        return newContactId;
     }
 }

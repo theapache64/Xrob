@@ -17,6 +17,10 @@ public class Contact {
         this.phoneNumbers = phone;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -38,7 +42,43 @@ public class Contact {
                 '}';
     }
 
-    public String getId() {
-        return id;
+
+    public static class PhoneNumber {
+
+        private String contactId;
+        private final String phone;
+        private final String type;
+
+        public PhoneNumber(String contactId, String phone, String type) {
+            this.contactId = contactId;
+            this.phone = phone;
+            this.type = type;
+        }
+
+        public String getContactId() {
+            return contactId;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return "PhoneNumber{" +
+                    "contactId='" + contactId + '\'' +
+                    ", phone='" + phone + '\'' +
+                    ", type='" + type + '\'' +
+                    '}';
+        }
+
+        public void setContactId(String contactId) {
+            this.contactId = contactId;
+        }
+
     }
 }

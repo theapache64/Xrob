@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
+import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.utils.FileUtils;
 
 import org.json.JSONArray;
@@ -63,6 +64,10 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     public void cleanDb() {
         onUpgrade(this.getWritableDatabase(), 0, 0);
+    }
+
+    public String add(final Contact contact) {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
     public List<T> getAll() {
