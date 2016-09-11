@@ -9,9 +9,9 @@ import com.theah64.xrob.models.Victim;
  */
 public class Xrob extends Application {
 
-    static final String KEY_ERROR = "error";
-    static final String KEY_MESSAGE = "message";
-    static final String KEY_DATA = "data";
+    public static final String KEY_ERROR = "error";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_DATA = "data";
     static final String KEY_ERROR_CODE = "error_code";
     public static final String KEY_DATA_TYPE = "data_type";
     public static final String DATA_TYPE_CONTACTS = "contacts";

