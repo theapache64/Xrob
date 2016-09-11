@@ -12,6 +12,7 @@ import com.theah64.xrob.models.Victim;
 public class PrefUtils {
 
     public static final String KEY_IS_SYNC_CONTACTS = "is_sync_contacts";
+    public static final String IS_FCM_SYNCED = "is_fcm_synced";
     private static PrefUtils instance;
     private final SharedPreferences sharedPref;
 
@@ -30,7 +31,7 @@ public class PrefUtils {
         getEditor().putString(key, value).commit();
     }
 
-    private SharedPreferences.Editor getEditor() {
+    public SharedPreferences.Editor getEditor() {
         return sharedPref.edit();
     }
 
