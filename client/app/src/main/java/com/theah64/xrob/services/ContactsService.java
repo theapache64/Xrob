@@ -16,7 +16,6 @@ public class ContactsService extends Service {
     private static final int MIN_THRESHOLD = 1000;
     private static long lastTimeOfUpdate = 0;
 
-
     public ContactsService() {
 
     }
