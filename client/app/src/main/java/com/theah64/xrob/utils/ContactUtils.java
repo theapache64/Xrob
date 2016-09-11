@@ -9,6 +9,8 @@ import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
 
+import java.util.List;
+
 /**
  * Created by theapache64 on 11/9/16.
  */
@@ -135,4 +137,14 @@ public class ContactUtils {
         Log.d(X, "--------------------------------------");
     }
 
+    public static void push(Context context) {
+        final Contacts contactsTable = Contacts.getInstance(context);
+        final List<Contact> unSyncedContacts = contactsTable.getUnSyncedContacts();
+        if (unSyncedContacts != null) {
+            Log.d(X, unSyncedContacts.size() + " need to be synced!");
+
+            
+
+        }
+    }
 }
