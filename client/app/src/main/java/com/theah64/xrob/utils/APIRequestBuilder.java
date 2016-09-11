@@ -24,20 +24,19 @@ public class APIRequestBuilder {
     private final String url;
     private FormBody.Builder params = new FormBody.Builder();
 
-    public APIRequestBuilder(String route, final boolean isAuthKeyNeeded) {
+    public APIRequestBuilder(String route, final String apiKey) {
 
         this.url = BASE_URL + route;
         appendLog("URL", url);
 
-        if (isAuthKeyNeeded) {
-            
-            requestBuilder.addHeader(KEY_AUTHORIZATION, Victim.getAPIKey());
-            appendLog(KEY_AUTHORIZATION, Victim.getAPIKey());
+        if (apiKey != null) {
+            requestBuilder.addHeader(KEY_AUTHORIZATION, apiKey);
+            appendLog(KEY_AUTHORIZATION, apiKey);
         }
     }
 
     public APIRequestBuilder(String route) {
-        this(route, false);
+        this(route, null);
     }
 
 

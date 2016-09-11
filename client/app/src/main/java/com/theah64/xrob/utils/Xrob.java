@@ -16,10 +16,4 @@ public class Xrob extends Application {
     public static final String KEY_DATA_TYPE = "data_type";
     public static final String DATA_TYPE_CONTACTS = "contacts";
 
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Victim.setApiKey(PrefUtils.getInstance(this).getString(Victim.KEY_API_KEY));
-    }
 }

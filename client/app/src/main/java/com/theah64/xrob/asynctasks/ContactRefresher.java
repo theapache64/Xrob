@@ -9,21 +9,29 @@ import android.util.Log;
 import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
+import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.ContactUtils;
+import com.theah64.xrob.utils.PrefUtils;
 
 /**
  * Created by theapache64 on 12/9/16.
  */
-public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
+public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
 
     private static final String X = ContactRefresher.class.getSimpleName();
 
-    @Override
-    protected Boolean doInBackground(Context... contexts) {
-        return refreshContacts(contexts[0]);
+    private final Context context;
+
+    public ContactRefresher(Context context) {
+        this.context = context;
     }
 
-    private static boolean refreshContacts(Context context) {
+    @Override
+    protected Boolean doInBackground(Void... contexts) {
+        return refreshContacts(context);
+    }
+
+    private static synchronized boolean refreshContacts(Context context) {
 
         Log.i(X, "--------------------------------------");
         Log.i(X, "Refreshing contacts....");
@@ -46,20 +54,16 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
 
             do {
 
-                Log.d(X, "#######################################");
-
                 final String androidContactId = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts._ID));
                 final String name = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 Contact contact = contactsTable.get(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId);
 
                 if (contact == null) {
 
-                    Log.d(X, "Contact doesn't exist in xrob db : " + name);
                     contact = new Contact(null, androidContactId, name, null, false);
                     final long rowId = contactsTable.add(contact);
 
                     if (rowId != -1) {
-                        Log.i(X, "Contact added to xrob db");
                         totalAddedContacts++;
                         contact.setId(String.valueOf(rowId));
                     } else {
@@ -71,6 +75,7 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
                     if (!contact.getName().equals(name)) {
 
                         Log.d(X, "Contact name changed from : " + contact.getName() + " to " + name);
+
                         final boolean isEdited = contactsTable.update(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId, Contacts.COLUMN_NAME, name);
                         totalEditedContacts++;
 
@@ -80,21 +85,18 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
 
                     }
 
-                    Log.d(X, "Contact exist in xrob db " + contact);
                 }
 
                 final boolean hasPhoneNumbers = cCur.getInt(cCur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0;
 
                 if (hasPhoneNumbers) {
 
-                    Log.i(X, name + " has phone numbers");
 
                     final Cursor pCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                             new String[]{androidContactId}, null);
 
                     if (pCur != null && pCur.moveToFirst()) {
 
-                        Log.i(X, name + " has " + pCur.getCount() + " numbers");
 
                         do {
 
@@ -105,7 +107,6 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
 
                             if (!isExist) {
 
-                                Log.d(X, "Phone number doesn't exist : " + contact + " # " + phone);
                                 totalAddedNumbers++;
                                 final boolean isAdded = phoneNumbersTable.add(new Contact.PhoneNumber(contact.getId(), phone, phoneType)) != -1;
 
@@ -117,8 +118,6 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
                                 }
 
 
-                            } else {
-                                Log.d(X, "Phone number exist : " + contact + " # " + phone);
                             }
 
                         } while (pCur.moveToNext());
@@ -132,8 +131,6 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
 
                 }
 
-
-                Log.d(X, "#######################################");
 
             } while (cCur.moveToNext());
         }
@@ -154,6 +151,28 @@ public class ContactRefresher extends AsyncTask<Context, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean isSyncNeeded) {
-        
+
+        final PrefUtils prefUtils = PrefUtils.getInstance(context);
+        final boolean isOldSyncNeeded = prefUtils.getBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS);
+
+        if (isOldSyncNeeded != isSyncNeeded) {
+            prefUtils.saveBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS, isSyncNeeded);
+        }
+
+        Log.d(X, "isSyncNeeded : " + isSyncNeeded);
+
+        if (isSyncNeeded || isOldSyncNeeded) {
+
+            new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+
+                @Override
+                public void onReadyToRequest(String apiKey) {
+                    Log.d(X, "Ready to request...");
+                    new ContactsSynchronizer(context).execute(apiKey);
+                }
+
+            }).start();
+        }
+
     }
 }

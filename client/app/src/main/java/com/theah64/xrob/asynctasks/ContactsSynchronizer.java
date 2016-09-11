@@ -9,6 +9,7 @@ import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIResponse;
 import com.theah64.xrob.utils.OkHttpUtils;
+import com.theah64.xrob.utils.PrefUtils;
 import com.theah64.xrob.utils.Xrob;
 
 import org.json.JSONArray;
@@ -27,18 +28,23 @@ import okhttp3.Response;
 /**
  * Created by theapache64 on 12/9/16.
  */
-public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Context, Void, APIResponse> {
+public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<String, Void, Void> {
 
     private static final String X = ContactsSynchronizer.class.getSimpleName();
 
+    public ContactsSynchronizer(Context context) {
+        super(context);
+        Log.d(X, "Started ContactsSynchronizer");
+    }
+
+
     @Override
-    protected APIResponse doInBackground(Context... contexts) {
-        push(contexts[0]);
+    protected Void doInBackground(String... string) {
+        push(getContext(), string[0]);
         return null;
     }
 
-    public static void push(Context context) {
-
+    private static synchronized void push(final Context context, final String apiKey) {
         final Contacts contactsTable = Contacts.getInstance(context);
         final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
 
@@ -79,7 +85,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Context, 
                 }
 
                 //Building request
-                final Request contactsRequest = new APIRequestBuilder("/save", true)
+                final Request contactsRequest = new APIRequestBuilder("/save", apiKey)
                         .addParam(Xrob.KEY_ERROR, "false")
                         .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_CONTACTS)
                         .addParam(Xrob.KEY_MESSAGE, String.format(Locale.getDefault(), "%d contact(s) retrieved", jaContacts.length()))
@@ -95,9 +101,13 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Context, 
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+
                         try {
-                            final APIResponse apiResponse = new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+
+                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+
                             //Success all contacts synced
+                            PrefUtils.getInstance(context).saveBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS, false);
                             contactsTable.setAllContactsAndNumbersSynced();
 
                         } catch (JSONException | APIResponse.APIException e) {
@@ -109,12 +119,9 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Context, 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            Log.d(X, "No unsynced contacts found to push");
         }
     }
 
-
-    @Override
-    protected void onPostExecute(APIResponse apiResponse) {
-
-    }
 }
