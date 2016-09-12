@@ -170,7 +170,12 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
                     new ContactsSynchronizer(context).execute(apiKey);
                 }
 
-            }).execute();
+                @Override
+                public void onFailed(String reason) {
+                    Log.e(X, "Failed to sync contacts : " + reason);
+                }
+
+            });
         }
 
     }

@@ -34,7 +34,12 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 public void onReadyToRequest(String apiKey) {
                     new ContactsSynchronizer(context).execute(apiKey);
                 }
-            }).execute();
+
+                @Override
+                public void onFailed(String reason) {
+                    Log.e(X, "Failed to sync contacts : " + reason);
+                }
+            });
         }
 
     }

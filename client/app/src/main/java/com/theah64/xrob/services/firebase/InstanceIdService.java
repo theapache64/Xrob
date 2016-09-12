@@ -37,31 +37,43 @@ public class InstanceIdService extends FirebaseInstanceIdService {
                 .putBoolean(PrefUtils.IS_FCM_SYNCED, false)
                 .commit();
 
-        new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
-            @Override
-            public void onReadyToRequest(String apiKey) {
+        final boolean isLoggedIn = prefUtils.getBoolean(PrefUtils.IS_LOGGED_IN);
 
-                final Request fcmUpdateRequest = new APIRequestBuilder("/update/fcm", apiKey)
-                        .addParam(Victim.KEY_FCM_ID, newFcmId)
-                        .build();
+        if (isLoggedIn) {
 
-                OkHttpUtils.getInstance().getClient().newCall(fcmUpdateRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                    }
+            new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
+                @Override
+                public void onReadyToRequest(String apiKey) {
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
-                        } catch (JSONException | APIResponse.APIException e) {
+                    final Request fcmUpdateRequest = new APIRequestBuilder("/update/fcm", apiKey)
+                            .addParam(Victim.KEY_FCM_ID, newFcmId)
+                            .build();
+
+                    OkHttpUtils.getInstance().getClient().newCall(fcmUpdateRequest).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
                             e.printStackTrace();
                         }
-                    }
-                });
 
-            }
-        }).execute();
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try {
+                                new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                            } catch (JSONException | APIResponse.APIException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFailed(String reason) {
+                    Log.e(X, "Failed to update fcm : " + reason);
+                }
+            });
+
+        }
+
     }
 }
