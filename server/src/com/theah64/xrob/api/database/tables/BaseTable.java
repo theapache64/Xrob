@@ -50,6 +50,8 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+
+
     public void addv2(@Nullable final String victimId, final JSONArray jsonArray) throws RuntimeException, JSONException {
         throw new RuntimeException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }

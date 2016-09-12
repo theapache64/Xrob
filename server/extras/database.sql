@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `clients`(
   `is_verified_email` TINYINT(4) NOT NULL DEFAULT 0,
   `is_premium_client` TINYINT(4) NOT NULL DEFAULT 0,
   `is_active` tinyint(4)   NOT NULL DEFAULT 1,
-  `client_code` VARCHAR (20) NOT NULL,
+  `client_code` VARCHAR (10) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY (username),
@@ -185,8 +185,8 @@ CREATE TABLE IF NOT EXISTS `clients`(
   UNIQUE KEY (client_code)
 );
 
-DROP TABLE IF EXISTS `client_victim_relation`;
-CREATE TABLE IF NOT EXISTS `client_victim_relation`(
+DROP TABLE IF EXISTS `client_victim_relations`;
+CREATE TABLE IF NOT EXISTS `client_victim_relations`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `client_id` INT NOT NULL,
   `victim_id` INT NOT NULL,
