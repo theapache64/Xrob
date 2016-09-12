@@ -166,6 +166,7 @@ CREATE TABLE IF NOT EXISTS `victims` (
   UNIQUE KEY `api_key` (`api_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 DROP TABLE IF EXISTS `clients`;
 CREATE TABLE IF NOT EXISTS `clients`(
   `id` int(11) NOT NULL AUTO_INCREMENT,

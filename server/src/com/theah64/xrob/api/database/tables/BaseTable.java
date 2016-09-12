@@ -51,7 +51,6 @@ public class BaseTable<T> {
     }
 
 
-
     public void addv2(@Nullable final String victimId, final JSONArray jsonArray) throws RuntimeException, JSONException {
         throw new RuntimeException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
@@ -90,8 +89,15 @@ public class BaseTable<T> {
         return isEdited;
     }
 
-
     protected boolean isExist(final T t) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
+    protected boolean isExist(final String whereColumn, final String whereColumnValue) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
+    protected boolean isExist(final String whereColumn1, final String whereColumnValue1,final String whereColumn2, final String whereColumnValue2) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 

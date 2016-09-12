@@ -71,4 +71,7 @@ public class Connection {
     }
 
 
+    public static boolean isDebugMode() {
+        return debugMode;
+    }
 }

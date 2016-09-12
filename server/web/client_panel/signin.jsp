@@ -1,3 +1,4 @@
+<%@ page import="com.theah64.xrob.api.database.tables.Clients" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -8,9 +9,66 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title></title>
+    <title>Client Sign in</title>
+    <%@include file="../common_headers.jsp" %>
 </head>
 <body>
+<div class="container">
 
+    <div class="row">
+        <h1 class="text-center">Sign in</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4  content-centered">
+
+            <%--Form--%>
+            <form role="form" action="signin.jsp" method="POST">
+
+                <div class="form-group">
+                    <label for="iUsername">Username : </label>
+                    <input type="text" id="iUsername" class="form-control" placeholder="Username"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="iPassword">Password : </label>
+                    <input type="password" id="iPassword" class="form-control" placeholder="Password"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Sign in</button>
+
+            </form>
+
+
+                <%
+                    if (session.getAttribute("authorization") != null) {
+                        response.sendRedirect("/index.jsp");
+                        return;
+                    }
+
+                    final String username = request.getParameter("username");
+                    final String password = request.getParameter("password");
+
+                    if (username != null && password != null) {
+
+                        final User theUser = Clients.getInstance().get(Clients.COLUMN_USERNAME, username, Users.COLUMN_PASSWORD, password);
+
+                        if (theUser != null) {
+                            session.setAttribute("authorization", "true");
+                            session.setAttribute(Users.COLUMN_ID, theUser.getId());
+                            response.sendRedirect("/index.jsp");
+                        } else {
+                %>
+                <div class="text-danger">Invalid credentials!</div>
+                <%
+                        }
+                    }
+                %>
+
+
+        </div>
+    </div>
+</div>
 </body>
 </html>
