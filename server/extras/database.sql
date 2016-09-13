@@ -201,7 +201,6 @@ CREATE TABLE IF NOT EXISTS `client_victim_relations`(
 );
 
 
-
 /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
   DELIMITER $$
 

@@ -56,7 +56,8 @@ public class Victims extends BaseTable<Victim> {
                 final String email = rs.getString(COLUMN_EMAIL);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String fcmId = rs.getString(COLUMN_FCM_ID);
-                victim = new Victim(name, phone, email, null, apiKey, fcmId, id);
+
+                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, null, null, null, null, false);
             }
 
             rs.close();
@@ -76,11 +77,12 @@ public class Victims extends BaseTable<Victim> {
 
     /**
      * Used to add new victim to the database
+     * null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, otherDeviceInfo, null, null, true
      */
     @Override
     public boolean add(Victim victim) {
 
-        final String addVictimQuery = "INSERT INTO victims (name,fcm_id,api_key,imei,phone,email) VALUES (?,?,?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info) VALUES (?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -90,11 +92,15 @@ public class Victims extends BaseTable<Victim> {
             final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
 
             ps.setString(1, victim.getName());
-            ps.setString(2, victim.getFCMId());
-            ps.setString(3, victim.getApiKey());
+            ps.setString(2, victim.getEmail());
+            ps.setString(3, victim.getPhone());
             ps.setString(4, victim.getIMEI());
-            ps.setString(5, victim.getPhone());
-            ps.setString(6, victim.getEmail());
+
+            ps.setString(5, victim.getDeviceHash());
+            ps.setString(6, victim.getApiKey());
+            ps.setString(7, victim.getFCMId());
+            ps.setString(8, victim.getDeviceName());
+            ps.setString(9, victim.getOtherDeviceInfo());
 
             isVictimAdded = ps.executeUpdate() == 1;
 

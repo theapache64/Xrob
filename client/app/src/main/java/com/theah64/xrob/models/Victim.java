@@ -33,4 +33,7 @@ public class Victim {
     public static final String KEY_FCM_ID = "fcm_id";
     private static final String X = Victim.class.getSimpleName();
 
+    public static final String KEY_DEVICE_NAME = "device_name";
+    public static final String KEY_DEVICE_HASH = "device_hash";
+    public static final String KEY_OTHER_DEVICE_INFO = "other_device_info";
 }

