@@ -3,4 +3,63 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+
+    <!-- Signup-->
+    <servlet>
+        <servlet-name>ClientSignUp</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/signup.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientSignUp</servlet-name>
+        <url-pattern>/client/signup</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Signin-->
+    <servlet>
+        <servlet-name>ClientSignIn</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/signin.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientSignIn</servlet-name>
+        <url-pattern>/client/signin</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Client panel-->
+    <servlet>
+        <servlet-name>ClientPanel</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientPanel</servlet-name>
+        <url-pattern>/client/panel</url-pattern>
+    </servlet-mapping>
+
+    <!-- Victim profile-->
+    <servlet>
+        <servlet-name>VictimProfile</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/victim/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VictimProfile</servlet-name>
+        <url-pattern>/client/victim/profile/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Victim contacts-->
+    <servlet>
+        <servlet-name>VictimContacts</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/victim/contacts.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VictimContacts</servlet-name>
+        <url-pattern>/client/victim/contacts/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -9,6 +9,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    if (session.getAttribute(Clients.COLUMN_ID) != null) {
+        response.sendRedirect("/client/panel");
+        return;
+    }
+%>
 <html>
 <head>
     <title>Client Sign in</title>
@@ -26,17 +32,19 @@
         <div class="col-md-4  content-centered">
 
             <%--Form--%>
-            <form action="signin.jsp" method="POST" role="form">
+            <form action="/client/signin" method="POST" role="form">
 
                 <div class="form-group">
                     <label for="iUsername">Username : </label>
-                    <input name="username" type="text" id="iUsername" class="form-control" placeholder="Username"/>
+                    <input value="testuser" name="username" type="text" id="iUsername" class="form-control"
+                           placeholder="Username"/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="iPassword">Password : </label>
-                    <input name="password" type="password" id="iPassword" class="form-control" placeholder="Password"/>
+                    <input value="testpass" name="password" type="password" id="iPassword" class="form-control"
+                           placeholder="Password"/>
                 </div>
 
                 <div class="row">
@@ -44,23 +52,19 @@
                     <div class="col-md-8">
                         <%
 
-                            if (session.getAttribute(Clients.COLUMN_ID) != null) {
-                                response.sendRedirect("/index.jsp");
-                                return;
-                            }
+                            final boolean isFormSubmitted = request.getParameter("isFormSubmitted") != null;
 
-                            final String username = request.getParameter(Clients.COLUMN_USERNAME);
-                            final String password = request.getParameter("password");
+                            if (isFormSubmitted) {
 
-
-                            if (username != null && password != null) {
+                                final String username = request.getParameter(Clients.COLUMN_USERNAME);
+                                final String password = request.getParameter("password");
 
                                 final Client theClient = Clients.getInstance().get(Clients.COLUMN_USERNAME, username, Clients.COLUMN_PASS_HASH, DarKnight.getEncrypted(password));
 
                                 if (theClient != null) {
                                     System.out.println(theClient.toString());
                                     session.setAttribute(Clients.COLUMN_ID, theClient.getId());
-                                    response.sendRedirect("index.jsp");
+                                    response.sendRedirect("/client/panel");
                                 } else {
                         %>
                         <div class="text-danger pull-left">Invalid credentials!!</div>
@@ -73,7 +77,7 @@
 
 
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary pull-right">Sign in</button>
+                        <input value="Sign in" name="isFormSubmitted" type="submit" class="btn btn-primary pull-right"/>
                     </div>
 
 
@@ -83,6 +87,12 @@
             </form>
 
 
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            Don't have an account, <a href="/client/signup">Sign up</a>
         </div>
     </div>
 </div>

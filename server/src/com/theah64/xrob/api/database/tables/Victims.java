@@ -6,6 +6,8 @@ import com.theah64.xrob.api.models.Victim;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theapache64 on 11/22/2015.
@@ -16,13 +18,13 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_FCM_ID = "fcm_id";
     public static final java.lang.String COLUMN_API_KEY = "api_key";
     private static final String TABLE_VICTIMS = "victims";
-    public static final String COLUMN_CLIENT_ID = "client_id";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_FCM_UPDATED_AT = "fcm_updated_at";
     public static final String COLUMN_DEVICE_HASH = "device_hash";
     public static final String COLUMN_DEVICE_NAME = "device_name";
     public static final String COLUMN_OTHER_DEVICE_INFO = "other_device_info";
+    public static final String COLUMN_VICTIM_CODE = "victim_code";
 
     private Victims() {
     }
@@ -57,7 +59,7 @@ public class Victims extends BaseTable<Victim> {
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String fcmId = rs.getString(COLUMN_FCM_ID);
 
-                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, null, null, null, null, false);
+                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, null, null, null, null, false, null);
             }
 
             rs.close();
@@ -82,7 +84,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public boolean add(Victim victim) {
 
-        final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info) VALUES (?,?,?,?,?,?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info,victim_code) VALUES (?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -101,6 +103,7 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(7, victim.getFCMId());
             ps.setString(8, victim.getDeviceName());
             ps.setString(9, victim.getOtherDeviceInfo());
+            ps.setString(10, victim.getVictimCode());
 
             isVictimAdded = ps.executeUpdate() == 1;
 
@@ -195,50 +198,5 @@ public class Victims extends BaseTable<Victim> {
         return isVictimUpdated;
     }
 
-    /**
-     * `id` int(11) NOT NULL AUTO_INCREMENT,
-     * `name` varchar(100),
-     * `email` VARCHAR (150),
-     * `phone` VARCHAR (20),
-     * `fcm_id` text,
-     * `fcm_updated_at` timestamp NULL,
-     * `api_key` varchar(10) NOT NULL,
-     * `imei` varchar(16) NOT NULL,
-     * `actions` varchar(100) DEFAULT NULL,
-     * `is_active` tinyint(4)   NOT NULL DEFAULT 1,
-     * `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     *
-     * @param victim
-     * @return
-     @Override public boolean update(Victim victim) {
 
-     boolean isUpdated = false;
-
-     final String updateQuery = new PreparedUpdateQueryBuilder(TABLE_VICTIMS)
-     .setIfNotNull(COLUMN_NAME, victim.getName())
-     .setIfNotNull(COLUMN_EMAIL, victim.getEmail())
-     .setIfNotNull(COLUMN_PHONE, victim.getPhone())
-     .setIfNotNull(COLUMN_FCM_ID, victim.getFCMId())
-     .setIfNotNull(victim.getFCMId(), COLUMN_FCM_UPDATED_AT, "CURRENT_TIMESTAMP", false)
-     .setWhereClause("id = ?")
-     .build();
-
-     System.out.println("Query : " + updateQuery);
-
-     final java.sql.Connection con = Connection.getConnection();
-     try {
-     final PreparedStatement ps = con.prepareStatement(updateQuery);
-
-     } catch (SQLException e) {
-     e.printStackTrace();
-     } finally {
-     try {
-     con.close();
-     } catch (SQLException e) {
-     e.printStackTrace();
-     }
-     }
-
-     return isUpdated;
-     }*/
 }

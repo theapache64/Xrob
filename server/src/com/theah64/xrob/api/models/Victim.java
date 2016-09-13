@@ -5,6 +5,7 @@ package com.theah64.xrob.api.models;
  */
 public class Victim {
 
+    public static final int VICTIM_CODE_LENGTH = 10;
     private String name;
     private String email;
     private String phone;
@@ -19,8 +20,9 @@ public class Victim {
     private final String actions;
     private final String createdAt;
     private final boolean isActive;
+    private final String victimCode;
 
-    public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String actions, String createdAt, boolean isActive) {
+    public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String actions, String createdAt, boolean isActive, String victimCode) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -34,6 +36,7 @@ public class Victim {
         this.actions = actions;
         this.createdAt = createdAt;
         this.isActive = isActive;
+        this.victimCode = victimCode;
     }
 
 
@@ -91,5 +94,30 @@ public class Victim {
 
     public String getOtherDeviceInfo() {
         return otherDeviceInfo;
+    }
+
+    public String getVictimCode() {
+        return victimCode;
+    }
+
+    public static String getDeviceInfoReadable(String otherDeviceInfo) {
+
+        try {
+            final StringBuilder infoBuilder = new StringBuilder();
+
+            final String[] deviceInfo = otherDeviceInfo.split(",");
+
+            for (final String info : deviceInfo) {
+                System.out.println(info);
+                final String[] labelInfo = info.split("=");
+                infoBuilder.append("<b>").append(labelInfo[0]).append("</b> : ").append(labelInfo[1]).append("</br>");
+            }
+
+            return infoBuilder.toString();
+
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

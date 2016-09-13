@@ -12,4 +12,8 @@ public class CommonUtils {
             return false;
         }
     }
+
+    public static String getProperSentense(int count, String singular, String plural) {
+        return count <= 1 ? singular : plural;
+    }
 }

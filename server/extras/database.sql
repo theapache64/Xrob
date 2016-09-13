@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
 DROP TABLE IF EXISTS `victims`;
 CREATE TABLE IF NOT EXISTS `victims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `victim_code` VARCHAR(10) NOT NULL,
   `name` varchar(100),
   `email` VARCHAR (150),
   `phone` VARCHAR (20),

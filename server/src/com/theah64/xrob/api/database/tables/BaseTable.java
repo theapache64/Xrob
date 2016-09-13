@@ -29,6 +29,9 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    public String addv3(T newInstance) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
 
     public boolean add(T newInstance) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
@@ -97,7 +100,7 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    protected boolean isExist(final String whereColumn1, final String whereColumnValue1,final String whereColumn2, final String whereColumnValue2) {
+    protected boolean isExist(final String whereColumn1, final String whereColumnValue1, final String whereColumn2, final String whereColumnValue2) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
@@ -116,5 +119,9 @@ public class BaseTable<T> {
                     throw new IllegalArgumentException("No table defined for the type " + deliveryType);
             }
         }
+    }
+
+    public List<T> getAll(final String whereColumn, final String whereColumnValue) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 }

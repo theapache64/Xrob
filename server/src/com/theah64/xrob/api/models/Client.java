@@ -5,6 +5,7 @@ package com.theah64.xrob.api.models;
  */
 public class Client {
 
+    public static final String KEY = "client";
     private final String id, username, passHash, apiKey, email, clientCode;
 
     public Client(String id, String username, String passHash, String apiKey, String email, String clientCode) {

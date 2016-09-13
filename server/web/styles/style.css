@@ -1,3 +1,13 @@
+
+body     {
+    background: url(/assets/images/wall.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
 .content-centered {
     float: none;
     margin: 0 auto;
