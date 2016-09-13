@@ -2,6 +2,7 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Client;
+import com.theah64.xrob.api.models.ClientVictimRelation;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +28,7 @@ public class Clients extends BaseTable<Client> {
 
     @Override
     public String get(String byColumn, String byValues, String columnToReturn) {
+
         String valueToReturn = null;
         final String query = String.format("SELECT %s FROM clients WHERE %s = ? LIMIT 1", columnToReturn, byColumn);
         final java.sql.Connection con = Connection.getConnection();
@@ -110,5 +112,43 @@ public class Clients extends BaseTable<Client> {
         }
 
         return isClientAdded;
+    }
+
+    @Override
+    public Client get(String column1, String value1, String column2, String value2) {
+
+        final String query = String.format("SELECT id FROM clients WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
+
+        final java.sql.Connection connection = Connection.getConnection();
+        Client client = null;
+
+        try {
+
+            final PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, value1);
+            ps.setString(2, value2);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                //Collecting relation
+                final String id = rs.getString(COLUMN_ID);
+                client = new Client(id, null, null, null, null, null);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return client;
     }
 }

@@ -8,7 +8,7 @@
 --%>
 <%
     if (session.getAttribute(Clients.COLUMN_ID) == null) {
-        response.sendRedirect("signin.jsp");
+        response.sendRedirect("signup.jsp");
         return;
     }
 %>

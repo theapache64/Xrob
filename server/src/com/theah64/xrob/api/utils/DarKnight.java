@@ -20,7 +20,6 @@ public class DarKnight {
 
     public static String getEncrypted(String plainText) {
 
-        System.out.println(SALT.length);
         Key salt = getSalt();
 
         try {
