@@ -20,6 +20,9 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_FCM_UPDATED_AT = "fcm_updated_at";
+    public static final String COLUMN_DEVICE_HASH = "device_hash";
+    public static final String COLUMN_DEVICE_NAME = "device_name";
+    public static final String COLUMN_OTHER_DEVICE_INFO = "other_device_info";
 
     private Victims() {
     }

