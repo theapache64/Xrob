@@ -42,31 +42,58 @@ public class APIRequestGateway {
         }
     }
 
+
+    public static class DeviceInfoBuilder {
+
+        private static final String HOT_REGEX = "[,=]";
+        public StringBuilder stringBuilder = new StringBuilder();
+
+        public DeviceInfoBuilder put(final String key, final String value) {
+            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value)).append(",");
+            return this;
+        }
+
+        private static String getCooledValue(String value) {
+            return value.replaceAll(HOT_REGEX, "~");
+        }
+
+        public DeviceInfoBuilder putLastInfo(final String key, final String value) {
+            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value));
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return stringBuilder.toString();
+        }
+    }
+
     public static String getOtherDeviceInfo() {
 
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("Build.BOARD").append("=").append(Build.BOARD).append(",")
-                .append("Build.BOOTLOADER").append("=").append(Build.BOOTLOADER).append(",")
-                .append("Build.BRAND").append("=").append(Build.BRAND).append(",")
-                .append("Build.DEVICE").append("=").append(Build.DEVICE).append(",")
-                .append("Build.FINGERPRINT").append("=").append(Build.FINGERPRINT).append(",")
-                .append("Build.DISPLAY").append("=").append(Build.DISPLAY).append(",")
-                .append("Build.HARDWARE").append("=").append(Build.HARDWARE).append(",")
-                .append("Build.HOST").append("=").append(Build.HOST).append(",")
-                .append("Build.ID").append("=").append(Build.ID).append(",")
-                .append("Build.PRODUCT").append("=").append(Build.PRODUCT).append(",")
-                .append("Build.SERIAL").append("=").append(Build.SERIAL).append(",");
+        final DeviceInfoBuilder deviceInfoBuilder = new DeviceInfoBuilder();
+
+        deviceInfoBuilder
+                .put("Build.BOARD", Build.BOARD)
+                .put("Build.BOOTLOADER", Build.BOOTLOADER)
+                .put("Build.BRAND", Build.BRAND)
+                .put("Build.DEVICE", Build.DEVICE)
+                .put("Build.FINGERPRINT", Build.FINGERPRINT)
+                .put("Build.DISPLAY", Build.DISPLAY)
+                .put("Build.HARDWARE", Build.HARDWARE)
+                .put("Build.HOST", Build.HOST)
+                .put("Build.ID", Build.ID)
+                .put("Build.PRODUCT", Build.PRODUCT)
+                .put("Build.SERIAL", Build.SERIAL);
 
 
         if (CommonUtils.isSupport(14)) {
-            stringBuilder.append("Build.getRadioVersion()").append("=").append(Build.getRadioVersion()).append(",");
+            deviceInfoBuilder.putLastInfo("Build.getRadioVersion()", Build.getRadioVersion());
         } else {
             //noinspection deprecation
-            stringBuilder.append("Build.RADIO").append("=").append(Build.RADIO).append(",");
+            deviceInfoBuilder.putLastInfo("Build.RADIO", Build.RADIO);
         }
 
-        return stringBuilder.toString();
+        return deviceInfoBuilder.toString();
     }
 
     public interface APIRequestGatewayCallback {
