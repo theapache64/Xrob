@@ -1,2 +1,2 @@
 # Xrob
-An advanced data mining virus for android.
+A spy application, designed for android. (Under construction).
