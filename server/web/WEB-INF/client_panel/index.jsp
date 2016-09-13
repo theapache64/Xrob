@@ -16,6 +16,34 @@
 <head>
     <title>Client panel</title>
     <%@include file="../common_headers.jsp" %>
+    <script>
+        $(document).ready(function () {
+
+            //Row click
+            $("table#tVictims td.clickable_data").click(function () {
+                window.document.location = $(this).parent().data("href");
+            });
+
+            $(document).ready(function () {
+
+                var $rows = $('table#tVictims tr.data_row');
+                $('input#iSearch').keyup(function () {
+
+                    var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+                            reg = new RegExp(val, 'i'),
+                            text;
+
+                    $rows.show().filter(function () {
+                        text = $(this).text().replace(/\s+/g, ' ');
+                        return !reg.test(text);
+                    }).hide();
+                });
+
+            });
+
+
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -27,66 +55,71 @@
 
     %>
 
-    <%--Generate table here--%>
+    <div class="row">
+        <%--Generate table here--%>
+        <div class="col-md-12 content-centered">
 
-    <h4>You've <%=CommonUtils.getProperSentense(victims.size(), "one victim", victims.size() + " victims")%>
-    </h4>
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-8 pull-left">
+                    <h4>
+                        You've <%=CommonUtils.getProperSentense(victims.size(), "one victim", victims.size() + " victims")%>
+                    </h4>
+                </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Name</th>
-                <th >Email</th>
-                <th>Phone</th>
-                <th>IMEI</th>
-                <th>Device</th>
-                <th ></th>
-                <%-- <th>Device info</th>--%>
-            </tr>
-
-            <%
-                for (final Victim victim : victims) {
-            %>
-            <tr>
-                <td><%=victim.getName()%>
-                </td>
-                <td><%=victim.getEmail()%>
-                </td>
-                <td><%=victim.getPhone()%>
-                </td>
-                <td><%=victim.getIMEI()%>
-                </td>
-                <td><%=victim.getDeviceName()%>
-                    <a data-toggle="collapse"
-                       data-target="#<%=victim.getId()%>">more...
-                    </a>
-
-                    <div id="<%=victim.getId()%>" class="collapse">
-                        <%=Victim.getDeviceInfoReadable(victim.getOtherDeviceInfo())%>
+                <div class="col-md-4 pull-right">
+                    <div class="input-group">
+                            <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+                        <input id="iSearch" placeholder="Search" type="text" class="form-control"/>
                     </div>
-                </td>
-                <td>
+                </div>
+            </div>
 
-                    <a href="/client/victim/profile/<%=victim.getVictimCode()%>" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-eye-open"></span> View
-                    </a>
-                </td>
-                <%--<td><%=Victim.getDeviceInfoReadable(victim.getOtherDeviceInfo())%>
-                </td>--%>
-            </tr>
-            <%
-                }
-            %>
+            <table id="tVictims" class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>IMEI</th>
+                    <th>Device</th>
+                    <%-- <th>Device info</th>--%>
+                </tr>
 
-        </table>
+                <%
+                    for (final Victim victim : victims) {
+                %>
+                <tr class="data_row" data-href="/client/victim/profile/<%=victim.getVictimCode()%>">
+                    <td class="clickable_data"><%=victim.getName()%>
+                    </td>
+                    <td class="clickable_data"><%=victim.getEmail()%>
+                    </td>
+                    <td class="clickable_data"><%=victim.getPhone()%>
+                    </td>
+                    <td class="clickable_data"><%=victim.getIMEI()%>
+                    </td>
+                    <td data-toggle="collapse" data-target="#<%=victim.getId()%>"><%=victim.getDeviceName()%><span class="label label-default pull-right">more...</span>
+                        <div id="<%=victim.getId()%>" class="collapse">
+                            <%=Victim.getDeviceInfoReadable(victim.getOtherDeviceInfo())%>
+                        </div>
+                    </td>
+                </tr>
+
+                <%
+                    }
+                %>
+
+            </table>
+
+        </div>
+
     </div>
-
-
     <%
 
 
     } else {
     %>
+
 
     <div class="row">
         <h1 class="text-danger text-center">No victim connected!</h1>

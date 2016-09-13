@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class BaseTable<T> {
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_CREATED_AT = "created_at";
+    protected static final String COLUMN_AS_UNIX_EPOCH = "unix_epoch";
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
 
     public T get(final String column, final String value) {
@@ -102,6 +105,36 @@ public class BaseTable<T> {
 
     protected boolean isExist(final String whereColumn1, final String whereColumnValue1, final String whereColumn2, final String whereColumnValue2) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
+
+    public String getV2(String tableName, String byColumn, String byValue, String columnToReturn) {
+
+        final String query = String.format("SELECT %s FROM %s WHERE %s = ? ORDER BY id DESC LIMIT 1", columnToReturn, tableName, byColumn);
+
+        String resultValue = null;
+        final java.sql.Connection connection = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, byValue);
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                resultValue = rs.getString(columnToReturn);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultValue;
     }
 
     public static class Factory {

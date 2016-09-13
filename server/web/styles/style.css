@@ -1,5 +1,5 @@
 
-body     {
+body {
     background: url(/assets/images/wall.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -7,8 +7,51 @@ body     {
     background-size: cover;
 }
 
-
 .content-centered {
     float: none;
     margin: 0 auto;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.profile_grid {
+    background-color: #F44336;
+    border-radius: 5px;
+    height: 129px;
+}
+
+.profile_grid:hover {
+    background-color: #D32F2F;
+}
+
+p.profile_grid_main_title {
+    color: white;
+    text-align: center;
+    font-size: 54px;
+    word-wrap: break-word;
+}
+
+p.profile_grid_sub_title {
+    color: white;
+    text-align: center;
+    font-size: 19px;
+}
+
+table tr, th {
+    text-align: center;
+}
+
+table#tContacts tr td {
+    vertical-align: middle;
+}
+
+span.phone_number {
+    position: relative;
+    top: 3px;
+}
+
+td.clickable_data{
+    cursor: pointer;
 }
