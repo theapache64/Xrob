@@ -2,8 +2,6 @@ package com.theah64.xrob.api.utils;
 
 import com.theah64.xrob.api.database.tables.Victims;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Created by shifar on 31/12/15.
  */

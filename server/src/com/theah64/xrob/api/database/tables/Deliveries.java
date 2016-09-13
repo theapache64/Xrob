@@ -1,7 +1,6 @@
 package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
-import com.theah64.xrob.api.models.Contact;
 import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
 

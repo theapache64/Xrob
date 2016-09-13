@@ -2,14 +2,12 @@ package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.ClientVictimRelations;
 import com.theah64.xrob.api.database.tables.Clients;
-import com.theah64.xrob.api.models.Client;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.Request;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

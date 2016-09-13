@@ -4,7 +4,6 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Client;
-import com.theah64.xrob.api.models.ClientVictimRelation;
 import com.theah64.xrob.api.models.Victim;
 
 import java.sql.PreparedStatement;

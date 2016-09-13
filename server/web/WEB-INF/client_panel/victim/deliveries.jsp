@@ -1,12 +1,9 @@
-<%@ page import="com.theah64.xrob.api.models.Victim" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
-<%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
-<%@ page import="com.theah64.xrob.api.models.Contact" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Contacts" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
 <%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.models.Victim" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
