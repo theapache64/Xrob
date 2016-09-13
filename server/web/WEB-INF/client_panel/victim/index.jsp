@@ -61,10 +61,21 @@
             <div class="col-lg-3">
                 <a href="/client/victim/contacts/<%=victimCode%>">
                     <div class="profile_grid">
-                        <p class="profile_grid_main_title"><%=Contacts.getInstance().getTotalContacts(theVictim.getId())%>
+                        <p class="profile_grid_main_title"><%=Contacts.getInstance().getTotal(theVictim.getId())%>
                         </p>
 
                         <p class="profile_grid_sub_title">Contacts</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3">
+                <a href="/client/victim/deliveries/<%=victimCode%>">
+                    <div class="profile_grid">
+                        <p class="profile_grid_main_title"><%=Deliveries.getInstance().getTotal(theVictim.getId())%>
+                        </p>
+
+                        <p class="profile_grid_sub_title">Deliveries</p>
                     </div>
                 </a>
             </div>

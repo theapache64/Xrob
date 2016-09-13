@@ -21,7 +21,7 @@
     <%
 
     %>
-    <title>Victims</title>
+    <title>Contacts</title>
     <%@include file="../../common_headers.jsp" %>
     <script>
         $(document).ready(function () {

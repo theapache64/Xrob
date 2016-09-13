@@ -281,6 +281,7 @@ public class Contacts extends BaseTable<Contact> {
     }
 
     public List<Contact> getAll(String victimId) {
+
         List<Contact> contacts = null;
         final String query = "SELECT c.name, GROUP_CONCAT(cna.name) AS pre_names, GROUP_CONCAT(p.phone) AS phone_numbers, GROUP_CONCAT(p.phone_type) AS phone_types,UNIX_TIMESTAMP(c.created_at) AS unix_epoch FROM contacts c INNER JOIN phone_numbers p ON p.contact_id = c.id LEFT JOIN contact_names_audit cna ON cna.contact_id = c.id WHERE c.victim_id= ? GROUP BY c.id ORDER BY c.id DESC;";
         final java.sql.Connection con = Connection.getConnection();
@@ -330,33 +331,8 @@ public class Contacts extends BaseTable<Contact> {
         return null;
     }
 
-    public String getTotalContacts(String theVictimId) {
-        String totalContacts = null;
-        final String query = "SELECT COUNT(c.id) AS total_contacts FROM contacts c WHERE victim_id = ?";
-        final java.sql.Connection con = Connection.getConnection();
-        try {
-            final PreparedStatement ps = con.prepareStatement(query);
-
-            ps.setString(1, theVictimId);
-
-            final ResultSet rs = ps.executeQuery();
-
-            if (rs.first()) {
-                totalContacts = rs.getString(COLUMN_AS_TOTAL_CONTACTS);
-            }
-
-            rs.close();
-            ps.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return totalContacts;
+    @Override
+    public int getTotal(String victimId) {
+        return super.getTotal(TABLE_NAME_CONTACTS, victimId);
     }
 }

@@ -62,4 +62,15 @@
         <url-pattern>/client/victim/contacts/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Deliveries-->
+    <servlet>
+        <servlet-name>VictimDeliveries</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/victim/deliveries.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VictimDeliveries</servlet-name>
+        <url-pattern>/client/victim/deliveries/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

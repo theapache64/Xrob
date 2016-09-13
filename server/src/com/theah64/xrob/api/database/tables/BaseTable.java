@@ -23,6 +23,7 @@ public class BaseTable<T> {
     public static final String COLUMN_CREATED_AT = "created_at";
     protected static final String COLUMN_AS_UNIX_EPOCH = "unix_epoch";
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
+    private static final String COLUMN_AS_TOTAL_ROWS = "total_rows";
 
     public T get(final String column, final String value) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
@@ -157,4 +158,42 @@ public class BaseTable<T> {
     public List<T> getAll(final String whereColumn, final String whereColumnValue) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
+
+
+    protected int getTotal(final String tableName, final String victimId) {
+
+        int totalCount = 0;
+        final String query = String.format("SELECT COUNT(id) AS total_rows FROM %s  WHERE victim_id = ?", tableName);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, victimId);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                totalCount = rs.getInt(COLUMN_AS_TOTAL_ROWS);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalCount;
+    }
+
+    public int getTotal(final String victimId) {
+        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+    }
 }
+
