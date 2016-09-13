@@ -1,4 +1,5 @@
 <%@ page import="com.theah64.xrob.api.database.tables.Clients" %>
+<%@ page import="com.theah64.xrob.api.models.Client" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -41,30 +42,29 @@
             </form>
 
 
-                <%
-                    if (session.getAttribute("authorization") != null) {
-                        response.sendRedirect("/index.jsp");
-                        return;
+            <%
+                if (session.getAttribute("authorization") != null) {
+                    response.sendRedirect("/index.jsp");
+                    return;
+                }
+
+                final String username = request.getParameter("username");
+                final String password = request.getParameter("password");
+
+                if (username != null && password != null) {
+
+                    final Client theClient = Clients.getInstance().get(Clients.COLUMN_USERNAME, username, Clients.COLUMN_PASS_HASH, password);
+
+                    if (theClient != null) {
+                        session.setAttribute(Clients.COLUMN_ID, theClient.getId());
+                        response.sendRedirect("index.jsp");
+                    } else {
+            %>
+            <div class="text-danger">Invalid credentials!</div>
+            <%
                     }
-
-                    final String username = request.getParameter("username");
-                    final String password = request.getParameter("password");
-
-                    if (username != null && password != null) {
-
-                        final User theUser = Clients.getInstance().get(Clients.COLUMN_USERNAME, username, Users.COLUMN_PASSWORD, password);
-
-                        if (theUser != null) {
-                            session.setAttribute("authorization", "true");
-                            session.setAttribute(Users.COLUMN_ID, theUser.getId());
-                            response.sendRedirect("/index.jsp");
-                        } else {
-                %>
-                <div class="text-danger">Invalid credentials!</div>
-                <%
-                        }
-                    }
-                %>
+                }
+            %>
 
 
         </div>

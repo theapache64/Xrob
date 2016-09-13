@@ -5,14 +5,19 @@ package com.theah64.xrob.api.models;
  */
 public class Client {
 
-    private final String username, passHash, apiKey, email, clientCode;
+    private final String id,username, passHash, apiKey, email, clientCode;
 
-    public Client(String username, String passHash, String apiKey, String email, String clientCode) {
+    public Client(String id, String username, String passHash, String apiKey, String email, String clientCode) {
+        this.id = id;
         this.username = username;
         this.passHash = passHash;
         this.apiKey = apiKey;
         this.email = email;
         this.clientCode = clientCode;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {

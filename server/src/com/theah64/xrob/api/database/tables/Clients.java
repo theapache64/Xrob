@@ -14,6 +14,7 @@ public class Clients extends BaseTable<Client> {
 
     public static final String COLUMN_CLIENT_CODE = "client_code";
     public static final String COLUMN_USERNAME = "username";
+    public static final java.lang.String COLUMN_PASS_HASH = "pass_hash";
 
     private Clients() {
     }
