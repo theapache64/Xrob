@@ -52,7 +52,7 @@ span.phone_number {
     top: 3px;
 }
 
-td.clickable_data{
+td.clickable_data {
     cursor: pointer;
 }
 
@@ -60,10 +60,23 @@ ul#nav_menu {
     margin-top: 22px;
 }
 
-ul#main_menu{
+ul#main_menu {
     margin-top: 4px;
 }
 
 .change-form-wrapper.col-md-4 {
     height: 274px;
+}
+
+p.change-settings-result {
+    position: absolute;
+    bottom: 36px;
+}
+
+.change-form-wrapper-plus p.change-settings-result {
+    bottom: 56px;
+}
+
+.change-form-wrapper.col-md-12 {
+    height: 200px;
 }

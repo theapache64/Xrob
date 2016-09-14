@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-
     <!-- Signup-->
     <servlet>
         <servlet-name>ClientSignUp</servlet-name>
@@ -83,4 +82,18 @@
         <servlet-name>ClientSettings</servlet-name>
         <url-pattern>/client/settings</url-pattern>
     </servlet-mapping>
+
+    <!-- Client settings-->
+    <servlet>
+        <servlet-name>ClientSignout</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/signout.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientSignout</servlet-name>
+        <url-pattern>/client/signout</url-pattern>
+    </servlet-mapping>
+
+
+
 </web-app>

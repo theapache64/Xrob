@@ -6,7 +6,12 @@ package com.theah64.xrob.api.models;
 public class Client {
 
     public static final String KEY = "client";
-    private final String id, username, passHash, apiKey, email, clientCode;
+    private final String id;
+    private String username;
+    private final String passHash;
+    private final String apiKey;
+    private String email;
+    private String clientCode;
 
     public Client(String id, String username, String passHash, String apiKey, String email, String clientCode) {
         this.id = id;
@@ -51,5 +56,18 @@ public class Client {
                 ", email='" + email + '\'' +
                 ", clientCode='" + clientCode + '\'' +
                 '}';
+    }
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setClientCode(String clientCode) {
+        this.clientCode = clientCode;
     }
 }
