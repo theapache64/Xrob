@@ -1,30 +1,55 @@
 package com.theah64.xrob.services.firebase;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.theah64.xrob.R;
+import com.theah64.xrob.database.Commands;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 public class MessagingService extends FirebaseMessagingService {
 
     private static final String X = MessagingService.class.getSimpleName();
+    private static final String KEY_TYPE = "type";
+    private static final String TYPE_COMMAND = "command";
+    private static final String KEY_DATA = "data";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.i(X, "Firebase Message received : " + remoteMessage);
-        Log.i(X, "remoteMessage.From : " + remoteMessage.getFrom());
-        Log.i(X, "remoteMessage.MessageId : " + remoteMessage.getMessageId());
-        Log.i(X, "remoteMessage.getCollapseKey : " + remoteMessage.getCollapseKey());
-        Log.i(X, "remoteMessage.getMessageType : " + remoteMessage.getMessageType());
-        Log.i(X, "remoteMessage.getTo : " + remoteMessage.getTo());
-        Log.i(X, "remoteMessage.getData : " + remoteMessage.getData());
-        Log.i(X, "remoteMessage.getTtl : " + remoteMessage.getTtl());
-        Log.i(X, "remoteMessage.getSentTime : " + remoteMessage.getSentTime());
-        Log.i(X, "remoteMessage.getNotification : " + remoteMessage.getNotification().getTitle());
-        Log.i(X, "remoteMessage.getNotification.getBody : " + remoteMessage.getNotification().getBody());
-        Log.i(X, "remoteMessage.getData().size() : " + remoteMessage.getData().size());
+        Map<String, String> data = remoteMessage.getData();
+        Log.i(X, "FCM says : " + data);
+        if (!data.isEmpty()) {
+            final String type = data.get(KEY_TYPE);
+            if (type.equals(TYPE_COMMAND)) {
+                Log.d(X, "Command received");
+                try {
+                    final JSONObject joCommand = new JSONObject(data.get(KEY_DATA));
+                    final String id = joCommand.getString(Commands.COLUMN_ID);
+                    final String command = joCommand.getString(Commands.COLUMN_COMMAND);
+
+                    showNotification(this, command);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void showNotification(Context context, String command) {
+        final NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context)
+                .setContentTitle(command)
+                .setAutoCancel(false)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setSmallIcon(R.drawable.ic_error_outline_black_48dp);
+
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0,notificationCompat.build());
     }
 }

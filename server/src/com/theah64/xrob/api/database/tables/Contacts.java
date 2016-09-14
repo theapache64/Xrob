@@ -324,12 +324,6 @@ public class Contacts extends BaseTable<Contact> {
         return contacts;
     }
 
-    private static String[] getGroupDecatenated(String data) {
-        if (data != null) {
-            return data.split(",");
-        }
-        return null;
-    }
 
     @Override
     public int getTotal(String victimId) {

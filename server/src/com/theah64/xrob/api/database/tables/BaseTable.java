@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -195,5 +196,13 @@ public class BaseTable<T> {
     public int getTotal(final String victimId) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
+
+    protected static String[] getGroupDecatenated(String data) {
+        if (data != null) {
+            return data.split(",");
+        }
+        return null;
+    }
+
 }
 
