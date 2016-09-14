@@ -216,7 +216,7 @@ DROP TABLE IF EXISTS `command_statuses`;
 CREATE TABLE IF NOT EXISTS `command_statuses`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `command_id` INT NOT NULL,
-  `status` ENUM ('SENT','DELIVERED','PROCESSED','FINISHED') NOT NULL DEFAULT 'SENT',
+  `status` ENUM ('SENT','DELIVERED','FINISHED') NOT NULL DEFAULT 'SENT',
   `status_message` TEXT,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`),

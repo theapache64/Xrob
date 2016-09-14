@@ -176,9 +176,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
 
         //Hiding launcher icon
-        PackageManager p = getPackageManager();
+        /*PackageManager p = getPackageManager();
         ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);*/
 
         OkHttpUtils.cancelCall(connectCall);
         super.onStop();

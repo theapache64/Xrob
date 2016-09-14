@@ -1,9 +1,11 @@
 package com.theah64.xrob.commandcenter.commands;
 
+import android.content.Context;
+
 /**
  * Created by theapache64 on 14/9/16,7:48 PM.
  */
-public class BaseCommand {
+public abstract class BaseCommand {
 
     private static final java.lang.String BASE_COMMAND_CODE = "xrob";
     private final String[] args;
@@ -36,4 +38,6 @@ public class BaseCommand {
             super(s);
         }
     }
+
+    public abstract void handle(final Context context);
 }

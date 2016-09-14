@@ -19,7 +19,7 @@ public class CommandFactory {
 
             default:
                 throw new BaseCommand.CommandException("Command not defined " + commandType);
-                
+
         }
     }
 

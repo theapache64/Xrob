@@ -21,6 +21,7 @@ public class FCMUtils {
     public static final String KEY_TYPE = "type";
     public static final String TYPE_COMMAND = "command";
     public static final String KEY_DATA = "data";
+    public static final String KEY_TYPE_DATA = "type_data";
     public static final String KEY_TO = "to";
     private static final String FCM_NOTIFICATION_KEY = "AIzaSyAlI64y49SzETsHp_8-zasi4QZdAIZt7XM";
 

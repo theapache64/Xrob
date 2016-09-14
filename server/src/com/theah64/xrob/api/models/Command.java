@@ -14,7 +14,7 @@ import java.util.List;
 public class Command {
 
     public static final String COMMAND_NOTIFY = "notify";
-    public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify)\\s'(?:.+)'$";
+    public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify).+";
 
     private final String id, command, relativeEstablishedTime;
     private final List<Status> statuses;
@@ -56,14 +56,16 @@ public class Command {
             joFcm.put(FCMUtils.KEY_TO, fcmId);
 
             final JSONObject joData = new JSONObject();
-            joData.put(FCMUtils.KEY_TYPE, FCMUtils.TYPE_COMMAND);
 
             final JSONObject joCommand = new JSONObject();
             joCommand.put(Commands.COLUMN_COMMAND, command.getCommand());
             joCommand.put(Commands.COLUMN_ID, command.getId());
 
-            joData.put(FCMUtils.KEY_DATA, joCommand);
+            joData.put(FCMUtils.KEY_TYPE, FCMUtils.TYPE_COMMAND);
+            joData.put(FCMUtils.KEY_TYPE_DATA, joCommand);
+
             joFcm.put(FCMUtils.KEY_DATA, joData);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -74,7 +76,7 @@ public class Command {
     public String getId() {
         return id;
     }
-    
+
     public static class Status {
 
         private final String status, statusMessage, relativeReportTime;
