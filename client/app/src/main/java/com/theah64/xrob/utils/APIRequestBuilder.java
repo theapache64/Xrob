@@ -13,8 +13,8 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    //private static final String BASE_URL = "http://192.168.43.147:8080/v1";
-    private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
+    private static final String BASE_URL = "http://192.168.43.147:8080/v1";
+    //private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
     private static final String KEY_AUTHORIZATION = "Authorization";

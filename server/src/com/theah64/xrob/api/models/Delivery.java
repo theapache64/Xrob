@@ -10,7 +10,11 @@ import java.io.File;
  */
 public class Delivery {
 
-    private  String relativeSyncTime;
+    public static final String TYPE_JOIN = "join";
+    public static final String TYPE_RE_JOIN = "re_join";
+    public static final String TYPE_OTHER = "other";
+    private String relativeSyncTime;
+
     public String getRelativeSyncTime() {
         return relativeSyncTime;
     }
@@ -48,7 +52,7 @@ public class Delivery {
         this.hasServerError = hasServerError;
         this.serverErrorMessage = serverErrorMessage;
         this.createdAt = createdAt;
-        if (syncedAt != -1) {
+        if (syncedAt > 0) {
             this.relativeSyncTime = TimeUtils.getRelativeTime(syncedAt);
         }
 
@@ -74,6 +78,9 @@ public class Delivery {
             case TYPE_MEDIA_SCREEN_SHOT:
             case TYPE_MEDIA_VOICE:
             case TYPE_MEDIA_SELFIE:
+            case TYPE_JOIN:
+            case TYPE_RE_JOIN:
+            case TYPE_OTHER:
                 break;
 
             default:

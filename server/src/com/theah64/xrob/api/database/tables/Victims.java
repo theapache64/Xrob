@@ -82,7 +82,19 @@ public class Victims extends BaseTable<Victim> {
      */
     @Override
     public boolean add(Victim victim) {
+        return addv3(victim) != null;
+    }
 
+    @Override
+    public void addv2(Victim victim) throws RuntimeException {
+        if (!add(victim)) {
+            throw new RuntimeException("Unexpected error while adding new victim");
+        }
+    }
+
+    @Override
+    public String addv3(Victim victim) {
+        String newVictimId = null;
         final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info,victim_code) VALUES (?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
@@ -90,7 +102,7 @@ public class Victims extends BaseTable<Victim> {
         boolean isVictimAdded = false;
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
+            final PreparedStatement ps = connection.prepareStatement(addVictimQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, victim.getName());
             ps.setString(2, victim.getEmail());
@@ -104,7 +116,13 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(9, victim.getOtherDeviceInfo());
             ps.setString(10, victim.getVictimCode());
 
-            isVictimAdded = ps.executeUpdate() == 1;
+            if (ps.executeUpdate() == 1) {
+                final ResultSet rs = ps.executeQuery();
+                if (rs.first()) {
+                    newVictimId = rs.getString(1);
+                }
+                rs.close();
+            }
 
             ps.close();
 
@@ -118,14 +136,7 @@ public class Victims extends BaseTable<Victim> {
             }
         }
 
-        return isVictimAdded;
-    }
-
-    @Override
-    public void addv2(Victim victim) throws RuntimeException {
-        if (!add(victim)) {
-            throw new RuntimeException("Unexpected error while adding new victim");
-        }
+        return newVictimId;
     }
 
     /**
