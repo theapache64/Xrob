@@ -89,6 +89,17 @@
                 </a>
             </div>
 
+            <div class="col-lg-3">
+                <a href="/client/victim/command_center/<%=victimCode%>">
+                    <div class="profile_grid">
+                        <p class="profile_grid_main_title">C
+                        </p>
+
+                        <p class="profile_grid_sub_title">Command center</p>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
         <%
