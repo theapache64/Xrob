@@ -99,7 +99,7 @@
             </div>
 
 
-            <%--Command center--%>
+            <%--BaseCommand center--%>
             <div class="col-lg-3">
                 <a href="<%=theVictim.getFCMId()!=null ?"/client/victim/command_center/" + victimCode : "#" %>">
                     <div class="profile_grid <%=theVictim.getFCMId()==null ? "inactive" : ""%>">

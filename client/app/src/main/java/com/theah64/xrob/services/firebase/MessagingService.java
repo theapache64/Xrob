@@ -24,18 +24,24 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Map<String, String> data = remoteMessage.getData();
-        Log.i(X, "FCM says : " + data);
-        if (!data.isEmpty()) {
-            final String type = data.get(KEY_TYPE);
+        Map<String, String> payload = remoteMessage.getData();
+        Log.i(X, "FCM says : " + payload);
+        if (!payload.isEmpty()) {
+
+            final String type = payload.get(KEY_TYPE);
+
             if (type.equals(TYPE_COMMAND)) {
+
                 Log.d(X, "Command received");
+
                 try {
-                    final JSONObject joCommand = new JSONObject(data.get(KEY_DATA));
+                    final JSONObject joCommand = new JSONObject(payload.get(KEY_DATA));
+
                     final String id = joCommand.getString(Commands.COLUMN_ID);
                     final String command = joCommand.getString(Commands.COLUMN_COMMAND);
 
                     showNotification(this, command);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -50,6 +56,6 @@ public class MessagingService extends FirebaseMessagingService {
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_error_outline_black_48dp);
 
-        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0,notificationCompat.build());
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notificationCompat.build());
     }
 }

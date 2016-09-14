@@ -94,7 +94,7 @@
         <url-pattern>/client/signout</url-pattern>
     </servlet-mapping>
 
-    <!-- Command center-->
+    <!-- BaseCommand center-->
     <servlet>
         <servlet-name>VictimCommandCenter</servlet-name>
         <jsp-file>/WEB-INF/client_panel/victim/command_center.jsp</jsp-file>

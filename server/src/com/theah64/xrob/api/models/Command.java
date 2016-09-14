@@ -12,7 +12,10 @@ import java.util.List;
  * Created by theapache64 on 14/9/16,4:37 PM.
  */
 public class Command {
+
+    public static final String COMMAND_NOTIFY = "notify";
     public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify)\\s'(?:.+)'$";
+
     private final String id, command, relativeEstablishedTime;
     private final List<Status> statuses;
 
@@ -71,7 +74,7 @@ public class Command {
     public String getId() {
         return id;
     }
-
+    
     public static class Status {
 
         private final String status, statusMessage, relativeReportTime;
