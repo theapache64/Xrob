@@ -21,6 +21,13 @@
     %>
     <title>Victims</title>
     <%@include file="../../common_headers.jsp" %>
+    <script>
+        $(document).ready(function () {
+            $(".inactive").click(function () {
+                alert("Command center not available for this victim");
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -67,6 +74,7 @@
 
         <div class="row" style="margin-top: 20px;">
 
+            <%--Contacts--%>
             <div class="col-lg-3">
                 <a href="/client/victim/contacts/<%=victimCode%>">
                     <div class="profile_grid">
@@ -78,6 +86,7 @@
                 </a>
             </div>
 
+            <%--Deliveries--%>
             <div class="col-lg-3">
                 <a href="/client/victim/deliveries/<%=victimCode%>">
                     <div class="profile_grid">
@@ -89,9 +98,11 @@
                 </a>
             </div>
 
+
+            <%--Command center--%>
             <div class="col-lg-3">
-                <a href="/client/victim/command_center/<%=victimCode%>">
-                    <div class="profile_grid">
+                <a href="<%=theVictim.getFCMId()!=null ?"/client/victim/command_center/" + victimCode : "#" %>">
+                    <div class="profile_grid <%=theVictim.getFCMId()==null ? "inactive" : ""%>">
                         <p class="profile_grid_main_title">C
                         </p>
 
@@ -99,6 +110,7 @@
                     </div>
                 </a>
             </div>
+
 
         </div>
 

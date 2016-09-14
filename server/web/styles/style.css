@@ -80,3 +80,7 @@ p.change-settings-result {
 .change-form-wrapper.col-md-12 {
     height: 200px;
 }
+
+.inactive {
+    background-color: #222222;
+}
