@@ -70,7 +70,6 @@
 
         <div class="row" style="margin-top: 20px;">
 
-
             <%
                 final List<Delivery> deliveries = Deliveries.getInstance().getAll(theVictim.getId());
                 if (deliveries != null) {

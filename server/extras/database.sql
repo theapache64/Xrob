@@ -200,6 +200,20 @@ CREATE TABLE IF NOT EXISTS `client_victim_relations`(
   FOREIGN KEY (victim_id) REFERENCES victims(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `commands`;
+CREATE TABLE IF NOT EXISTS `commands`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `victim_id` INT NOT NULL,
+  `client_id` INT NOT NULL,
+  `command` TEXT,
+  `status` ENUM ('SENT','DELIVERED','PROCESSED','FINISHED') NOT NULL DEFAULT 'SENT',
+  `result` TEXT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`),
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (victim_id) REFERENCES victims(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 
 /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
   DELIMITER $$
