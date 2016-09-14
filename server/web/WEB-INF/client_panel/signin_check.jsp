@@ -10,12 +10,12 @@
 <%
 
     final Object clientId = session.getAttribute(Clients.COLUMN_ID);
-
+    final Client client;
     if (clientId == null) {
         response.sendRedirect("/client/signup");
         return;
     } else {
-        final Client client = Clients.getInstance().get(Clients.COLUMN_ID, clientId.toString());
+        client = Clients.getInstance().get(Clients.COLUMN_ID, clientId.toString());
         if (client != null) {
             request.setAttribute(Client.KEY, client);
         } else {

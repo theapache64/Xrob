@@ -73,4 +73,14 @@
         <url-pattern>/client/victim/deliveries/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Client settings-->
+    <servlet>
+        <servlet-name>ClientSettings</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/settings.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientSettings</servlet-name>
+        <url-pattern>/client/settings</url-pattern>
+    </servlet-mapping>
 </web-app>

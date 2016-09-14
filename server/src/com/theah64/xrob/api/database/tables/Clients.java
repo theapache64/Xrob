@@ -27,6 +27,7 @@ public class Clients extends BaseTable<Client> {
     public static final String REGEX_USERNAME = "^[a-z0-9]{6,20}$";
     public static final String REGEX_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final int API_KEY_LENGTH = 10;
+    public static final String REGEX_CLIENT_CODE ="^[0-9]{10}$" ;
 
     private Clients() {
     }
@@ -129,9 +130,9 @@ public class Clients extends BaseTable<Client> {
         final boolean isSingleColumnMatch = column2 == null && value2 == null;
 
         if (isSingleColumnMatch) {
-            query = String.format("SELECT id,client_code FROM clients WHERE %s = ? LIMIT 1", column1);
+            query = String.format("SELECT id,client_code,username,email,pass_hash FROM clients WHERE %s = ? LIMIT 1", column1);
         } else {
-            query = String.format("SELECT id,client_code FROM clients WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
+            query = String.format("SELECT id,client_code,username,email,pass_hash FROM clients WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
         }
 
         final java.sql.Connection connection = Connection.getConnection();
@@ -154,7 +155,10 @@ public class Clients extends BaseTable<Client> {
                 //Collecting relation
                 final String id = rs.getString(COLUMN_ID);
                 final String clientCode = rs.getString(COLUMN_CLIENT_CODE);
-                client = new Client(id, null, null, null, null, clientCode);
+                final String username = rs.getString(COLUMN_USERNAME);
+                final String email = rs.getString(COLUMN_EMAIL);
+                final String passHash = rs.getString(COLUMN_PASS_HASH);
+                client = new Client(id, username, passHash, null, email, clientCode);
             }
 
             rs.close();

@@ -71,7 +71,9 @@
                     <label for="iEmail">Email : </label>
                     <input value="theapache64@gmail.com" name="email" type="email" id="iEmail" class="form-control"
                            placeholder="Your email address"
+                           data-error="Whooops, that email address is invalid"
                            required/>
+                    <div class="help-block with-errors"></div>
                 </div>
 
 

@@ -1,10 +1,9 @@
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
 <%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Contacts" %>
+<%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -28,25 +27,36 @@
 <div class="container">
     <%@include file="../header.jsp" %>
 
-    <div class="row">
-        <%
-            try {
+    <%
+        try {
 
-                final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 1);
-                final String victimCode = pathInfoUtils.getPart(1);
-                final Victims victimsTable = Victims.getInstance();
-                final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 1);
+            final String victimCode = pathInfoUtils.getPart(1);
+            final Victims victimsTable = Victims.getInstance();
+            final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
-                if (theVictim != null) {
+            if (theVictim != null) {
+
+                if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
                     final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(theVictim.getId());
 
-        %>
+    %>
 
+    <div class="row text-center">
+        <ul id="nav_menu" class="breadcrumb">
+            <li><a href="/client/panel">Victims</a></li>
+            <li class="active"><%=theVictim.getIdentity()%>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="row">
 
         <div class="row">
             <div class="col-md-12">
-                <h4><%=theVictim.getDeviceName()%>
+                <h4><%=theVictim.getIdentity()%>
                     <small>
                         <%=lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")" %>
                     </small>
@@ -84,23 +94,25 @@
         <%
 
             } else {
-                throw new PathInfo.PathInfoException("Invalid victim code");
+                throw new PathInfo.PathInfoException("No connection established with this victim");
             }
 
         %>
     </div>
 
-    <div class="row">
 
-        <%
-        } catch (PathInfo.PathInfoException e) {
-            e.printStackTrace();
-        %>
-        <h1 class="text-danger text-center">Invalid profile</h1>
-        <%
-            }
-        %>
-    </div>
+    <%
+        } else {
+            throw new PathInfo.PathInfoException("Invalid victim code");
+        }
+    } catch (PathInfo.PathInfoException e) {
+        e.printStackTrace();
+    %>
+    <%=HtmlTemplates.getErrorHtml(e.getMessage())%>
+    <%
+        }
+    %>
+
 
 </div>
 </body>

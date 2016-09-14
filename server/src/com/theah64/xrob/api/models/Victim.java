@@ -119,4 +119,14 @@ public class Victim {
             return null;
         }
     }
+
+    public String getIdentity() {
+        if (getName() != null) {
+            return getName();
+        } else if (getEmail() != null) {
+            return getEmail();
+        } else {
+            return getDeviceName();
+        }
+    }
 }

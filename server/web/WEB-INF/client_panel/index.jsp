@@ -36,6 +36,12 @@
 <div class="container">
     <%@include file="header.jsp" %>
 
+    <div class="row text-center">
+        <ul id="nav_menu" class="breadcrumb">
+            <li class="active">Victims</li>
+        </ul>
+    </div>
+
     <%
         final List<Victim> victims = Clients.getInstance().getVictims(session.getAttribute(Clients.COLUMN_ID).toString());
         if (victims != null) {
