@@ -6,6 +6,7 @@
 <%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
 <%@ page import="com.theah64.xrob.api.models.Contact" %>
 <%@ page import="com.theah64.xrob.api.database.tables.Contacts" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -23,22 +24,13 @@
     %>
     <title>Contacts</title>
     <%@include file="../../common_headers.jsp" %>
+    <%
+        final HtmlTemplates.SearchTemplate searchTemplate = new HtmlTemplates.SearchTemplate("tContacts", "contact_row");
+    %>
     <script>
         $(document).ready(function () {
 
-            var $rows = $('table#tContacts tr.contact_row');
-            $('input#iSearch').keyup(function () {
-
-                var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
-                        reg = new RegExp(val, 'i'),
-                        text;
-
-                $rows.show().filter(function () {
-                    text = $(this).text().replace(/\s+/g, ' ');
-                    return !reg.test(text);
-                }).hide();
-            });
-
+            <%=searchTemplate.getSearchScript()%>
         });
 
 
@@ -66,55 +58,41 @@
 
         <div class="row" style="margin-top: 20px;">
 
-
-            <%
-                final List<Contact> contacts = Contacts.getInstance().getAll(theVictim.getId());
-                if (contacts != null) {
-            %>
             <div class="col-md-10 content-centered">
 
-                <div class="row" style="margin-bottom: 20px;">
-                    <div class="col-md-8 pull-left">
-                        <h4><%=theVictim.getDeviceName()%>
-                            <small>
-                                <%=lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")" %>
-                            </small>
-                        </h4>
-                    </div>
+                <%=searchTemplate.getTopTemplate(theVictim.getDeviceName(),
+                        lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
 
-                    <div class="col-md-4 pull-right">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-        <i class="glyphicon glyphicon-search"></i>
-    </span>
-                            <input id="iSearch" placeholder="Search" type="text" class="form-control"/>
-                        </div>
-                    </div>
+                <%
+                    final List<Contact> contacts = Contacts.getInstance().getAll(theVictim.getId());
+                    if (contacts != null) {
+                %>
+                <div class="row">
+                    <table id="tContacts" class="table table-bordered table-condensed">
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Synced</th>
+                        </tr>
+
+                        <%
+                            for (final Contact contact : contacts) {
+                        %>
+                        <tr class="contact_row">
+                            <td><%=contact.getName()%><%=contact.getPreNames() != null ? "<small>(" + contact.getPreNames() + ")</small>" : ""%>
+                            </td>
+                            <td><%=Contact.getHtmlizedPhoneNumberAndTypes(contact.getPhone())%>
+                            </td>
+                            <td><%=contact.getRelativeSyncTime()%>
+                            </td>
+                        </tr>
+                        <%
+                            }
+                        %>
+
+                    </table>
                 </div>
 
-                <table id="tContacts" class="table table-bordered table-condensed">
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Synced</th>
-                    </tr>
-
-                    <%
-                        for (final Contact contact : contacts) {
-                    %>
-                    <tr class="contact_row">
-                        <td><%=contact.getName()%><%=contact.getPreNames() != null ? "<small>(" + contact.getPreNames() + ")</small>" : ""%>
-                        </td>
-                        <td><%=Contact.getHtmlizedPhoneNumberAndTypes(contact.getPhone())%>
-                        </td>
-                        <td><%=contact.getRelativeSyncTime()%>
-                        </td>
-                    </tr>
-                    <%
-                        }
-                    %>
-
-                </table>
             </div>
             <%
                 } else {

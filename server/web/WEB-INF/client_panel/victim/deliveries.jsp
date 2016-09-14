@@ -4,6 +4,7 @@
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -21,21 +22,13 @@
     %>
     <title>Deliveries</title>
     <%@include file="../../common_headers.jsp" %>
+    <%
+        final HtmlTemplates.SearchTemplate searchTemplate = new HtmlTemplates.SearchTemplate("tDeliveries", "delivery_row");
+    %>
     <script>
         $(document).ready(function () {
 
-            var $rows = $('table#tDeliveries tr.delivery_row');
-            $('input#iSearch').keyup(function () {
-
-                var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
-                        reg = new RegExp(val, 'i'),
-                        text;
-
-                $rows.show().filter(function () {
-                    text = $(this).text().replace(/\s+/g, ' ');
-                    return !reg.test(text);
-                }).hide();
-            });
+            <%=searchTemplate.getSearchScript()%>
 
         });
 
@@ -71,24 +64,9 @@
             %>
             <div class="col-md-10 content-centered">
 
-                <div class="row" style="margin-bottom: 20px;">
-                    <div class="col-md-8 pull-left">
-                        <h4><%=theVictim.getDeviceName()%>
-                            <small>
-                                <%=lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")" %>
-                            </small>
-                        </h4>
-                    </div>
-
-                    <div class="col-md-4 pull-right">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-        <i class="glyphicon glyphicon-search"></i>
-    </span>
-                            <input id="iSearch" placeholder="Search" type="text" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
+                <%=searchTemplate.getTopTemplate(
+                        theVictim.getDeviceName(),
+                        lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
 
                 <table id="tDeliveries" class="table table-bordered table-condensed">
                     <tr>
@@ -130,19 +108,14 @@
 
         %>
     </div>
-
-    <div class="row">
-
-        <%
-        } catch (PathInfo.PathInfoException e) {
-            e.printStackTrace();
-        %>
-        <h1 class="text-danger text-center"><b>Whoops!</b></br> <%=e.getMessage()%>
-        </h1>
-        <%
-            }
-        %>
-    </div>
+    <%
+    } catch (PathInfo.PathInfoException e) {
+        e.printStackTrace();
+    %>
+    <%=HtmlTemplates.getErrorHtml(e.getMessage())%>
+    <%
+        }
+    %>
 
 </div>
 </body>

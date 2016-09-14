@@ -1,6 +1,7 @@
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -15,6 +16,9 @@
 <head>
     <title>Client panel</title>
     <%@include file="../common_headers.jsp" %>
+    <%
+        final HtmlTemplates.SearchTemplate searchTemplate = new HtmlTemplates.SearchTemplate("tVictims", "clickable_data");
+    %>
     <script>
         $(document).ready(function () {
 
@@ -23,23 +27,7 @@
                 window.document.location = $(this).parent().data("href");
             });
 
-            $(document).ready(function () {
-
-                var $rows = $('table#tVictims tr.data_row');
-                $('input#iSearch').keyup(function () {
-
-                    var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
-                            reg = new RegExp(val, 'i'),
-                            text;
-
-                    $rows.show().filter(function () {
-                        text = $(this).text().replace(/\s+/g, ' ');
-                        return !reg.test(text);
-                    }).hide();
-                });
-
-            });
-
+            <%=searchTemplate.getSearchScript()%>
 
         });
     </script>
@@ -58,22 +46,8 @@
         <%--Generate table here--%>
         <div class="col-md-12 content-centered">
 
-            <div class="row" style="margin-bottom: 20px;">
-                <div class="col-md-8 pull-left">
-                    <h4>
-                        You've <%=CommonUtils.getProperSentense(victims.size(), "one victim", victims.size() + " victims")%>
-                    </h4>
-                </div>
 
-                <div class="col-md-4 pull-right">
-                    <div class="input-group">
-                            <span class="input-group-addon">
-        <i class="glyphicon glyphicon-search"></i>
-    </span>
-                        <input id="iSearch" placeholder="Search" type="text" class="form-control"/>
-                    </div>
-                </div>
-            </div>
+            <%=searchTemplate.getTopTemplate(CommonUtils.getProperSentense(victims.size(), "one victim", victims.size() + " victims"), "")%>
 
             <table id="tVictims" class="table table-bordered">
                 <tr>
@@ -120,13 +94,7 @@
 
     } else {
     %>
-
-
-    <div class="row">
-        <h1 class="text-danger text-center">No victim connected!</h1>
-    </div>
-
-
+    <%=HtmlTemplates.getErrorHtml("No victim connected")%>
     <%
         }
     %>

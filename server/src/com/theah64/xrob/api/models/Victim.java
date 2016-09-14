@@ -108,7 +108,6 @@ public class Victim {
             final String[] deviceInfo = otherDeviceInfo.split(",");
 
             for (final String info : deviceInfo) {
-                System.out.println(info);
                 final String[] labelInfo = info.split("=");
                 infoBuilder.append("<b>").append(labelInfo[0]).append("</b> : ").append(labelInfo[1]).append("</br>");
             }

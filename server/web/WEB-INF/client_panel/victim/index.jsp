@@ -23,7 +23,6 @@
     <title>Victims</title>
     <%@include file="../../common_headers.jsp" %>
 
-
 </head>
 <body>
 <div class="container">

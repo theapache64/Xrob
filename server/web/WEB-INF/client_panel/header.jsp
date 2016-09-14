@@ -13,6 +13,7 @@
         </h2>
         </a>
     </div>
+    
     <div class="col-md-4" style="margin-top: 16px">
         <div class="well well-sm pull-right">CLIENT CODE:
             <b><%=((Client) request.getAttribute(Client.KEY)).getClientCode()%>
