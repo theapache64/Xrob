@@ -13,6 +13,10 @@ import java.sql.SQLException;
  */
 public class CommandStatuses extends BaseTable<Command.Status> {
 
+    public static final String COLUMN_COMMAND_ID = "command_id";
+    public static final String COLUMN_STATUS = "status";
+    public static final String COLUMN_STATUS_MESSAGE = "status_message";
+
     private CommandStatuses() {
     }
 

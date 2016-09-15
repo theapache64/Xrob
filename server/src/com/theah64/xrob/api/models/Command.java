@@ -150,5 +150,17 @@ public class Command {
                     return "label-info";
             }
         }
+
+        public static boolean isValid(String status) {
+            switch (status) {
+                case STATUS_SENT:
+                case STATUS_DELIVERED:
+                case STATUS_FINISHED:
+                case STATUS_FAILED:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

@@ -14,11 +14,13 @@ import java.util.List;
  * Created by theapache64 on 14/9/16,4:37 PM.
  */
 public class Commands extends BaseTable<Command> {
+
     public static final String COLUMN_COMMAND = "command";
     private static final String COLUMN_AS_COMMAND_ESTABLISHED_AT = "command_established_at";
     private static final String COLUMN_AS_COMMAND_STATUSES = "command_statuses";
     private static final String COLUMN_AS_COMMAND_STATUS_MESSAGES = "command_status_messages";
     private static final String COLUMN_AS_COMMAND_STATUSES_REPORTED_AT = "command_statuses_reported_at";
+    public static final String COLUMN_VICTIM_ID = "victim_id";
 
     private Commands() {
     }
@@ -110,5 +112,31 @@ public class Commands extends BaseTable<Command> {
         }
 
         return commandId;
+    }
+
+    @Override
+    public boolean isExist(String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
+        boolean isExist = false;
+        final String query = String.format("SELECT id FROM commands WHERE %s = ? AND %s = ? LIMIT 1", whereColumn1, whereColumn2);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, whereColumnValue1);
+            ps.setString(2, whereColumnValue2);
+            final ResultSet rs = ps.executeQuery();
+            isExist = rs.first();
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isExist;
     }
 }

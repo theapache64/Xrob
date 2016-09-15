@@ -158,16 +158,18 @@
                         for (final Command command : commands) {
                     %>
                     <tr class="command_row">
-                        <td><code><%=command.getCommand()%></code>
+                        <td><textarea class="form-control"><%=command.getCommand()%></textarea>
                         </td>
                         <td style="text-align: left">
                             <%
                                 if (!command.getStatuses().isEmpty()) {
-                                    for (Command.Status status : command.getStatuses()) {
+                                    for (int i = command.getStatuses().size() - 1; i >= 0; i--) {
+                                        final Command.Status status = command.getStatuses().get(i);
                             %>
                             <span class="label <%=status.getBootstrapLabelClassForStatus()%>"><%=status.getStatus() + " " + status.getRelativeReportTime()%></span>
                             <small>(<%=status.getStatusMessage()%>)
-                            </small><br>
+                            </small>
+                            <br>
                             <%
                                 }
                             } else {

@@ -105,7 +105,7 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    protected boolean isExist(final String whereColumn1, final String whereColumnValue1, final String whereColumn2, final String whereColumnValue2) {
+    public boolean isExist(final String whereColumn1, final String whereColumnValue1, final String whereColumn2, final String whereColumnValue2) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
