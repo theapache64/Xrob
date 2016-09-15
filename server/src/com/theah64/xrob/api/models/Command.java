@@ -97,12 +97,29 @@ public class Command {
 
     public static class Status {
 
-        private final String status, statusMessage, relativeReportTime;
+        private final String status, statusMessage, relativeReportTime,commandId;
 
-        public Status(String status, String statusMessage, long reportedAt) {
+        public Status(String status, String statusMessage, long reportedAt, String commandId) {
             this.status = status;
             this.statusMessage = statusMessage;
+            this.commandId = commandId;
             this.relativeReportTime = TimeUtils.getRelativeTime(reportedAt);
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getStatusMessage() {
+            return statusMessage;
+        }
+
+        public String getRelativeReportTime() {
+            return relativeReportTime;
+        }
+
+        public String getCommandId() {
+            return commandId;
         }
 
         @Override
