@@ -54,7 +54,7 @@ public class Commands extends BaseTable<Command> {
 
                     final List<Command.Status> commandStatuses = new ArrayList<>(commandStatusesArr.length);
                     for (int i = 0; i < commandStatuses.size(); i++) {
-                        commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i]), commandId));
+                        commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i]), id));
                     }
 
                     commands.add(new Command(id, command, commandEstablishedAt, commandStatuses, null, null));
