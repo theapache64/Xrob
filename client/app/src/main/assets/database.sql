@@ -16,4 +16,12 @@ CREATE TABLE phone_numbers(
 	FOREIGN KEY (contact_id) REFERENCES contacts (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS command_statuses;
+CREATE TABLE command_statuses(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    command_id INTEGER NOT NULL,
+    command_status VARCHAR(10) CHECK (command_status IN ('DELIVERED','FINISHED')) NOT NULL,
+    is_synced INTEGER CHECK(is_synced IN (0,1)) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 

@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `command_statuses`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `command_id` INT NOT NULL,
   `status` ENUM ('SENT','DELIVERED','FINISHED','FAILED') NOT NULL DEFAULT 'SENT',
-  `status_message` TEXT,
+  `status_message` TEXT NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`),
   FOREIGN KEY (command_id) REFERENCES commands(id) ON UPDATE CASCADE ON DELETE CASCADE

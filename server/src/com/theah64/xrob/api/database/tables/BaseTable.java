@@ -3,6 +3,7 @@ package com.theah64.xrob.api.database.tables;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
+import com.theah64.xrob.api.models.Command;
 import com.theah64.xrob.api.models.Delivery;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -137,6 +138,31 @@ public class BaseTable<T> {
         }
 
         return resultValue;
+    }
+
+    public boolean isExist(String tableName, String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
+        boolean isExist = false;
+        final String query = String.format("SELECT id FROM %s WHERE %s = ? AND %s = ? LIMIT 1", tableName, whereColumn1, whereColumn2);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, whereColumnValue1);
+            ps.setString(2, whereColumnValue2);
+            final ResultSet rs = ps.executeQuery();
+            isExist = rs.first();
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isExist;
     }
 
     public static class Factory {

