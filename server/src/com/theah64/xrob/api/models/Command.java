@@ -97,7 +97,12 @@ public class Command {
 
     public static class Status {
 
-        private final String status, statusMessage, relativeReportTime,commandId;
+        public static final String STATUS_SENT = "SENT";
+        public static final String STATUS_DELIVERED = "DELIVERED";
+        public static final String STATUS_FINISHED = "FINISHED";
+        public static final String STATUS_FAILED = "FAILED";
+
+        private final String status, statusMessage, relativeReportTime, commandId;
 
         public Status(String status, String statusMessage, long reportedAt, String commandId) {
             this.status = status;
@@ -129,6 +134,21 @@ public class Command {
                     ", statusMessage='" + statusMessage + '\'' +
                     ", relativeReportTime='" + relativeReportTime + '\'' +
                     '}';
+        }
+
+        public String getBootstrapLabelClassForStatus() {
+            switch (status) {
+                case STATUS_SENT:
+                    return "label-default";
+                case STATUS_DELIVERED:
+                    return "label-primary";
+                case STATUS_FINISHED:
+                    return "label-success";
+                case STATUS_FAILED:
+                    return "label-danger";
+                default:
+                    return "label-info";
+            }
         }
     }
 }

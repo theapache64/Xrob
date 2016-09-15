@@ -48,12 +48,12 @@ public class Commands extends BaseTable<Command> {
                     final String command = rs.getString(COLUMN_COMMAND);
                     final long commandEstablishedAt = rs.getLong(COLUMN_AS_COMMAND_ESTABLISHED_AT);
 
-                    final String[] commandStatusesArr = getGroupDecatenated(COLUMN_AS_COMMAND_STATUSES);
-                    final String[] commandStatusMessages = getGroupDecatenated(COLUMN_AS_COMMAND_STATUS_MESSAGES);
-                    final String[] commandStatusesReportedAt = getGroupDecatenated(COLUMN_AS_COMMAND_STATUSES_REPORTED_AT);
+                    final String[] commandStatusesArr = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES));
+                    final String[] commandStatusMessages = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUS_MESSAGES));
+                    final String[] commandStatusesReportedAt = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES_REPORTED_AT));
 
                     final List<Command.Status> commandStatuses = new ArrayList<>(commandStatusesArr.length);
-                    for (int i = 0; i < commandStatuses.size(); i++) {
+                    for (int i = 0; i < commandStatusesArr.length; i++) {
                         commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i]), id));
                     }
 

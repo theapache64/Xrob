@@ -69,13 +69,13 @@
                     for (final Victim victim : victims) {
                 %>
                 <tr class="data_row" data-href="/client/victim/profile/<%=victim.getVictimCode()%>">
-                    <td class="clickable_data"><%=victim.getName()%>
+                    <td class="clickable_data"><%=victim.getName() != null ? victim.getName() : "-"%>
                     </td>
-                    <td class="clickable_data"><%=victim.getEmail()%>
+                    <td class="clickable_data"><%=victim.getEmail() != null ? victim.getEmail() : "-"%>
                     </td>
-                    <td class="clickable_data"><%=victim.getPhone()%>
+                    <td class="clickable_data"><%=victim.getPhone() != null ? victim.getPhone() : "-"%>
                     </td>
-                    <td class="clickable_data"><%=victim.getIMEI()%>
+                    <td class="clickable_data"><%=victim.getIMEI() != null ? victim.getIMEI() : "-"%>
                     </td>
                     <td data-toggle="collapse" data-target="#<%=victim.getId()%>"><%=victim.getDeviceName()%><span
                             class="label label-default pull-right">more...</span>

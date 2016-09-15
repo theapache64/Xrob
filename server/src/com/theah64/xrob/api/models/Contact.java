@@ -70,7 +70,7 @@ public class Contact {
             return htmlBuilder.toString();
 
         } else {
-            return "No numbers synced.";
+            return "-";
         }
 
     }

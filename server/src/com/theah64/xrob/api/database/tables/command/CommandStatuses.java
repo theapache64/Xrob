@@ -23,8 +23,8 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     }
 
     @Override
-    public void addv2(Command.Status status) throws RuntimeException {
-
+    public boolean add(Command.Status status) {
+        boolean isAdded = false;
         final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message) VALUES (?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
@@ -36,16 +36,9 @@ public class CommandStatuses extends BaseTable<Command.Status> {
             ps.setString(1, status.getCommandId());
             ps.setString(2, status.getStatus());
             ps.setString(3, status.getStatusMessage());
-            ps.executeUpdate();
 
-            /*if (ps.executeUpdate() == 1) {
-                final ResultSet rs = ps.getGeneratedKeys();
-                if (rs.first()) {
-                    clientId = rs.getString(1);
-                }
-                rs.close();
-            }*/
-            
+            isAdded = ps.executeUpdate() == 1;
+
             ps.close();
 
         } catch (SQLException e) {
@@ -57,5 +50,6 @@ public class CommandStatuses extends BaseTable<Command.Status> {
                 e.printStackTrace();
             }
         }
+        return isAdded;
     }
 }

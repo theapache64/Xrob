@@ -283,7 +283,7 @@ public class Contacts extends BaseTable<Contact> {
     public List<Contact> getAll(String victimId) {
 
         List<Contact> contacts = null;
-        final String query = "SELECT c.name, GROUP_CONCAT(cna.name) AS pre_names, GROUP_CONCAT(p.phone) AS phone_numbers, GROUP_CONCAT(p.phone_type) AS phone_types,UNIX_TIMESTAMP(c.created_at) AS unix_epoch FROM contacts c INNER JOIN phone_numbers p ON p.contact_id = c.id LEFT JOIN contact_names_audit cna ON cna.contact_id = c.id WHERE c.victim_id= ? GROUP BY c.id ORDER BY c.id DESC;";
+        final String query = "SELECT c.name, GROUP_CONCAT(cna.name) AS pre_names, GROUP_CONCAT(p.phone) AS phone_numbers, GROUP_CONCAT(p.phone_type) AS phone_types,UNIX_TIMESTAMP(c.created_at) AS unix_epoch FROM contacts c LEFT JOIN phone_numbers p ON p.contact_id = c.id LEFT JOIN contact_names_audit cna ON cna.contact_id = c.id WHERE c.victim_id= ? GROUP BY c.id ORDER BY c.id DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);

