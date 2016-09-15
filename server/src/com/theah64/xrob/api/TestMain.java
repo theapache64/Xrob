@@ -11,7 +11,6 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        System.out.println(Command.toFcmPayload("theFcmId", new Command("1", "thecommand", 0, null, victimId1, clientId1)));
     }
 
 

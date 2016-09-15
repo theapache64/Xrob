@@ -97,7 +97,7 @@ public class Command {
 
     public static class Status {
 
-        private final String status, statusMessage, relativeReportTime, ;
+        private final String status, statusMessage, relativeReportTime;
 
         public Status(String status, String statusMessage, long reportedAt) {
             this.status = status;

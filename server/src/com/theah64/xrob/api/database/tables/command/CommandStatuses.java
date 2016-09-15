@@ -25,7 +25,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     @Override
     public void addv2(Command.Status status) throws RuntimeException {
 
-        final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message) VALUES (?,?,?);";
+        /*final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message) VALUES (?,?,?);";
         final java.sql.Connection connection = Connection.getConnection();
 
         //To track the success
@@ -56,6 +56,6 @@ public class CommandStatuses extends BaseTable<Command.Status> {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }

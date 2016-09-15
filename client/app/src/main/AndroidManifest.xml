@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <!--To launch activity-->
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <!--TODO: Dir - NOT YET-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".utils.Xrob"
