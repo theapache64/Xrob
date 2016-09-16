@@ -117,7 +117,7 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(10, victim.getVictimCode());
 
             if (ps.executeUpdate() == 1) {
-                final ResultSet rs = ps.executeQuery();
+                final ResultSet rs = ps.getGeneratedKeys();
                 if (rs.first()) {
                     newVictimId = rs.getString(1);
                 }

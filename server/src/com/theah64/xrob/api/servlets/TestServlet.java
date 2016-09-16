@@ -17,19 +17,7 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        final File root = new File(System.getProperty("user.dir") + File.separator + "testdir");
-        resp.getWriter().write(scan(root));
-    }
 
-    private String scan(File root) {
-        if (root.isDirectory()) {
-            for (final File f : root.listFiles()) {
-                return scan(f);
-            }
-
-        } else {
-            return root.getAbsolutePath();
-        }
     }
 
 

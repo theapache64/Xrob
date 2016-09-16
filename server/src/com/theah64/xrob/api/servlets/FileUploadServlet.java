@@ -102,7 +102,7 @@ public class FileUploadServlet extends AdvancedBaseServlet {
                             is.close();
                         }
 
-                        System.out.println(String.format("File saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
+                        System.out.println(String.format("FileNode saved :)\nName : %s\nContentType:%s\nSize: %d", fileName, contentType, size));
 
                         //TODO: Add the file details to the database
 

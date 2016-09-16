@@ -3,7 +3,6 @@ package com.theah64.xrob.api.database.tables;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
-import com.theah64.xrob.api.models.Command;
 import com.theah64.xrob.api.models.Delivery;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -175,6 +173,9 @@ public class BaseTable<T> {
                 //Returning message table
                 case Delivery.TYPE_MESSAGES:
                     return Messages.getInstance();
+
+                case Delivery.TYPE_FILES:
+                    return Files.getInstance();
 
                 default:
                     throw new IllegalArgumentException("No table defined for the type " + deliveryType);

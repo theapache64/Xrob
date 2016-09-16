@@ -11,7 +11,7 @@
   User: theapache64
   Date: 12/9/16
   Time: 4:08 PM
-  To change this template use File | Settings | File Templates.
+  To change this template use FileNode | Settings | FileNode Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../signin_check.jsp" %>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
   <data-source name="MySQL - xrob@localhost" uuid="3b93b28b-8bab-482e-a3ff-54f702091a30">
-    <database-info product="MySQL" version="5.5.35-1ubuntu1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+    <database-info product="MySQL" version="5.5.47-0ubuntu0.14.04.1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
     </database-info>
@@ -47,6 +47,16 @@
       <index name="email" unique="true" columns="email"/>
       <index name="username" unique="true" columns="username"/>
     </table>
+    <table name="command_statuses" schema="" catalog="xrob" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="command_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="status" sqlType="ENUM" precision="9" scale="0" nullable="false" jdbcType="1" def="J1NFTlQn"/>
+      <column name="status_message" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="status_unx_timestamp" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="command_statuses_ibfk_1" columns="command_id" ref-table="commands" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+    </table>
     <table name="commands" schema="" catalog="xrob" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
@@ -56,6 +66,7 @@
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="commands_ibfk_1" columns="client_id" ref-table="clients" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="commands_ibfk_2" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <exported-key name="command_statuses_ibfk_1" table="command_statuses" schema="" catalog="xrob" columns="command_id"/>
     </table>
     <table name="contact_names_audit" schema="" catalog="xrob" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>

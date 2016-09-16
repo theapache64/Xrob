@@ -5,7 +5,7 @@
   User: theapache64
   Date: 30/8/16
   Time: 10:32 PM
-  To change this template use File | Settings | File Templates.
+  To change this template use FileNode | Settings | FileNode Templates.
 --%>
 <%
 

