@@ -7,12 +7,13 @@ import java.util.List;
  */
 public class File {
 
-    private final String id, fileName, fileSizeInKB;
+    private final String id, fileName, absoluteParentPath, fileSizeInKB;
     private final boolean isDirectory;
 
-    public File(String id, String fileName, String fileSizeInKB, boolean isDirectory) {
+    public File(String id, String fileName, String absoluteParentPath, String fileSizeInKB, boolean isDirectory) {
         this.id = id;
         this.fileName = fileName;
+        this.absoluteParentPath = absoluteParentPath;
         this.fileSizeInKB = fileSizeInKB;
         this.isDirectory = isDirectory;
     }
@@ -31,5 +32,9 @@ public class File {
 
     public boolean isDirectory() {
         return isDirectory;
+    }
+
+    public String getAbsoluteParentPath() {
+        return absoluteParentPath;
     }
 }

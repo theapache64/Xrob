@@ -5,6 +5,7 @@ package com.theah64.xrob.api.utils.clientpanel;
  */
 public class PathInfo {
 
+    public static final int UNLIMITED = -1;
     private final String pathInfo;
     private final int minNumberOfParams, maxNumberOfParams;
     private String[] pathParts;
@@ -20,10 +21,10 @@ public class PathInfo {
             this.pathParts = pathInfo.split("/");
             final int totalNumOfParams = this.pathParts.length - 1; // -first slash
             System.out.println("t" + totalNumOfParams);
-            if (totalNumOfParams > maxNumberOfParams) {
-                throw new PathInfoException("Maximum number of param is exceeded");
-            } else if (totalNumOfParams < maxNumberOfParams) {
-                throw new PathInfoException("Minimum number of param is not satisfied");
+            if (maxNumberOfParams != UNLIMITED && totalNumOfParams > maxNumberOfParams) {
+                throw new PathInfoException("Maximum number of param is exceeded (" + totalNumOfParams + "/" + maxNumberOfParams + ")");
+            } else if (minNumberOfParams != UNLIMITED && totalNumOfParams < minNumberOfParams) {
+                throw new PathInfoException("Minimum number of param is not satisfied (" + totalNumOfParams + "/" + maxNumberOfParams + ")");
             }
 
         } else if (minNumberOfParams > 0) {
@@ -36,10 +37,14 @@ public class PathInfo {
     }
 
     public String getPart(int index, String defValue) {
-        if (pathParts.length < index) {
+        if (index < pathParts.length) {
             return pathParts[index];
         }
         return defValue;
+    }
+
+    public String getLastPart(String defValue) {
+        return getPart(pathParts.length - 1);
     }
 
     public static final class PathInfoException extends Exception {

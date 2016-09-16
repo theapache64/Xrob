@@ -103,8 +103,10 @@
     <table name="files" schema="" catalog="xrob" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="file_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="absolute_parent_path" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
       <column name="file_name" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="parent_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="parent_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="is_directory" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
       <column name="file_size_in_kb" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>

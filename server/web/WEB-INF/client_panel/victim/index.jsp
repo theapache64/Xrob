@@ -112,16 +112,16 @@
             </div>
 
             <%--Files--%>
-                <div class="col-lg-3">
-                    <a href="/client/victim/files/<%=victimCode%>">
-                        <div class="profile_grid">
-                            <p class="profile_grid_main_title">F
-                            </p>
+            <div class="col-lg-3">
+                <a href="/client/victim/files/<%=victimCode%>">
+                    <div class="profile_grid">
+                        <p class="profile_grid_main_title">F
+                        </p>
 
-                            <p class="profile_grid_sub_title">Files</p>
-                        </div>
-                    </a>
-                </div>
+                        <p class="profile_grid_sub_title">Files</p>
+                    </div>
+                </a>
+            </div>
 
 
         </div>
@@ -138,7 +138,7 @@
 
     <%
         } else {
-            throw new PathInfo.PathInfoException("Invalid victim code");
+            throw new PathInfo.PathInfoException("Invalid victim code " + victimCode);
         }
     } catch (PathInfo.PathInfoException e) {
         e.printStackTrace();
