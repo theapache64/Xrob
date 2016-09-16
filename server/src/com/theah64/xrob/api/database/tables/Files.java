@@ -8,12 +8,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theapache64 on 16/9/16,9:25 PM.
  */
 public class Files extends BaseTable<File> {
+
+    private static final String COLUMN_FILE_NAME = "file_name";
+    private static final String COLUMN_PARENT_ID = "parent_id";
+    private static final String COLUMN_IS_DIRECTORY = "is_directory";
+    private static final String COLUMN_FILE_SIZE_IN_KB = "file_size_in_kb";
 
     private Files() {
     }
@@ -69,5 +77,43 @@ public class Files extends BaseTable<File> {
             }
 
         }
+    }
+
+    @Override
+    public List<File> getAll(String victimId, String fileParentId) {
+        List<File> files = null;
+        final String query = " SELECT id,file_name,file_size_in_kb, is_directory FROM files WHERE victim_id = ? AND parent_id = ? AND is_active =1;";
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, victimId);
+            ps.setString(2, fileParentId);
+
+            final ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+                files = new ArrayList<>();
+                do {
+                    final String id = rs.getString(COLUMN_ID);
+                    final String fileName = rs.getString(COLUMN_FILE_NAME);
+                    final String fileSizeInKB = rs.getString(COLUMN_FILE_SIZE_IN_KB);
+                    final boolean isDirectory = rs.getBoolean(COLUMN_IS_DIRECTORY);
+
+                    files.add(new File(id, fileName, fileSizeInKB, isDirectory));
+                } while (rs.next());
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return files;
     }
 }

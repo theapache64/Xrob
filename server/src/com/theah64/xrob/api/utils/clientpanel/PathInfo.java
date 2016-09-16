@@ -32,7 +32,14 @@ public class PathInfo {
     }
 
     public String getPart(final int index) {
-        return this.pathParts[index];
+        return getPart(index, null);
+    }
+
+    public String getPart(int index, String defValue) {
+        if (pathParts.length < index) {
+            return pathParts[index];
+        }
+        return defValue;
     }
 
     public static final class PathInfoException extends Exception {

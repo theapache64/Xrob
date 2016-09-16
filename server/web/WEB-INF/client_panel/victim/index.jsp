@@ -111,6 +111,18 @@
                 </a>
             </div>
 
+            <%--Files--%>
+                <div class="col-lg-3">
+                    <a href="/client/victim/files/<%=victimCode%>">
+                        <div class="profile_grid">
+                            <p class="profile_grid_main_title">F
+                            </p>
+
+                            <p class="profile_grid_sub_title">Files</p>
+                        </div>
+                    </a>
+                </div>
+
 
         </div>
 
