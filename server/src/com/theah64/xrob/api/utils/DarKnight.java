@@ -2,10 +2,9 @@ package com.theah64.xrob.api.utils;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
-import java.security.Key;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 
 /*
  * Used to simple text enc and dec
@@ -31,7 +30,7 @@ public class DarKnight {
             e.printStackTrace();
         }
 
-        return null;
+        throw new IllegalArgumentException("Failed to encrypt data");
     }
 
     public static String getDecrypted(String encodedText) {

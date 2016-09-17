@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,11 +46,8 @@ public class TestMain {
     }
 
     public static void main(String[] args) throws JSONException {
-        final File root = new File("lab/testdir");
-        final List<FileNode> fileNodes = scan(root);
-        //Collections.reverse(fileNodes);
-        JSONArray jaFiles = read(fileNodes);
-        System.out.println(jaFiles.toString());
+        System.out.println("shifar///".replaceAll("/", ""));
+        ;
     }
 
 

