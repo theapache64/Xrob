@@ -54,7 +54,6 @@ public class CommandCenter {
             } catch (BaseCommand.CommandException e) {
                 e.printStackTrace();
                 commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, "CommandException: " + e.getMessage()));
-                ACRA.getErrorReporter().handleException(e);
                 syncCommandStatus(context);
             }
 
