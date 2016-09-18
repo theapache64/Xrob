@@ -13,6 +13,7 @@ public class Delivery {
     public static final String TYPE_JOIN = "join";
     public static final String TYPE_RE_JOIN = "re_join";
     public static final String TYPE_OTHER = "other";
+    public static final String TYPE_COMMAND_STATUSES = "command_statuses";
     private String relativeSyncTime;
 
     public String getRelativeSyncTime() {
@@ -80,6 +81,7 @@ public class Delivery {
             case TYPE_MEDIA_SELFIE:
             case TYPE_JOIN:
             case TYPE_RE_JOIN:
+            case TYPE_COMMAND_STATUSES:
             case TYPE_OTHER:
                 break;
 

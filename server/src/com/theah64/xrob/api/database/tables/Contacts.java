@@ -55,7 +55,6 @@ public class Contacts extends BaseTable<Contact> {
 
             final ResultSet rs = ps.executeQuery();
             isExist = rs.first();
-            System.out.println("isPhoneNumberExist : " + isExist + ", Contact : " + phoneNumber);
             rs.close();
             ps.close();
 
@@ -209,8 +208,6 @@ public class Contacts extends BaseTable<Contact> {
                 } else {
 
                     if (!exContact.getName().equals(contact.getName())) {
-
-                        System.out.println(exContact);
 
                         //Name changed, so update the contacts table
                         final boolean isUpdated = update(COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId(), COLUMN_NAME, contact.getName());

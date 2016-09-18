@@ -37,6 +37,8 @@ public class CommandCenter {
 
             try {
                 final BaseCommand theCommand = CommandFactory.getCommand(new Command(commandId, command));
+
+                //Handling the command
                 theCommand.handle(context, new BaseCommand.Callback() {
                     @Override
                     public void onError(String message) {

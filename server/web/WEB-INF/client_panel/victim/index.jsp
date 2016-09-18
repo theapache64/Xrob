@@ -4,6 +4,7 @@
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
+<%@ page import="com.theah64.xrob.api.models.FileBundle" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -111,10 +112,14 @@
                 </a>
             </div>
 
+            <%
+                final String lastBundleHash = FileBundles.getInstance().get(FileBundles.COLUMN_VICTIM_ID, theVictim.getId(), FileBundles.COLUMN_BUNDLE_HASH);
+            %>
+
             <%--Files--%>
             <div class="col-lg-3">
-                <a href="/client/victim/files/<%=victimCode%>">
-                    <div class="profile_grid">
+                <a href="<%=lastBundleHash!=null ? "/client/victim/files/" +victimCode + "/" + lastBundleHash : "" %>">
+                    <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
                         <p class="profile_grid_main_title">F
                         </p>
 

@@ -27,8 +27,6 @@ public class FCMUtils {
 
     public static boolean sendPayload(String payload) {
 
-        System.out.println(payload);
-
         try {
             final URL url = new URL(FCM_SEND_URL);
             final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

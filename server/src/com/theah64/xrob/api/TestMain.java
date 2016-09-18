@@ -15,8 +15,17 @@ import java.util.List;
 public class TestMain {
 
 
-    public static class FileNode {
 
+
+    public static void main(String[] args) throws JSONException {
+        final File root = new File("lab/testdir");
+        final List<FileNode> fileNodes = scan(root);
+        //Collections.reverse(fileNodes);
+        JSONArray jaFiles = read(fileNodes);
+
+    }
+
+    public static class FileNode {
         private final String id, name;
         private final List<FileNode> files;
         private final long sizeInKb;
@@ -44,15 +53,6 @@ public class TestMain {
             return sizeInKb;
         }
     }
-
-    public static void main(String[] args) throws JSONException {
-        final File root = new File("lab/testdir");
-        final List<FileNode> fileNodes = scan(root);
-        //Collections.reverse(fileNodes);
-        JSONArray jaFiles = read(fileNodes);
-        System.out.println(jaFiles.toString());
-    }
-
 
     private static JSONArray read(List<FileNode> fileNodes) throws JSONException {
         if (fileNodes != null) {

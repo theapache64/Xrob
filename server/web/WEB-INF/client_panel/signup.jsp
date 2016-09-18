@@ -73,6 +73,7 @@
                            placeholder="Your email address"
                            data-error="Whooops, that email address is invalid"
                            required/>
+
                     <div class="help-block with-errors"></div>
                 </div>
 

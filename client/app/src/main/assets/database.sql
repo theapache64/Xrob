@@ -25,3 +25,10 @@ CREATE TABLE command_statuses(
     created_at TEXT NOT NULL
 );
 
+DROP TABLE IF EXISTS deliveries;
+CREATE TABLE deliveries(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    route TEXT NOT NULL,
+    body TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);

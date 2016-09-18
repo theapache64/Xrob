@@ -17,7 +17,6 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/update/fcm"})
 public class FCMUpdateServlet extends AdvancedBaseServlet {
 
-
     @Override
     protected boolean isSecureServlet() {
         return true;

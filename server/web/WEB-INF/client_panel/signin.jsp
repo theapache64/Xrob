@@ -62,7 +62,6 @@
                                 final Client theClient = Clients.getInstance().get(Clients.COLUMN_USERNAME, username, Clients.COLUMN_PASS_HASH, DarKnight.getEncrypted(password));
 
                                 if (theClient != null) {
-                                    System.out.println(theClient.toString());
                                     session.setAttribute(Clients.COLUMN_ID, theClient.getId());
                                     response.sendRedirect("/client/panel");
                                 } else {

@@ -47,6 +47,8 @@ public class Xrob extends Application {
     static final String KEY_ERROR_CODE = "error_code";
     public static final String KEY_DATA_TYPE = "data_type";
     public static final String DATA_TYPE_CONTACTS = "contacts";
+    public static final String DATA_TYPE_COMMAND_STATUSES = "command_statuses";
+    public static final String DATA_TYPE_FILES = "files";
 
     private static void initImageLoader(final Context context) {
 

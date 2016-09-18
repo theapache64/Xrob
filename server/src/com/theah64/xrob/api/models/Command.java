@@ -113,14 +113,9 @@ public class Command {
 
             this.commandReportedAt = commandReportedAt;
             this.relativeCommandReportTime = TimeUtils.getRelativeTime(false, commandReportedAt);
-            System.out.println("------------------");
-            System.out.println(commandReportedAt + " : Relative command report time : " + relativeCommandReportTime);
-
 
             this.commandHappenedAt = commandHappenedAt;
             this.relativeCommandHappenedTime = TimeUtils.getRelativeTime(true, commandHappenedAt);
-            System.out.println(commandHappenedAt + " : Relative command happened time : " + relativeCommandHappenedTime);
-            System.out.println("------------------");
         }
 
         public String getStatus() {

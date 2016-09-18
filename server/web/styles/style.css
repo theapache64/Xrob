@@ -39,6 +39,10 @@ p.profile_grid_sub_title {
     font-size: 19px;
 }
 
+abbr{
+    cursor: text !important;
+}
+
 table tr, th {
     text-align: center;
 }

@@ -62,7 +62,10 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<St
 
                 Log.d(X, "How's this : " + jaStatuses);
 
-                final Request commandSyncRequest = new APIRequestBuilder("/command/status/add", strings[0])
+                final Request commandSyncRequest = new APIRequestBuilder("/save", strings[0])
+                        .addParam(Xrob.KEY_ERROR, "false")
+                        .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_COMMAND_STATUSES)
+                        .addParam(Xrob.KEY_MESSAGE, statusList.size() + " status(es) added")
                         .addParam(Xrob.KEY_DATA, jaStatuses.toString())
                         .build();
 

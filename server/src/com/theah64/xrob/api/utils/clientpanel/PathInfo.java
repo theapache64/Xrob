@@ -20,7 +20,6 @@ public class PathInfo {
 
             this.pathParts = pathInfo.split("/");
             final int totalNumOfParams = this.pathParts.length - 1; // -first slash
-            System.out.println("t" + totalNumOfParams);
             if (maxNumberOfParams != UNLIMITED && totalNumOfParams > maxNumberOfParams) {
                 throw new PathInfoException("Maximum number of param is exceeded (" + totalNumOfParams + "/" + maxNumberOfParams + ")");
             } else if (minNumberOfParams != UNLIMITED && totalNumOfParams < minNumberOfParams) {
