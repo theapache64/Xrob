@@ -110,12 +110,13 @@ public class Files extends BaseTable<File> {
     @Override
     public List<File> getAll(String victimId, String fileParentId) {
         List<File> files = null;
-        final String query = " SELECT file_id,file_name,absolute_parent_path,file_size_in_kb, is_directory,file_hash FROM files WHERE victim_id = ? AND parent_id = ? AND is_active =1;";
+        final String query = "SELECT f.file_id, f.file_name, f.absolute_parent_path, f.file_size_in_kb, f.is_directory, f.file_hash FROM files f INNER JOIN file_bundles fb ON fb.id = f.file_bundle_id AND fb.is_active = 1 WHERE fb.victim_id = ? AND f.parent_id = ? AND fb.id = (SELECT MAX(id) FROM file_bundles WHERE victim_id = ?) AND f.is_active = 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, victimId);
             ps.setString(2, fileParentId);
+            ps.setString(3, victimId);
 
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {

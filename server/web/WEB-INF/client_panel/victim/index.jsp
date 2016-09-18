@@ -46,7 +46,7 @@
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
-                    final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(theVictim.getId());
+                    final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(null, theVictim.getId());
 
     %>
 
