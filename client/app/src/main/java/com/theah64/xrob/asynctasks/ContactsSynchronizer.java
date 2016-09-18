@@ -107,7 +107,6 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<String, V
                             new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
                             //Success all contacts synced
-                            PrefUtils.getInstance(context).saveBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS, false);
                             contactsTable.setAllContactsAndNumbersSynced();
 
                         } catch (JSONException | APIResponse.APIException e) {
@@ -120,7 +119,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<String, V
                 e.printStackTrace();
             }
         } else {
-            Log.d(X, "No unsynced contacts found to push");
+            Log.i(X, "Every contacts are synced :)");
         }
     }
 

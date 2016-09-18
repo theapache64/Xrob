@@ -38,7 +38,7 @@ public class Commands extends BaseTable<Command> {
 
         List<Command> commands = null;
 
-        final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.created_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages,GROUP_CONCAT(UNIX_TIMESTAMP(cs.created_at)) AS command_statuses_reported_at ,GROUP_CONCAT(cs.status_happened_at) AS command_statuses_happened_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
+        final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.last_logged_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages,GROUP_CONCAT(UNIX_TIMESTAMP(cs.last_logged_at)) AS command_statuses_reported_at ,GROUP_CONCAT(cs.status_happened_at) AS command_statuses_happened_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);

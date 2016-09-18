@@ -11,7 +11,6 @@ import com.theah64.xrob.models.Victim;
  */
 public class PrefUtils {
 
-    public static final String KEY_IS_SYNC_CONTACTS = "is_sync_contacts";
     public static final String IS_FCM_SYNCED = "is_fcm_synced";
     public static final String IS_LOGGED_IN = "is_logged_in";
     private static PrefUtils instance;

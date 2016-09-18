@@ -150,23 +150,14 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean isSyncNeeded) {
-
-        final PrefUtils prefUtils = PrefUtils.getInstance(context);
-        final boolean isOldSyncNeeded = prefUtils.getBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS);
-
-        if (isOldSyncNeeded != isSyncNeeded) {
-            prefUtils.saveBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS, isSyncNeeded);
-        }
-
         Log.d(X, "isSyncNeeded : " + isSyncNeeded);
 
-        if (isSyncNeeded || isOldSyncNeeded) {
+        if (isSyncNeeded) {
 
             new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
 
                 @Override
                 public void onReadyToRequest(String apiKey) {
-                    Log.d(X, "Ready to request...");
                     new ContactsSynchronizer(context).execute(apiKey);
                 }
 

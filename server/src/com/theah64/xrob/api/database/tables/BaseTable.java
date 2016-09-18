@@ -20,7 +20,7 @@ public class BaseTable<T> {
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_CREATED_AT = "created_at";
+    public static final String COLUMN_CREATED_AT = "last_logged_at";
     protected static final String COLUMN_AS_UNIX_EPOCH = "unix_epoch";
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
     private static final String COLUMN_AS_TOTAL_ROWS = "total_rows";
