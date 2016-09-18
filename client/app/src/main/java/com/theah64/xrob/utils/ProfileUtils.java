@@ -29,9 +29,6 @@ public class ProfileUtils {
         return instance;
     }
 
-    public String getIMEI() {
-        return ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-    }
 
     public String getDeviceOwnerName() {
 
