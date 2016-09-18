@@ -23,22 +23,22 @@ CREATE TABLE IF NOT EXISTS `clients` (
 
 DROP TABLE IF EXISTS `victims`;
 CREATE TABLE IF NOT EXISTS `victims` (
-  `id`                INT(11)     NOT NULL AUTO_INCREMENT,
-  `victim_code`       VARCHAR(10) NOT NULL,
-  `name`              VARCHAR(100),
-  `email`             VARCHAR(150),
-  `phone`             VARCHAR(20),
-  `fcm_id`            TEXT,
-  `fcm_updated_at`    TIMESTAMP   NULL,
-  `api_key`           VARCHAR(10) NOT NULL,
-  `imei`              VARCHAR(16) NOT NULL,
-  `device_name`       VARCHAR(50) NOT NULL,
-  `device_hash`       TEXT        NOT NULL,
-  `device_info_static` TEXT        NOT NULL,
+  `id`                  INT(11)     NOT NULL AUTO_INCREMENT,
+  `victim_code`         VARCHAR(10) NOT NULL,
+  `name`                VARCHAR(100),
+  `email`               VARCHAR(150),
+  `phone`               VARCHAR(20),
+  `fcm_id`              TEXT,
+  `fcm_updated_at`      TIMESTAMP   NULL,
+  `api_key`             VARCHAR(10) NOT NULL,
+  `imei`                VARCHAR(16) NOT NULL,
+  `device_name`         VARCHAR(50) NOT NULL,
+  `device_hash`         TEXT        NOT NULL,
+  `device_info_static`  TEXT        NOT NULL,
   `device_info_dynamic` TEXT        NOT NULL,
-  `actions`           VARCHAR(100)         DEFAULT NULL,
-  `is_active`         TINYINT(4)  NOT NULL DEFAULT 1,
-  `last_logged_at`    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `actions`             VARCHAR(100)         DEFAULT NULL,
+  `is_active`           TINYINT(4)  NOT NULL DEFAULT 1,
+  `last_logged_at`      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `imei` (`imei`),
   UNIQUE KEY `api_key` (`api_key`)
@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS `victims` (
 
 DROP TABLE IF EXISTS `victim_device_info_dynamic_audit`;
 CREATE TABLE IF NOT EXISTS `victim_device_info_dynamic_audit` (
-  `id`             INT(11)   NOT NULL AUTO_INCREMENT,
-  `victim_id`      INT       NOT NULL,
-  `device_info_dynamic`    TEXT      NOT NULL,
-  `last_logged_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id`                  INT(11)   NOT NULL AUTO_INCREMENT,
+  `victim_id`           INT       NOT NULL,
+  `device_info_dynamic` TEXT      NOT NULL,
+  `last_logged_at`      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (victim_id) REFERENCES victims (id)
     ON UPDATE CASCADE
@@ -162,10 +162,22 @@ CREATE TABLE IF NOT EXISTS `command_statuses` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `file_bundles`;
+CREATE TABLE IF NOT EXISTS `file_bundles` (
+  `id`             INT(11)    NOT NULL AUTO_INCREMENT,
+  `victim_id`      INT(11)    NOT NULL,
+  `is_active`      TINYINT(4) NOT NULL DEFAULT 1,
+  `last_logged_at` TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
 DROP TABLE IF EXISTS `files`;
 CREATE TABLE IF NOT EXISTS `files` (
   `id`                   INT(11)    NOT NULL AUTO_INCREMENT,
-  `victim_id`            INT(11)    NOT NULL,
+  `file_bundle_id`       INT        NOT NULL,
   `file_id`              INT        NOT NULL,
   `absolute_parent_path` TEXT       NOT NULL,
   `file_name`            TEXT       NOT NULL,
@@ -176,10 +188,9 @@ CREATE TABLE IF NOT EXISTS `files` (
   `is_active`            TINYINT(4) NOT NULL DEFAULT 1,
   `last_logged_at`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `victim_id` (`victim_id`),
-  FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
-    ON DELETE CASCADE
+  FOREIGN KEY (`file_bundle_id`) REFERENCES `file_bundles` (`id`)
     ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 
@@ -259,7 +270,7 @@ FOR EACH ROW BEGIN
   IF OLD.device_info_dynamic <> NEW.device_info_dynamic
   THEN
     INSERT INTO victim_device_info_dynamic_audit
-    SET victim_id = OLD.id,
+    SET victim_id         = OLD.id,
       device_info_dynamic = OLD.device_info_dynamic;
   END IF;
 END$$

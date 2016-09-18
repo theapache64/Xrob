@@ -14,6 +14,7 @@ public class CommandFactory {
         final String commandType = getCommandType(command.getCommand());
 
         switch (commandType) {
+
             case Command.COMMAND_NOTIFY:
                 return new NotificationCommand(command.getCommand());
 
