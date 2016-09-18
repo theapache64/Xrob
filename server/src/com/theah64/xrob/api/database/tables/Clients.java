@@ -226,7 +226,7 @@ public class Clients extends BaseTable<Client> {
 
     public List<Victim> getVictims(String clientId) {
         List<Victim> victims = null;
-        final String query = "SELECT v.id,v.name,v.phone,v.email,v.imei,v.device_name,v.other_device_info,v.victim_code FROM victims v INNER JOIN client_victim_relations cvr ON cvr.victim_id = v.id  WHERE cvr.client_id = ?";
+        final String query = "SELECT v.id,v.name,v.phone,v.email,v.imei,v.device_name,v.device_info_static,v.device_info_dynamic,v.victim_code FROM victims v INNER JOIN client_victim_relations cvr ON cvr.victim_id = v.id  WHERE cvr.client_id = ?";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -242,10 +242,11 @@ public class Clients extends BaseTable<Client> {
                     final String phone = rs.getString(Victims.COLUMN_PHONE);
                     final String imei = rs.getString(Victims.COLUMN_IMEI);
                     final String deviceName = rs.getString(Victims.COLUMN_DEVICE_NAME);
-                    final String otherDeviceInfo = rs.getString(Victims.COLUMN_OTHER_DEVICE_INFO);
+                    final String deviceInfoStatic = rs.getString(Victims.COLUMN_DEVICE_INFO_STATIC);
+                    final String deviceInfoDynamic = rs.getString(Victims.COLUMN_DEVICE_INFO_DYNAMIC);
                     final String victimCode = rs.getString(Victims.COLUMN_VICTIM_CODE);
 
-                    victims.add(new Victim(id, name, email, phone, imei, null, null, null, deviceName, otherDeviceInfo, null, null, false, victimCode));
+                    victims.add(new Victim(id, name, email, phone, imei, null, null, null, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, false, victimCode));
 
                 } while (rs.next());
             }

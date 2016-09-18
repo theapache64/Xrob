@@ -39,5 +39,11 @@ public abstract class BaseCommand {
         }
     }
 
-    public abstract void handle(final Context context);
+    public abstract void handle(final Context context,final Callback callback);
+
+    public interface Callback {
+        void onError(final String message);
+
+        void onSuccess(final String message);
+    }
 }

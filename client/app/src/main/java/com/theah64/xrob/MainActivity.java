@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.PROCESS_OUTGOING_CALLS,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
                 }, RQ_CODE_RQ_PERMISSIONS);
             } else {
                 doNormalWork();

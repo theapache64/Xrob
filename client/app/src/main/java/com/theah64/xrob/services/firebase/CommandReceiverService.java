@@ -12,9 +12,9 @@ import com.theah64.xrob.commandcenter.CommandCenter;
 
 import java.util.Map;
 
-public class MessagingService extends FirebaseMessagingService {
+public class CommandReceiverService extends FirebaseMessagingService {
 
-    private static final String X = MessagingService.class.getSimpleName();
+    private static final String X = CommandReceiverService.class.getSimpleName();
     private static final String KEY_TYPE = "type";
     private static final String TYPE_COMMAND = "command";
     private static final String KEY_DATA = "data";
@@ -25,7 +25,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         Map<String, String> payload = remoteMessage.getData();
         Log.i(X, "FCM says : " + payload);
-        
+
         if (!payload.isEmpty()) {
 
             final String type = payload.get(KEY_TYPE);

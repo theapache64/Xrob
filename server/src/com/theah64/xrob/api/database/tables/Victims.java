@@ -21,8 +21,9 @@ public class Victims extends BaseTable<Victim> {
     private static final String COLUMN_FCM_UPDATED_AT = "fcm_updated_at";
     public static final String COLUMN_DEVICE_HASH = "device_hash";
     public static final String COLUMN_DEVICE_NAME = "device_name";
-    public static final String COLUMN_OTHER_DEVICE_INFO = "other_device_info";
+    public static final String COLUMN_DEVICE_INFO_STATIC = "device_info_static";
     public static final String COLUMN_VICTIM_CODE = "victim_code";
+    public static final String COLUMN_DEVICE_INFO_DYNAMIC = "device_info_dynamic";
 
     private Victims() {
     }
@@ -36,7 +37,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id,device_name FROM victims WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id,device_name,device_info_dynamic FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection con = Connection.getConnection();
         Victim victim = null;
@@ -57,8 +58,9 @@ public class Victims extends BaseTable<Victim> {
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String fcmId = rs.getString(COLUMN_FCM_ID);
                 final String deviceName = rs.getString(COLUMN_DEVICE_NAME);
+                final String deviceInfoDynamic = rs.getString(COLUMN_DEVICE_INFO_DYNAMIC);
 
-                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, null, null, false, null);
+                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, deviceInfoDynamic, null, null, false, null);
             }
 
             rs.close();
@@ -95,7 +97,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public String addv3(Victim victim) {
         String newVictimId = null;
-        final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info,victim_code) VALUES (?,?,?,?,?,?,?,?,?,?);";
+        final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,device_info_static,device_info_dynamic,victim_code) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
@@ -113,8 +115,9 @@ public class Victims extends BaseTable<Victim> {
             ps.setString(6, victim.getApiKey());
             ps.setString(7, victim.getFCMId());
             ps.setString(8, victim.getDeviceName());
-            ps.setString(9, victim.getOtherDeviceInfo());
-            ps.setString(10, victim.getVictimCode());
+            ps.setString(9, victim.getDeviceInfoStatic());
+            ps.setString(10, victim.getDeviceInfoDynamic());
+            ps.setString(11, victim.getVictimCode());
 
             if (ps.executeUpdate() == 1) {
                 final ResultSet rs = ps.getGeneratedKeys();

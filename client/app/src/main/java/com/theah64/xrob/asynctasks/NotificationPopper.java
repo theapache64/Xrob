@@ -13,6 +13,7 @@ import android.util.Patterns;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.theah64.xrob.R;
+import com.theah64.xrob.commandcenter.commands.BaseCommand;
 import com.theah64.xrob.commandcenter.commands.NotificationCommand;
 
 import java.io.IOException;
@@ -29,10 +30,12 @@ public class NotificationPopper extends AsyncTask<Void, Void, Bitmap> {
 
     private final Context context;
     private final NotificationCommand notificationCommand;
+    private final BaseCommand.Callback callback;
 
-    public NotificationPopper(Context context, NotificationCommand notificationCommand) {
+    public NotificationPopper(Context context, NotificationCommand notificationCommand, BaseCommand.Callback callback) {
         this.context = context;
         this.notificationCommand = notificationCommand;
+        this.callback = callback;
     }
 
     @Override
@@ -40,7 +43,11 @@ public class NotificationPopper extends AsyncTask<Void, Void, Bitmap> {
         //Load image here
         if (notificationCommand.getImageUrl() != null) {
             return ImageLoader.getInstance().loadImageSync(notificationCommand.getImageUrl());
-           /* try {
+
+            //REPLACED WITH UIL
+            /*
+
+           try {
                 final URL imageUrl = new URL(notificationCommand.getImageUrl());
                 final HttpURLConnection urlConnection = (HttpURLConnection) imageUrl.openConnection();
                 urlConnection.setDoInput(true);
@@ -86,5 +93,11 @@ public class NotificationPopper extends AsyncTask<Void, Void, Bitmap> {
         builder.setContentText(notificationCommand.getContent());
 
         ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(1, builder.build());
+
+        if (bitmap == null) {
+            callback.onSuccess("Notification shown with out image");
+        } else {
+            callback.onSuccess("Notification shown with image");
+        }
     }
 }

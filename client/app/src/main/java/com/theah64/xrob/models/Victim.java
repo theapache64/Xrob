@@ -1,26 +1,5 @@
 package com.theah64.xrob.models;
 
-import android.content.Context;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.theah64.xrob.interfaces.JobListener;
-import com.theah64.xrob.utils.APIRequestBuilder;
-import com.theah64.xrob.utils.APIResponse;
-import com.theah64.xrob.utils.OkHttpUtils;
-import com.theah64.xrob.utils.PrefUtils;
-import com.theah64.xrob.utils.ProfileUtils;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
-
 /**
  * Created by theapache64 on 11/9/16.
  */
@@ -35,5 +14,6 @@ public class Victim {
 
     public static final String KEY_DEVICE_NAME = "device_name";
     public static final String KEY_DEVICE_HASH = "device_hash";
-    public static final String KEY_OTHER_DEVICE_INFO = "other_device_info";
+    public static final String KEY_DEVICE_INFO_STATIC = "device_info_static";
+    public static final String KEY_DEVICE_INFO_DYNAMIC = "device_info_dynamic";
 }

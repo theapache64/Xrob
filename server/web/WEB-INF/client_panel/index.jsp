@@ -61,7 +61,8 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>IMEI</th>
-                    <th>Device</th>
+                    <th>Device - STATIC</th>
+                    <th>Device - DYNAMIC</th>
                     <%-- <th>Device info</th>--%>
                 </tr>
 
@@ -75,15 +76,27 @@
                     </td>
                     <td class="clickable_data"><%=victim.getPhone() != null ? victim.getPhone() : "-"%>
                     </td>
+
                     <td class="clickable_data"><%=victim.getIMEI() != null ? victim.getIMEI() : "-"%>
                     </td>
-                    <td data-toggle="collapse" data-target="#<%=victim.getId()%>"><%=victim.getDeviceName()%><span
+
+                    <td data-toggle="collapse" data-target="#static<%=victim.getId()%>"><%=victim.getDeviceName()%><span
                             class="label label-default pull-right">more...</span>
 
-                        <div id="<%=victim.getId()%>" class="collapse">
-                            <%=Victim.getDeviceInfoReadable(victim.getOtherDeviceInfo())%>
+                        <div id="static<%=victim.getId()%>" class="collapse">
+                            <%=Victim.getDeviceInfoReadable(victim.getDeviceInfoStatic())%>
                         </div>
                     </td>
+
+                    <td data-toggle="collapse"
+                        data-target="#dynamic<%=victim.getId()%>"><%=victim.getDeviceInfoDynamic().substring(0, 20)%><span
+                            class="label label-default pull-right">more...</span>
+
+                        <div id="dynamic<%=victim.getId()%>" class="collapse">
+                            <%=Victim.getDeviceInfoReadable(victim.getDeviceInfoDynamic())%>
+                        </div>
+                    </td>
+
                 </tr>
 
                 <%
