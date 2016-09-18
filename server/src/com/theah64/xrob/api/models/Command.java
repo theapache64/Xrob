@@ -26,7 +26,7 @@ public class Command {
     public Command(String id, String command, long reportedAt, List<Status> statuses, String victimId, String clientId) {
         this.id = id;
         this.command = command;
-        this.relativeEstablishedTime = TimeUtils.getRelativeTime(reportedAt);
+        this.relativeEstablishedTime = TimeUtils.getRelativeTime(false, reportedAt);
         this.statuses = statuses;
         this.victimId = victimId;
         this.clientId = victimId;
@@ -97,18 +97,30 @@ public class Command {
 
     public static class Status {
 
+        private final long commandReportedAt, commandHappenedAt;
+
         public static final String STATUS_SENT = "SENT";
         public static final String STATUS_DELIVERED = "DELIVERED";
         public static final String STATUS_FINISHED = "FINISHED";
         public static final String STATUS_FAILED = "FAILED";
 
-        private final String status, statusMessage, relativeReportTime, commandId;
+        private final String status, statusMessage, relativeCommandReportTime, relativeCommandHappenedTime, commandId;
 
-        public Status(String status, String statusMessage, long reportedAt, String commandId) {
+        public Status(String status, String statusMessage, long commandReportedAt, long commandHappenedAt, String commandId) {
             this.status = status;
             this.statusMessage = statusMessage;
             this.commandId = commandId;
-            this.relativeReportTime = TimeUtils.getRelativeTime(reportedAt);
+
+            this.commandReportedAt = commandReportedAt;
+            this.relativeCommandReportTime = TimeUtils.getRelativeTime(false, commandReportedAt);
+            System.out.println("------------------");
+            System.out.println(commandReportedAt + " : Relative command report time : " + relativeCommandReportTime);
+
+
+            this.commandHappenedAt = commandHappenedAt;
+            this.relativeCommandHappenedTime = TimeUtils.getRelativeTime(true, commandHappenedAt);
+            System.out.println(commandHappenedAt + " : Relative command happened time : " + relativeCommandHappenedTime);
+            System.out.println("------------------");
         }
 
         public String getStatus() {
@@ -119,21 +131,12 @@ public class Command {
             return statusMessage;
         }
 
-        public String getRelativeReportTime() {
-            return relativeReportTime;
+        public String getRelativeCommandReportTime() {
+            return relativeCommandReportTime;
         }
 
         public String getCommandId() {
             return commandId;
-        }
-
-        @Override
-        public String toString() {
-            return "Status{" +
-                    "status='" + status + '\'' +
-                    ", statusMessage='" + statusMessage + '\'' +
-                    ", relativeReportTime='" + relativeReportTime + '\'' +
-                    '}';
         }
 
         public String getBootstrapLabelClassForStatus() {
@@ -149,6 +152,18 @@ public class Command {
                 default:
                     return "label-info";
             }
+        }
+
+        public long getCommandHappenedAt() {
+            return commandHappenedAt;
+        }
+
+        public long getCommandReportedAt() {
+            return commandReportedAt;
+        }
+
+        public String getRelativeCommandHappenedTime() {
+            return relativeCommandHappenedTime;
         }
 
         public static boolean isValid(String status) {

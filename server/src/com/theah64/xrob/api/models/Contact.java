@@ -21,7 +21,7 @@ public class Contact {
         this.name = name;
         this.phoneNumbers = phone;
         this.preNames = preNames;
-        this.relativeSyncTime = TimeUtils.getRelativeTime(syncedAt);
+        this.relativeSyncTime = TimeUtils.getRelativeTime(false,syncedAt);
     }
 
 

@@ -50,7 +50,11 @@ public class FCMUtils {
             }
             br.close();
             final JSONObject joResp = new JSONObject(response.toString());
-            return joResp.getInt("failure") == 0;
+            final boolean isSent = joResp.getInt("failure") == 0;
+            if (!isSent) {
+                throw new IllegalArgumentException("FCM failed to send command : " + response);
+            }
+            return true;
         } catch (java.io.IOException e) {
             e.printStackTrace();
             return false;

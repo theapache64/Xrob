@@ -44,7 +44,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
         cv.put(COLUMN_PHONE_NUMBER, phoneNumber.getPhone());
         cv.put(COLUMN_PHONE_TYPE, phoneNumber.getPhoneType());
         rowId = db.insert(TABLE_PHONE_NUMBERS, null, cv);
-        db.close();
+
         return rowId;
     }
 
@@ -102,7 +102,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
             pCur.close();
         }
 
-        db.close();
+
         return phoneNumbers;
     }
 

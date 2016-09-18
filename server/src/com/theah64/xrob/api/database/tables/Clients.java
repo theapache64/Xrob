@@ -83,12 +83,12 @@ public class Clients extends BaseTable<Client> {
 
         String clientId = null;
         final String addClientQuery = "INSERT INTO clients (username, pass_hash, api_key,email,client_code) VALUES (?,?,?,?,?);";
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            final PreparedStatement ps = con.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, client.getUsername());
             ps.setString(2, client.getPassHash());
@@ -111,7 +111,7 @@ public class Clients extends BaseTable<Client> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -136,12 +136,12 @@ public class Clients extends BaseTable<Client> {
             query = String.format("SELECT id,client_code,username,email,pass_hash FROM clients WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
         }
 
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
         Client client = null;
 
         try {
 
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
 
             if (isSingleColumnMatch) {
                 ps.setString(1, value1);
@@ -169,7 +169,7 @@ public class Clients extends BaseTable<Client> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

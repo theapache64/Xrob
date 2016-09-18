@@ -96,13 +96,10 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
 
     protected boolean update(String tableName, String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
-        boolean isEdited = false;
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(columnToUpdate, valueToUpdate);
-        isEdited = db.update(tableName, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
-        db.close();
-        return isEdited;
+        return db.update(tableName, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
     }
 
     public T get(final String column1, final String value1, final String column2, final String value2) {
@@ -111,6 +108,14 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     public List<T> getAll() {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    public void deleteAll() {
+        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    }
+
+    protected void deleteAll(final String tableName) {
+        this.getWritableDatabase().delete(tableName, null, null);
     }
 
     public Context getContext() {

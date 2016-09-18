@@ -20,6 +20,7 @@ public class Commands extends BaseTable<Command> {
     private static final String COLUMN_AS_COMMAND_STATUSES = "command_statuses";
     private static final String COLUMN_AS_COMMAND_STATUS_MESSAGES = "command_status_messages";
     private static final String COLUMN_AS_COMMAND_STATUSES_REPORTED_AT = "command_statuses_reported_at";
+    private static final String COLUMN_AS_COMMAND_STATUSES_HAPPENED_AT = "command_statuses_happened_at";
     public static final String COLUMN_VICTIM_ID = "victim_id";
     private static final String TABLE_NAME_COMMANDS = "commands";
 
@@ -37,7 +38,7 @@ public class Commands extends BaseTable<Command> {
 
         List<Command> commands = null;
 
-        final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.created_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages, GROUP_CONCAT(UNIX_TIMESTAMP(cs.created_at)) AS command_statuses_reported_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
+        final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.created_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages,GROUP_CONCAT(UNIX_TIMESTAMP(cs.created_at)) AS command_statuses_reported_at ,GROUP_CONCAT(cs.status_happened_at) AS command_statuses_happened_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -54,10 +55,15 @@ public class Commands extends BaseTable<Command> {
                     final String[] commandStatusesArr = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES));
                     final String[] commandStatusMessages = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUS_MESSAGES));
                     final String[] commandStatusesReportedAt = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES_REPORTED_AT));
+                    final String[] commandStatusesHappenedAt = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES_HAPPENED_AT));
 
                     final List<Command.Status> commandStatuses = new ArrayList<>(commandStatusesArr.length);
                     for (int i = 0; i < commandStatusesArr.length; i++) {
-                        commandStatuses.add(new Command.Status(commandStatusesArr[i], commandStatusMessages[i], Long.parseLong(commandStatusesReportedAt[i]), id));
+                        commandStatuses.add(new Command.Status(
+                                commandStatusesArr[i],
+                                commandStatusMessages[i],
+                                Long.parseLong(commandStatusesReportedAt[i]),
+                                Long.parseLong(commandStatusesHappenedAt[i]), id));
                     }
 
                     commands.add(new Command(id, command, commandEstablishedAt, commandStatuses, null, null));
@@ -81,11 +87,11 @@ public class Commands extends BaseTable<Command> {
     public String addv3(Command command) {
         String commandId = null;
         final String addClientQuery = "INSERT INTO commands (command,client_id,victim_id) VALUES (?,?,?);";
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
         try {
-            final PreparedStatement ps = connection.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            final PreparedStatement ps = con.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, command.getCommand());
             ps.setString(2, command.getClientId());
@@ -106,7 +112,7 @@ public class Commands extends BaseTable<Command> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

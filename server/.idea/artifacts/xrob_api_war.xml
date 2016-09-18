@@ -4,7 +4,9 @@
     <root id="archive" name="xrob_api_war.war">
       <element id="artifact" artifact-name="xrob_api:war exploded" />
       <element id="directory" name="WEB-INF">
-        <element id="directory" name="lib" />
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="json" />
+        </element>
       </element>
     </root>
   </artifact>

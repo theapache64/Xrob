@@ -53,7 +53,7 @@ public class Delivery {
         this.serverErrorMessage = serverErrorMessage;
         this.createdAt = createdAt;
         if (syncedAt > 0) {
-            this.relativeSyncTime = TimeUtils.getRelativeTime(syncedAt);
+            this.relativeSyncTime = TimeUtils.getRelativeTime(false, syncedAt);
         }
 
         checkDataType();

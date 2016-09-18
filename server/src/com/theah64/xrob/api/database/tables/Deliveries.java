@@ -81,15 +81,15 @@ public class Deliveries extends BaseTable<Delivery> {
         final String query = "SELECT UNIX_TIMESTAMP(created_at) AS unix_epoch FROM deliveries WHERE victim_id = ? ORDER BY id DESC LIMIT 1";
 
         String relativeTime = null;
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, theVictimId);
             final ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
-                relativeTime = TimeUtils.getRelativeTime(rs.getLong(COLUMN_AS_UNIX_EPOCH));
+                relativeTime = TimeUtils.getRelativeTime(false, rs.getLong(COLUMN_AS_UNIX_EPOCH));
             }
             rs.close();
             ps.close();
@@ -97,7 +97,7 @@ public class Deliveries extends BaseTable<Delivery> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

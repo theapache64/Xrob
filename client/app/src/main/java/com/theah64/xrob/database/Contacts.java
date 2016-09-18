@@ -71,7 +71,7 @@ public class Contacts extends BaseTable<Contact> {
         }
 
         cursor.close();
-        db.close();
+
 
         return contacts;
     }
@@ -84,7 +84,7 @@ public class Contacts extends BaseTable<Contact> {
         cv.put(COLUMN_NAME, contact.getName());
         cv.put(COLUMN_ANDRIOD_CONTACT_ID, contact.getAndroidContactId());
         newContactId = db.insert(TABLE_NAME_CONTACTS, null, cv);
-        db.close();
+
         return newContactId;
     }
 
@@ -118,7 +118,7 @@ public class Contacts extends BaseTable<Contact> {
         cv.put(updateColumn, newUpdateColumnValue);
         cv.put(COLUMN_IS_SYNCED, "0");
         isEdited = db.update(TABLE_NAME_CONTACTS, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
-        db.close();
+
         return isEdited;
     }
 
@@ -126,6 +126,6 @@ public class Contacts extends BaseTable<Contact> {
         final SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE contacts SET is_synced = 1 WHERE is_synced = 0;");
         db.execSQL("UPDATE phone_numbers SET is_synced = 1 WHERE is_synced = 0;");
-        db.close();
+
     }
 }

@@ -19,9 +19,9 @@ public class TimeUtils {
 
     private static List<String> timesString = Arrays.asList("year", "month", "day", "hour", "minute", "second");
 
-    public static String getRelativeTime(long unixTimestamp) {
+    public static String getRelativeTime(final boolean isInMillis, long timestamp) {
 
-        final long diff = System.currentTimeMillis() - (unixTimestamp * 1000);
+        final long diff = System.currentTimeMillis() - (isInMillis ? timestamp : (timestamp * 1000));
 
         final StringBuilder timeBuilder = new StringBuilder();
 

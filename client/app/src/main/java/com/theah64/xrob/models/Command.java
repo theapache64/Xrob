@@ -25,4 +25,42 @@ public class Command {
             super(s);
         }
     }
+
+    public static class Status {
+
+        public static final String STATUS_DELIVERED = "DELIVERED";
+        public static final String STATUS_FINISHED = "FINISHED";
+        public static final String STATUS_FAILED = "FAILED";
+
+        private final String commandId, status, statusMessage;
+        private final long statusHappenedAt;
+
+        public Status(String commandId, String status, String statusMessage, long statusHappenedAt) {
+            this.commandId = commandId;
+            this.status = status;
+            this.statusMessage = statusMessage;
+            this.statusHappenedAt = statusHappenedAt;
+        }
+
+        public Status(String commandId, String status, String statusMessage) {
+            this(commandId, status, statusMessage, -1);
+        }
+
+
+        public String getCommandId() {
+            return commandId;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getStatusMessage() {
+            return statusMessage;
+        }
+
+        public long getStatusHappenedAt() {
+            return statusHappenedAt;
+        }
+    }
 }

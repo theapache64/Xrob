@@ -9,15 +9,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.theah64.xrob.R;
 import com.theah64.xrob.commandcenter.CommandCenter;
-import com.theah64.xrob.commandcenter.CommandFactory;
-import com.theah64.xrob.commandcenter.commands.BaseCommand;
-import com.theah64.xrob.commandcenter.commands.NotificationCommand;
-import com.theah64.xrob.database.Commands;
-import com.theah64.xrob.models.Command;
-
-import org.acra.ACRA;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -34,6 +25,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         Map<String, String> payload = remoteMessage.getData();
         Log.i(X, "FCM says : " + payload);
+        
         if (!payload.isEmpty()) {
 
             final String type = payload.get(KEY_TYPE);

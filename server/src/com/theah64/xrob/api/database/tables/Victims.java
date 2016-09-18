@@ -38,12 +38,12 @@ public class Victims extends BaseTable<Victim> {
 
         final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id,device_name FROM victims WHERE %s = ? LIMIT 1", byColumn);
 
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
         Victim victim = null;
 
         try {
 
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, byValue);
 
             final ResultSet rs = ps.executeQuery();
@@ -67,7 +67,7 @@ public class Victims extends BaseTable<Victim> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -96,13 +96,13 @@ public class Victims extends BaseTable<Victim> {
     public String addv3(Victim victim) {
         String newVictimId = null;
         final String addVictimQuery = "INSERT INTO victims (name,email,phone,imei,device_hash,api_key,fcm_id,device_name,other_device_info,victim_code) VALUES (?,?,?,?,?,?,?,?,?,?);";
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
         boolean isVictimAdded = false;
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addVictimQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            final PreparedStatement ps = con.prepareStatement(addVictimQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, victim.getName());
             ps.setString(2, victim.getEmail());
@@ -130,7 +130,7 @@ public class Victims extends BaseTable<Victim> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -159,11 +159,11 @@ public class Victims extends BaseTable<Victim> {
         final String query = String.format(queryFormat, updateColumn, whereColumn);
 
         boolean isVictimUpdated = false;
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, newUpdateColumnValue);
             ps.setString(2, whereColumnValue);
             isVictimUpdated = ps.executeUpdate() == 1;
@@ -172,7 +172,7 @@ public class Victims extends BaseTable<Victim> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

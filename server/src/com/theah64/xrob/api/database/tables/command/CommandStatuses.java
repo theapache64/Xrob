@@ -5,7 +5,6 @@ import com.theah64.xrob.api.database.tables.BaseTable;
 import com.theah64.xrob.api.models.Command;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -17,6 +16,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_STATUS_MESSAGE = "status_message";
     private static final String TABLE_NAME_COMMAND_STATUSES = "command_statuses";
+    public static final String COLUMN_STATUS_HAPPENED_AT = "status_happened_at";
 
     private CommandStatuses() {
     }
@@ -30,17 +30,20 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     @Override
     public boolean add(Command.Status status) {
         boolean isAdded = false;
-        final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message) VALUES (?,?,?);";
-        final java.sql.Connection connection = Connection.getConnection();
+        final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message,status_happened_at) VALUES (?,?,?,?);";
+        final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addClientQuery);
+            final PreparedStatement ps = con.prepareStatement(addClientQuery);
 
             ps.setString(1, status.getCommandId());
             ps.setString(2, status.getStatus());
             ps.setString(3, status.getStatusMessage());
+            ps.setLong(4, status.getCommandHappenedAt());
+
+            System.out.println("Command happened at " + status.getCommandHappenedAt());
 
             isAdded = ps.executeUpdate() == 1;
 
@@ -50,7 +53,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

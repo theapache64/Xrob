@@ -113,10 +113,10 @@ public class BaseTable<T> {
         final String query = String.format("SELECT %s FROM %s WHERE %s = ? ORDER BY id DESC LIMIT 1", columnToReturn, tableName, byColumn);
 
         String resultValue = null;
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, byValue);
             final ResultSet rs = ps.executeQuery();
 
@@ -129,7 +129,7 @@ public class BaseTable<T> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

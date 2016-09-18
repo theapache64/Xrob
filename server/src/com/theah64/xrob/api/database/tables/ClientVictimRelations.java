@@ -33,12 +33,12 @@ public class ClientVictimRelations extends BaseTable<ClientVictimRelation> {
 
         final String query = String.format("SELECT id FROM client_victim_relations WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
 
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
         ClientVictimRelation relation = null;
 
         try {
 
-            final PreparedStatement ps = connection.prepareStatement(query);
+            final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, value1);
             ps.setString(2, value2);
 
@@ -57,7 +57,7 @@ public class ClientVictimRelations extends BaseTable<ClientVictimRelation> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -70,13 +70,13 @@ public class ClientVictimRelations extends BaseTable<ClientVictimRelation> {
     public boolean add(ClientVictimRelation cvr) {
 
         final String addVictimQuery = "INSERT INTO client_victim_relations (client_id,victim_id) VALUES (?,?);";
-        final java.sql.Connection connection = Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
         boolean isRelationAdded = false;
 
         try {
-            final PreparedStatement ps = connection.prepareStatement(addVictimQuery);
+            final PreparedStatement ps = con.prepareStatement(addVictimQuery);
 
             ps.setString(1, cvr.getClientId());
             ps.setString(2, cvr.getVictimId());
@@ -89,7 +89,7 @@ public class ClientVictimRelations extends BaseTable<ClientVictimRelation> {
             e.printStackTrace();
         } finally {
             try {
-                connection.close();
+                con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
