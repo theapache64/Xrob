@@ -65,7 +65,7 @@ public class NotificationCommand extends BaseCommand {
 
     @Override
     public void handle(Context context, Callback callback) {
-        new NotificationPopper(context, this,callback).execute();
+        new NotificationPopper(context, this, callback).execute();
     }
 
     public String getTicker() {

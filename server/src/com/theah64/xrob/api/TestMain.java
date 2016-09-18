@@ -46,8 +46,11 @@ public class TestMain {
     }
 
     public static void main(String[] args) throws JSONException {
-        System.out.println("shifar///".replaceAll("/", ""));
-        ;
+        final File root = new File("lab/testdir");
+        final List<FileNode> fileNodes = scan(root);
+        //Collections.reverse(fileNodes);
+        JSONArray jaFiles = read(fileNodes);
+        System.out.println(jaFiles.toString());
     }
 
 
