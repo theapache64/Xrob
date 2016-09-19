@@ -1,11 +1,5 @@
-<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
-<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
-<%@ page import="com.theah64.xrob.api.models.Delivery" %>
-<%@ page import="com.theah64.xrob.api.models.Victim" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.DarKnight" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -109,7 +103,7 @@
                     </div>
                 </div>
 
-                <input name="isUserNameChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change username"
+                <input name="isUserNameChangeFormSubmitted" style="margin:0 0 10px 0" value="Change username"
                        type="submit" class="btn btn-danger pull-right"/>
             </form>
 
@@ -172,7 +166,7 @@
                     <div class="help-block with-errors">Enter your new email address</div>
                 </div>
 
-                <input name="isEmailChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change email"
+                <input name="isEmailChangeFormSubmitted" style="margin: 0  0 10px 0" value="Change email"
                        type="submit" class="btn btn-danger pull-right"/>
             </form>
         </div>
