@@ -4,7 +4,7 @@ A spy application, designed for android. (Under construction).
 ## Pending tasks
 - ~~Command history and status management~~
 - Contact sync test
-- SIM details sync
+- ~~SIM details sync~~
 - Client-Victim connected by
 
 ## Pending features
