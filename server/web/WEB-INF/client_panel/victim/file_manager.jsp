@@ -67,13 +67,9 @@
                 }
 
                 if (fileHash != null) {
-                    fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_FILE_ID);
+                    fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_ID);
                 }
 
-                if (fileParentId == null) {
-                    //No file hash so setting route
-                    fileParentId = "0";
-                }
 
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {

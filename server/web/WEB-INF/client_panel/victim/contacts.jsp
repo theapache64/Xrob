@@ -131,8 +131,7 @@
         } catch (PathInfo.PathInfoException e) {
             e.printStackTrace();
         %>
-        <h1 class="text-danger text-center"><b>Whoops!</b></br> <%=e.getMessage()%>
-        </h1>
+        <%=HtmlTemplates.getErrorHtml(e.getMessage())%>
         <%
             }
         %>

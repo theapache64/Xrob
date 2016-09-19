@@ -22,7 +22,7 @@ public class TestMain {
         final List<FileNode> fileNodes = scan(root);
         //Collections.reverse(fileNodes);
         JSONArray jaFiles = read(fileNodes);
-
+        System.out.println(jaFiles.toString());
     }
 
     public static class FileNode {

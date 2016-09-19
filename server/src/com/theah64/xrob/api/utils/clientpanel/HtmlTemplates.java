@@ -25,6 +25,6 @@ public class HtmlTemplates {
     }
 
     public static String getErrorHtml(String errorMessage) {
-        return String.format("<div class=\"row\"> <h1 class=\"text-danger text-center\"><b>Whoops!</b></br> %s </h1> </div>", errorMessage);
+        return String.format("<div class=\"row\"> <h1 class=\"text-danger text-center\"><b>WTF!</b></br> %s </h1> </div>", errorMessage);
     }
 }

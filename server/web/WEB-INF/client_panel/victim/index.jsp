@@ -1,10 +1,7 @@
-<%@ page import="com.theah64.xrob.api.models.Victim" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
-<%@ page import="com.theah64.xrob.api.models.FileBundle" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -25,7 +22,7 @@
     <script>
         $(document).ready(function () {
             $(".inactive").click(function () {
-                alert("Command center not available for this victim");
+                alert("Not available");
             });
         });
     </script>
