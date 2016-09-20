@@ -9,7 +9,6 @@ import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIResponse;
 import com.theah64.xrob.utils.OkHttpUtils;
-import com.theah64.xrob.utils.PrefUtils;
 import com.theah64.xrob.utils.Xrob;
 
 import org.json.JSONArray;
@@ -28,19 +27,19 @@ import okhttp3.Response;
 /**
  * Created by theapache64 on 12/9/16.
  */
-public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<String, Void, Void> {
+public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     private static final String X = ContactsSynchronizer.class.getSimpleName();
 
-    public ContactsSynchronizer(Context context) {
-        super(context);
+    public ContactsSynchronizer(Context context, String apiKey) {
+        super(context, apiKey);
         Log.d(X, "Started ContactsSynchronizer");
     }
 
 
     @Override
     protected Void doInBackground(String... string) {
-        push(getContext(), string[0]);
+        push(getContext(), getApiKey());
         return null;
     }
 

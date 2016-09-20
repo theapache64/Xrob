@@ -25,10 +25,11 @@ CREATE TABLE command_statuses(
     created_at TEXT NOT NULL
 );
 
-DROP TABLE IF EXISTS deliveries;
-CREATE TABLE deliveries(
+DROP TABLE IF EXISTS pending_deliveries;
+CREATE TABLE pending_deliveries(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    route TEXT NOT NULL,
-    body TEXT NOT NULL,
+    data_type TEXT NOT NULL,
+    data TEXT NOT NULL,
+    message VARCHAR(100) NOT NULL,
     created_at TEXT NOT NULL
 );
