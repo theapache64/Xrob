@@ -32,6 +32,7 @@ public class NotificationCommand extends BaseCommand {
 
         super(command);
         final CommandLineParser parser = new DefaultParser();
+
         try {
             final CommandLine cmd = parser.parse(notifyCmdOption, getArgs());
             this.title = cmd.getOptionValue(OPTION_TITLE);
