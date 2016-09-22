@@ -10,7 +10,6 @@ import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.utils.APIRequestGateway;
-import com.theah64.xrob.utils.PrefUtils;
 
 /**
  * Created by theapache64 on 12/9/16.
@@ -56,7 +55,7 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
 
                 final String androidContactId = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts._ID));
                 final String name = cCur.getString(cCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                Contact contact = contactsTable.get(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId);
+                Contact contact = contactsTable.get(Contacts.COLUMN_ANDROID_CONTACT_ID, androidContactId);
 
                 if (contact == null) {
 
@@ -76,7 +75,7 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
 
                         Log.d(X, "Contact name changed from : " + contact.getName() + " to " + name);
 
-                        final boolean isEdited = contactsTable.update(Contacts.COLUMN_ANDRIOD_CONTACT_ID, androidContactId, Contacts.COLUMN_NAME, name);
+                        final boolean isEdited = contactsTable.update(Contacts.COLUMN_ANDROID_CONTACT_ID, androidContactId, Contacts.COLUMN_NAME, name);
                         totalEditedContacts++;
 
                         if (!isEdited) {

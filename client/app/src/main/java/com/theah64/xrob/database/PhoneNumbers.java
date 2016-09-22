@@ -18,11 +18,10 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
     public static final String COLUMN_CONTACT_ID = "contact_id";
     public static final String COLUMN_PHONE_NUMBER = "phone_number";
     public static final String COLUMN_PHONE_TYPE = "phone_type";
-    public static final String TABLE_PHONE_NUMBERS = "phone_numbers";
     private static PhoneNumbers instance;
 
     private PhoneNumbers(Context context) {
-        super(context);
+        super(context, "phone_numbers");
     }
 
     public static PhoneNumbers getInstance(final Context context) {
@@ -43,7 +42,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
         cv.put(COLUMN_CONTACT_ID, phoneNumber.getContactId());
         cv.put(COLUMN_PHONE_NUMBER, phoneNumber.getPhone());
         cv.put(COLUMN_PHONE_TYPE, phoneNumber.getPhoneType());
-        rowId = db.insert(TABLE_PHONE_NUMBERS, null, cv);
+        rowId = db.insert(getTableName(), null, cv);
 
         return rowId;
     }
@@ -53,7 +52,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
         Contact.PhoneNumber phoneNumber = null;
 
         final SQLiteDatabase db = this.getWritableDatabase();
-        final Cursor cCur = db.query(TABLE_PHONE_NUMBERS, new String[]{COLUMN_ID}, column1 + " = ?  AND " + column2 + " = ?", new String[]{value1, value2}, null, null, null, "1");
+        final Cursor cCur = db.query(getTableName(), new String[]{COLUMN_ID}, column1 + " = ?  AND " + column2 + " = ?", new String[]{value1, value2}, null, null, null, "1");
 
         if (cCur != null) {
 
@@ -79,7 +78,7 @@ public class PhoneNumbers extends BaseTable<Contact.PhoneNumber> {
 
         List<Contact.PhoneNumber> phoneNumbers = null;
         final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor pCur = db.query(TABLE_PHONE_NUMBERS, new String[]{COLUMN_PHONE_NUMBER, COLUMN_PHONE_TYPE}, COLUMN_CONTACT_ID + " = ? AND is_synced = ?",
+        final Cursor pCur = db.query(getTableName(), new String[]{COLUMN_PHONE_NUMBER, COLUMN_PHONE_TYPE}, COLUMN_CONTACT_ID + " = ? AND is_synced = ?",
                 new String[]{contactId, "0"}, null, null, null
         );
 

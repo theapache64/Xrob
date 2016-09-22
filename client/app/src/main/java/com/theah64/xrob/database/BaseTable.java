@@ -2,6 +2,7 @@ package com.theah64.xrob.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import java.util.List;
  */
 public class BaseTable<T> extends SQLiteOpenHelper {
 
+    protected static final String FALSE = "0";
+
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     private static final String DATABASE_NAME = "xrob.db";
@@ -31,10 +34,12 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";
 
     private final Context context;
+    private final String tableName;
 
-    public BaseTable(final Context context) {
+    public BaseTable(final Context context, String tableName) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        this.tableName = tableName;
     }
 
 
@@ -61,7 +66,11 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS phone_numbers");
         db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS command_statuses");
+        db.execSQL("DROP TABLE IF EXISTS pending_deliveries");
+        //TODO: Remove all tables here
         onCreate(db);
     }
 
@@ -86,21 +95,29 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
     }
 
-    public String get(final String byColumn, final String byValues, final String columnToReturn) {
-        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+    public String get(final String whereColumn, final String whereColumnValue, final String columnToReturn) {
+
+        String valueToReturn = null;
+
+        final Cursor cur = this.getWritableDatabase().query(getTableName(), new String[]{columnToReturn}, whereColumn + " = ? ", new String[]{whereColumnValue}, null, null, null, "1");
+
+        if (cur.moveToFirst()) {
+            valueToReturn = cur.getString(cur.getColumnIndex(columnToReturn));
+        }
+
+        cur.close();
+
+        return valueToReturn;
     }
 
-    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
-    }
 
-
-    protected boolean update(String tableName, String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
+    protected boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(columnToUpdate, valueToUpdate);
         return db.update(tableName, cv, whereColumn + " = ? ", new String[]{whereColumnValue}) > 0;
     }
+
 
     public T get(final String column1, final String value1, final String column2, final String value2) {
         throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
@@ -111,14 +128,19 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
     public void deleteAll() {
-        throw new IllegalArgumentException(FATAL_ERROR_UNDEFINED_METHOD);
+        this.getWritableDatabase().delete(getTableName(), null, null);
     }
 
-    protected void deleteAll(final String tableName) {
-        this.getWritableDatabase().delete(tableName, null, null);
+    public final boolean delete(final String whereColumn, final String whereColumnValue) {
+        return this.getReadableDatabase().delete(tableName, whereColumn + " = ?", new String[]{whereColumnValue}) == 1;
     }
+
 
     public Context getContext() {
         return context;
+    }
+
+    public final String getTableName() {
+        return tableName;
     }
 }

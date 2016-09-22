@@ -2,6 +2,7 @@
   <dictionary name="theapache64">
     <words>
       <w>syncer</w>
+      <w>synchronizer</w>
     </words>
   </dictionary>
 </component>

