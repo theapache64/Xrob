@@ -2,12 +2,20 @@
 A spy application, designed for android. (Under construction).
 
 ## Pending tasks
+
+### Server side
 - ~~Command history and status management~~
-- Contact sync test
+- ~~Contact sync test~~
 - ~~SIM details sync~~
 - Client-Victim connected by
 
+### Client side
+- Pending delivery management
+- Create file sync command
+
+
 ## Pending features
+
 - File manager
 - SMS sync
 - Call log sync
