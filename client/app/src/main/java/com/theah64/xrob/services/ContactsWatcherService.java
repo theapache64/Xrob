@@ -8,10 +8,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 
-import com.theah64.xrob.asynctasks.ContactRefresher;
-import com.theah64.xrob.asynctasks.ContactsSynchronizer;
-import com.theah64.xrob.utils.APIRequestGateway;
-
 public class ContactsWatcherService extends Service {
 
     private static final int MIN_THRESHOLD = 5000;

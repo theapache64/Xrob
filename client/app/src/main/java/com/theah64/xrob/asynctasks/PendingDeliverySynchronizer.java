@@ -106,11 +106,6 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                     pendingDeliveriesTable.delete(PendingDeliveries.COLUMN_ID, curDel.getId());
                 }
 
-                if (curDel.getDataType().equals(Xrob.DATA_TYPE_CONTACTS)) {
-                    final boolean ifContactDelPending =
-                            pendingDeliveriesTable.get(PendingDeliveries.COLUMN_DATA_TYPE, Xrob.DATA_TYPE_CONTACTS, PendingDeliveries.COLUMN_ID) != null;
-                }
-
                 if (i < (pendingDeliveryList.size() - 1)) {
                     sync(pendingDeliveryList.get(i++));
                 }
