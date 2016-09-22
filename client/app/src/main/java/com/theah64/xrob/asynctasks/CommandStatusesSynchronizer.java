@@ -1,7 +1,6 @@
 package com.theah64.xrob.asynctasks;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.theah64.xrob.database.CommandStatuses;
@@ -27,14 +26,14 @@ import okhttp3.Response;
 /**
  * Created by theapache64 on 18/9/16.
  */
-public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<String, Void, Void> {
+public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
 
     private static final String X = CommandStatusesSynchronizer.class.getSimpleName();
     private static final String KEY_STATUS_HAPPENED_AT = "status_happened_at";
 
-    public CommandStatusesSynchronizer(Context context) {
-        super(context);
+    public CommandStatusesSynchronizer(Context context, String apiKey) {
+        super(context, apiKey);
     }
 
     @Override

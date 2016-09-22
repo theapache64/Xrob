@@ -26,7 +26,8 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Void... contexts) {
+    protected Boolean doInBackground(Void... voids) {
+
         return refreshContacts(context);
     }
 
@@ -158,7 +159,7 @@ public class ContactRefresher extends AsyncTask<Void, Void, Boolean> {
 
                 @Override
                 public void onReadyToRequest(String apiKey) {
-                    new ContactsSynchronizer(context).execute(apiKey);
+                    new ContactsSynchronizer(context, apiKey).execute();
                 }
 
                 @Override

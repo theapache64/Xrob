@@ -22,7 +22,7 @@ public class APIRequestBuilder {
     final Request.Builder requestBuilder = new Request.Builder();
     private final StringBuilder logBuilder = new StringBuilder();
 
-    private final String url;   
+    private final String url;
     private FormBody.Builder params = new FormBody.Builder();
 
     public APIRequestBuilder(String route, final String apiKey) {
