@@ -24,11 +24,13 @@ import java.util.List;
  */
 public class BaseTable<T> extends SQLiteOpenHelper {
 
-    protected static final String FALSE = "0";
+    static final String FALSE = "0";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     private static final String DATABASE_NAME = "xrob.db";
+
+    protected static final String COLUMN_CREATED_AT = "created_at";
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";

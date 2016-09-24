@@ -36,7 +36,7 @@ public class ContactsWatcherService extends Service {
 
     public class MyContactObserver extends ContentObserver {
 
-        public MyContactObserver(Handler handler) {
+        MyContactObserver(Handler handler) {
             super(handler);
         }
 

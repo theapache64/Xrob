@@ -1,6 +1,7 @@
 package com.theah64.xrob.asynctasks;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.theah64.xrob.database.BaseTable;
 import com.theah64.xrob.database.Contacts;
@@ -29,6 +30,7 @@ import okhttp3.Response;
  */
 public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
+    private static final String X = PendingDeliverySynchronizer.class.getSimpleName();
     private List<PendingDelivery> pendingDeliveryList;
     private int i = 0;
     private PendingDeliveries pendingDeliveriesTable;
@@ -45,19 +47,23 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
         pendingDeliveriesTable = PendingDeliveries.getInstance(getContext());
         pendingDeliveryList = pendingDeliveriesTable.getAll();
 
-        //Opening api request gate
-        new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
-            @Override
-            public void onReadyToRequest(String apiKeyLocal) {
-                apiKey = apiKeyLocal;
-                sync(pendingDeliveryList.get(i));
-            }
+        if (pendingDeliveryList != null) {
+            //Opening api request gate
+            new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
+                @Override
+                public void onReadyToRequest(String apiKeyLocal) {
+                    apiKey = apiKeyLocal;
+                    sync(pendingDeliveryList.get(i));
+                }
 
-            @Override
-            public void onFailed(String reason) {
+                @Override
+                public void onFailed(String reason) {
 
-            }
-        });
+                }
+            });
+        } else {
+            Log.d(X, "No pending deliveries found");
+        }
 
         return null;
     }

@@ -1,7 +1,9 @@
 package com.theah64.xrob.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.theah64.xrob.models.PendingDelivery;
 
@@ -13,10 +15,11 @@ import java.util.List;
  */
 public class PendingDeliveries extends BaseTable<PendingDelivery> {
 
-    public static final String COLUMN_DATA_TYPE = "data_type";
+    private static final String COLUMN_DATA_TYPE = "data_type";
     private static final String COLUMN_DATA = "data";
     private static final String COLUMN_MESSAGE = "message";
     private static final String COLUMN_IS_ERROR = "is_error";
+    private static final String X = PendingDeliveries.class.getSimpleName();
     private static PendingDeliveries instance;
 
     private PendingDeliveries(Context context) {
@@ -30,6 +33,29 @@ public class PendingDeliveries extends BaseTable<PendingDelivery> {
         }
 
         return instance;
+    }
+
+    @Override
+    public long add(PendingDelivery pd) {
+
+        Log.d(X, "PendingDeliveries: " + pd);
+
+        final ContentValues cv = new ContentValues(4);
+
+        cv.put(COLUMN_IS_ERROR, pd.isError());
+        cv.put(COLUMN_DATA_TYPE, pd.getDataType());
+        cv.put(COLUMN_DATA, pd.getData());
+        cv.put(COLUMN_MESSAGE, pd.getMessage());
+        cv.put(COLUMN_CREATED_AT, System.currentTimeMillis());
+
+        final long newRowId = this.getWritableDatabase().insert(getTableName(), null, cv);
+        if (newRowId != -1) {
+            Log.d(X, "Added : " + newRowId);
+        } else {
+            throw new IllegalArgumentException("Failed to add pending delivery");
+        }
+
+        return newRowId;
     }
 
     @Override

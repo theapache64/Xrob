@@ -18,7 +18,6 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
     public static final String COLUMN_COMMAND_ID = "command_id";
     public static final String COLUMN_STATUS = "status";
-    private static final String COLUMN_CREATED_AT = "created_at";
     private static final String X = CommandStatuses.class.getSimpleName();
     public static final String COLUMN_STATUS_MESSAGE = "status_message";
 

@@ -205,17 +205,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Log.d(X, "Starting contact sync... 1");
         new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
             @Override
             public void onReadyToRequest(String apiKey) {
-
+                Log.d(X, "Starting contact sync... 2");
                 new ContactsSynchronizer(MainActivity.this, apiKey).execute();
-
             }
 
             @Override
             public void onFailed(String reason) {
-
+                Log.e(X, "Error : " + reason);
             }
         });
 

