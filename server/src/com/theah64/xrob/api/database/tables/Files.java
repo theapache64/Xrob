@@ -43,6 +43,8 @@ public class Files extends BaseTable<File> {
     @Override
     public void addv2(@Nullable String victimId, JSONArray jaFiles) throws RuntimeException, JSONException {
 
+        System.out.println("jaFiles: " + jaFiles);
+
         //Exploding new file structures
         //Crearing file bundle
         final String bundleId = FileBundles.getInstance().addv3(new FileBundle(null, victimId, 0, DarKnight.getEncrypted(victimId + RandomString.getRandomString(10)).replaceAll("[^A-Za-z0-9]", "")));
