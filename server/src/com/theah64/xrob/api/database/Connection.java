@@ -13,24 +13,27 @@ import java.sql.SQLException;
 public class Connection {
 
     public static final boolean debugMode = true;
+    private static DataSource ds;
 
     public static java.sql.Connection getConnection() {
 
         try {
-            final Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            DataSource ds = (DataSource) envContext.lookup(debugMode ? "jdbc/xrob" : "jdbc/MySQLDS");
+
+            if (ds == null) {
+                final Context initContext = new InitialContext();
+                Context envContext = (Context) initContext.lookup("java:/comp/env");
+                ds = (DataSource) envContext.lookup(debugMode ? "jdbc/xrob" : "jdbc/MySQLDS");
+            }
+
             return ds.getConnection();
+
         } catch (NamingException | SQLException e) {
             e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage());
         }
-
-        System.out.println("Failed to get connection from pool, So  connecting through DriverManager class");
-        return getDriverManagerConnection();
-        //return null;
     }
 
-    //Local credentials
+    /*//Local credentials
     private static final String LC_HOST = "localhost";
     private static final String LC_PORT = "3306";
     private static final String LC_USERNAME = "root";
@@ -42,15 +45,15 @@ public class Connection {
     private static final String RM_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
     private static final String RM_PORT = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
 
-    private static final String DATABASE_NAME = "xrob";
+    private static final String DATABASE_NAME = "xrob";*/
 
-    private static final String SQL_CONNECTION_URL = String.format(
+   /* private static final String SQL_CONNECTION_URL = String.format(
             "jdbc:mysql://%s:%s/%s",
             debugMode ? LC_HOST : RM_HOST,
             debugMode ? LC_PORT : RM_PORT,
-            DATABASE_NAME);
+            DATABASE_NAME);*/
 
-    public static java.sql.Connection getDriverManagerConnection() {
+   /* public static java.sql.Connection getDriverManagerConnection() {
 
 
         try {
@@ -68,7 +71,7 @@ public class Connection {
             e.printStackTrace();
             throw new Error("Failed to get database connection : " + e.getMessage());
         }
-    }
+    }*/
 
 
     public static boolean isDebugMode() {

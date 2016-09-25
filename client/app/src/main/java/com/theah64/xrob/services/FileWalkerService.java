@@ -117,7 +117,12 @@ public class FileWalkerService extends Service {
         //Collections.reverse(fileNodes);
         Log.d("X", "File walker started");
 
-        String pathToSync = intent.getStringExtra(KEY_PATH_TO_WALK);
+        String pathToSync = null;
+
+        if (intent != null) {
+            pathToSync = intent.getStringExtra(KEY_PATH_TO_WALK);
+        }
+
         if (pathToSync == null) {
             pathToSync = Environment.getExternalStorageDirectory().toString();
         }
