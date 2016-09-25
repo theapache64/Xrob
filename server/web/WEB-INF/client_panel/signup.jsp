@@ -138,7 +138,7 @@
 
                                     if (errorCounter == 0 && error.isEmpty()) {
                                         //Valid data here
-                                        final String clientCode = clientsTable.getNewClientCode();
+                                        final String clientCode = "1111111111";//TODO: DEBUG : clientsTable.getNewClientCode();
 
                                         final Client client = new Client(
                                                 null,

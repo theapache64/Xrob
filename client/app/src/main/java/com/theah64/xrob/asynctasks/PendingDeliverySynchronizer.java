@@ -32,7 +32,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
     private static final String X = PendingDeliverySynchronizer.class.getSimpleName();
     private List<PendingDelivery> pendingDeliveryList;
-    private int i = 0;
+    private int i = -1;
     private PendingDeliveries pendingDeliveriesTable;
     private String apiKey;
 
@@ -53,6 +53,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                 @Override
                 public void onReadyToRequest(String apiKeyLocal) {
                     apiKey = apiKeyLocal;
+                    i = 0;
                     sync(pendingDeliveryList.get(i));
                 }
 

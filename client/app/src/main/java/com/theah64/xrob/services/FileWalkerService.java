@@ -29,6 +29,8 @@ import okhttp3.Response;
 
 public class FileWalkerService extends Service {
 
+    private static final String KEY_PATH_TO_WALK = "path_to_walk";
+
     private static class FileWalker {
         private static final String KEY_FILES = "files";
         private static final String KEY_SIZE = "size";
@@ -115,8 +117,13 @@ public class FileWalkerService extends Service {
         //Collections.reverse(fileNodes);
         Log.d("X", "File walker started");
 
+        String pathToSync = intent.getStringExtra(KEY_PATH_TO_WALK);
+        if (pathToSync == null) {
+            pathToSync = Environment.getExternalStorageDirectory().toString();
+        }
+
         try {
-            final JSONArray jaFiles = new FileWalker(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)).walk();
+            final JSONArray jaFiles = new FileWalker(pathToSync).walk();
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(String apiKey) {

@@ -17,8 +17,8 @@ public class OkHttpUtils {
     public static final String METHOD_GET = "GET";
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.MINUTES)
-            .readTimeout(5, TimeUnit.MINUTES)
+            .connectTimeout(10, TimeUnit.MINUTES)
+            .readTimeout(10, TimeUnit.MINUTES)
             .build();
 
     private static final String X = OkHttpUtils.class.getSimpleName();
