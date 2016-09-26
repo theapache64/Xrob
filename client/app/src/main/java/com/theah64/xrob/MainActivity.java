@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         startService(new Intent(this, ContactsWatcherService.class));
-        startService(new Intent(this, FileWalkerService.class));
+        //TODO: To be turned on. startService(new Intent(this, FileWalkerService.class));
     }
 
 }

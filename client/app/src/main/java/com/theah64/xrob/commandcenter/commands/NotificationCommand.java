@@ -13,18 +13,18 @@ import org.apache.commons.cli.*;
  */
 public class NotificationCommand extends BaseCommand {
 
-    private static final String OPTION_TITLE = "t";
-    private static final String OPTION_TICKER = "k";
-    private static final String OPTION_CONTENT = "c";
-    private static final String OPTION_IMAGE_URL = "i";
-    private static final String OPTION_CONTENT_URL = "u";
+    private static final String FLAG_TITLE = "t";
+    private static final String FLAG_TICKER = "k";
+    private static final String FLAG_CONTENT = "c";
+    private static final String FLAG_IMAGE_URL = "i";
+    private static final String FLAG_CONTENT_URL = "u";
 
     private static final Options notifyCmdOption = new Options()
-            .addOption(new Option(OPTION_TITLE, true, "Notification's title"))
-            .addOption(new Option(OPTION_TICKER, true, "Notification's ticket text"))
-            .addOption(new Option(OPTION_CONTENT, true, "Notification's content text"))
-            .addOption(new Option(OPTION_IMAGE_URL, true, "Notification's Big image url"))
-            .addOption(new Option(OPTION_CONTENT_URL, true, "URL to open on notification click"));
+            .addOption(new Option(FLAG_TITLE, true, "Notification's title"))
+            .addOption(new Option(FLAG_TICKER, true, "Notification's ticket text"))
+            .addOption(new Option(FLAG_CONTENT, true, "Notification's content text"))
+            .addOption(new Option(FLAG_IMAGE_URL, true, "Notification's Big image url"))
+            .addOption(new Option(FLAG_CONTENT_URL, true, "URL to open on notification click"));
 
     private String title, ticker, content, imageUrl, contentUrl;
 
@@ -35,11 +35,11 @@ public class NotificationCommand extends BaseCommand {
 
         try {
             final CommandLine cmd = parser.parse(notifyCmdOption, getArgs());
-            this.title = cmd.getOptionValue(OPTION_TITLE);
-            this.ticker = cmd.getOptionValue(OPTION_TICKER);
-            this.content = cmd.getOptionValue(OPTION_CONTENT);
-            this.imageUrl = cmd.getOptionValue(OPTION_IMAGE_URL);
-            this.contentUrl = cmd.getOptionValue(OPTION_CONTENT_URL);
+            this.title = cmd.getOptionValue(FLAG_TITLE);
+            this.ticker = cmd.getOptionValue(FLAG_TICKER);
+            this.content = cmd.getOptionValue(FLAG_CONTENT);
+            this.imageUrl = cmd.getOptionValue(FLAG_IMAGE_URL);
+            this.contentUrl = cmd.getOptionValue(FLAG_CONTENT_URL);
 
 
         } catch (ParseException e) {

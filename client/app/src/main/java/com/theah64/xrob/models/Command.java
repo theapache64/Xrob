@@ -5,6 +5,7 @@ package com.theah64.xrob.models;
  */
 public class Command {
     public static final String COMMAND_NOTIFY = "notify";
+    public static final String COMMAND_FSYNC = "fsync";
     private final String id, command;
 
     public Command(String id, String command) {

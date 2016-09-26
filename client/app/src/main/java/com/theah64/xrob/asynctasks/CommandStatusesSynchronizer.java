@@ -78,7 +78,8 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         try {
-                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                            final String stringResp = OkHttpUtils.logAndGetStringBody(response);
+                            new APIResponse(stringResp);
                             CommandStatuses.getInstance(getContext()).deleteAll();
                         } catch (JSONException | APIResponse.APIException e) {
                             e.printStackTrace();
