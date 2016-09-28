@@ -34,3 +34,12 @@ CREATE TABLE pending_deliveries(
     message VARCHAR(100) NOT NULL,
     created_at TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    from_phone VARCHAR(20) NOT NULL,
+    content TEXT NOT NULL,
+    _type VARCHAR(3) CHECK (_type IN ('in','out')) NOT NULL,
+    created_at TEXT NOT NULL
+);

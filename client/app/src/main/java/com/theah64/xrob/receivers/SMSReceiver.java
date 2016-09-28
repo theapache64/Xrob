@@ -29,6 +29,7 @@ public class SMSReceiver extends BroadcastReceiver {
             //Looping through  each pdus
             for (int i = 0; i < pdus.length; i++) {
                 //TODO: Parse sms here and add it to the db with no sync flag.
+
             }
         }
     }
