@@ -17,17 +17,17 @@ public abstract class BaseCommand {
     private final String[] args;
     private CommandLine cmd;
 
-    public BaseCommand(String command) throws CommandException, ParseException {
+    BaseCommand(String command) throws CommandException, ParseException {
         if (command != null && !command.isEmpty()) {
             if (command.startsWith(BASE_COMMAND_CODE)) {
                 this.args = command.split(" ");
-                if (args.length < 3) {
+                if (args.length <= 2) {
                     throw new IllegalArgumentException("Command should have at least 3 parts");
-                }else{
+                } else {
                     //Valid command syntax, check for options
-                    if(getOptions()!=null){
+                    if (getOptions() != null) {
                         final CommandLineParser parser = new DefaultParser();
-                        this.cmd = parser.parse(getOptions(),args);
+                        this.cmd = parser.parse(getOptions(), args);
                     }
                 }
             } else {
@@ -42,7 +42,7 @@ public abstract class BaseCommand {
         return args[1];
     }
 
-    public CommandLine getCmd() {
+    CommandLine getCmd() {
         return cmd;
     }
 
@@ -56,7 +56,6 @@ public abstract class BaseCommand {
 
     public interface Callback {
         void onError(final String message);
-
         void onSuccess(final String message);
     }
 

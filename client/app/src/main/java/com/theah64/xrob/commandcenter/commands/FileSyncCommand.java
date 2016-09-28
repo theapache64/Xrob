@@ -15,6 +15,7 @@ import org.apache.commons.cli.ParseException;
 import java.io.File;
 
 /**
+ * Used to sync files.
  * Created by theapache64 on 27/9/16.
  */
 
@@ -40,7 +41,6 @@ public class FileSyncCommand extends BaseCommand {
             }
         }
 
-
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FileSyncCommand extends BaseCommand {
         final Intent fileWalkerIntent = new Intent(context, FileWalkerService.class);
         fileWalkerIntent.putExtra(FileWalkerService.KEY_PATH_TO_WALK, this.dir);
         context.startService(fileWalkerIntent);
-        callback.onSuccess("File sync started @" + this.dir);
+        callback.onSuccess("File sync started at " + this.dir);
     }
 
     @Override

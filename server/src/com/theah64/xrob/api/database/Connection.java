@@ -29,7 +29,7 @@ public class Connection {
 
         } catch (NamingException | SQLException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(e.getMessage());
+            throw new IllegalArgumentException("Connection error : " + e.getMessage());
         }
     }
 
