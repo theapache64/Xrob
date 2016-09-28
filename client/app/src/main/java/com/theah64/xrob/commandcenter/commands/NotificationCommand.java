@@ -1,12 +1,13 @@
 package com.theah64.xrob.commandcenter.commands;
 
-import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v4.app.NotificationCompat;
 
 import com.theah64.xrob.asynctasks.NotificationPopper;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Created by theapache64 on 14/9/16,7:52 PM.
@@ -28,24 +29,17 @@ public class NotificationCommand extends BaseCommand {
 
     private String title, ticker, content, imageUrl, contentUrl;
 
-    public NotificationCommand(final String command) throws BaseCommand.CommandException {
+    public NotificationCommand(final String command) throws BaseCommand.CommandException, ParseException {
 
         super(command);
-        final CommandLineParser parser = new DefaultParser();
 
-        try {
-            final CommandLine cmd = parser.parse(notifyCmdOption, getArgs());
-            this.title = cmd.getOptionValue(FLAG_TITLE);
-            this.ticker = cmd.getOptionValue(FLAG_TICKER);
-            this.content = cmd.getOptionValue(FLAG_CONTENT);
-            this.imageUrl = cmd.getOptionValue(FLAG_IMAGE_URL);
-            this.contentUrl = cmd.getOptionValue(FLAG_CONTENT_URL);
+        final CommandLine cmd = getCmd();
+        this.title = cmd.getOptionValue(FLAG_TITLE);
+        this.ticker = cmd.getOptionValue(FLAG_TICKER);
+        this.content = cmd.getOptionValue(FLAG_CONTENT);
+        this.imageUrl = cmd.getOptionValue(FLAG_IMAGE_URL);
+        this.contentUrl = cmd.getOptionValue(FLAG_CONTENT_URL);
 
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new BaseCommand.CommandException("Invalid command: " + e.getMessage());
-        }
     }
 
     public String getTitle() {
@@ -67,6 +61,11 @@ public class NotificationCommand extends BaseCommand {
     @Override
     public void handle(Context context, Callback callback) {
         new NotificationPopper(context, this, callback).execute();
+    }
+
+    @Override
+    public Options getOptions() {
+        return notifyCmdOption;
     }
 
     public String getTicker() {

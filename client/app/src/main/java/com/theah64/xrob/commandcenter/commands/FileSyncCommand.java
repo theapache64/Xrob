@@ -24,29 +24,23 @@ public class FileSyncCommand extends BaseCommand {
 
     private static final Options options = new Options()
             .addOption(FLAG_DIRECTORY, true, "Directory path to sync");
+
     private String dir;
 
-    public FileSyncCommand(String command) throws CommandException {
+    public FileSyncCommand(String command) throws CommandException, ParseException {
         super(command);
+        this.dir = super.getCmd().getOptionValue(FLAG_DIRECTORY, null);
 
-        final CommandLineParser parser = new DefaultParser();
-        try {
-            final CommandLine cmd = parser.parse(options, getArgs());
-            this.dir = cmd.getOptionValue(FLAG_DIRECTORY, null);
-
-            if (this.dir == null) {
-                this.dir = Environment.getExternalStorageDirectory().getAbsolutePath();
-            } else {
-                //Has custom dir
-                if (!new File(this.dir).exists()) {
-                    throw new CommandException(this.dir + " does not exist!");
-                }
+        if (this.dir == null) {
+            this.dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            //Has custom dir
+            if (!new File(this.dir).exists()) {
+                throw new CommandException(this.dir + " does not exist!");
             }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new CommandException(e.getMessage());
         }
+
+
     }
 
     @Override
@@ -55,5 +49,10 @@ public class FileSyncCommand extends BaseCommand {
         fileWalkerIntent.putExtra(FileWalkerService.KEY_PATH_TO_WALK, this.dir);
         context.startService(fileWalkerIntent);
         callback.onSuccess("File sync started @" + this.dir);
+    }
+
+    @Override
+    public Options getOptions() {
+        return options;
     }
 }

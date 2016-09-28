@@ -5,12 +5,14 @@ import com.theah64.xrob.commandcenter.commands.FileSyncCommand;
 import com.theah64.xrob.models.Command;
 import com.theah64.xrob.commandcenter.commands.NotificationCommand;
 
+import org.apache.commons.cli.ParseException;
+
 /**
  * Created by theapache64 on 14/9/16,7:49 PM.
  */
 public class CommandFactory {
 
-    public static BaseCommand getCommand(final Command command) throws BaseCommand.CommandException {
+    public static BaseCommand getCommand(final Command command) throws BaseCommand.CommandException, ParseException {
 
         final String commandType = getCommandType(command.getCommand());
 
