@@ -17,7 +17,7 @@ public class FCMUpdateCommand extends BaseCommand {
 
     @Override
     public void handle(Context context, Callback callback) {
-
+        
     }
 
     @Override

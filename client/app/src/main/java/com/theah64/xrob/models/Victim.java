@@ -9,7 +9,7 @@ public class Victim {
     public static final String KEY_IMEI = "imei";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PHONE = "phone";
-    public static final String KEY_FCM_ID = "fcm_id";
+    public static final String KEY_THE_FCM_ID = "fcm_id";
     private static final String X = Victim.class.getSimpleName();
 
     public static final String KEY_DEVICE_NAME = "device_name";
