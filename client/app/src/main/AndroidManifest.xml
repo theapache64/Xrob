@@ -26,6 +26,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- To get SMS -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <application
         android:name=".utils.Xrob"
         android:allowBackup="true"
@@ -74,7 +78,22 @@
         <service
             android:name=".services.FileWalkerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            android:permission="android.permission.READ_EXTERNAL_STORAGE" />
+
+        <!--To receive SMS-->
+        <receiver
+            android:name=".receivers.SMSReceiver"
+            android:enabled="false"
+            android:exported="false"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+
+
     </application>
 
 </manifest>
