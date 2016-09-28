@@ -202,7 +202,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     }
 
-    private static synchronized void push(final Context context, final String apiKey) {
+    public static synchronized void push(final Context context, final String apiKey) {
         Log.d(X, "Starting contact sync... 9");
         final Contacts contactsTable = Contacts.getInstance(context);
         final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
