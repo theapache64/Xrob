@@ -25,6 +25,7 @@ public class Commands extends BaseTable<Command> {
     private static final String TABLE_NAME_COMMANDS = "commands";
 
     private Commands() {
+        super(tableName);
     }
 
     private static final Commands instance = new Commands();

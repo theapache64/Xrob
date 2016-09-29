@@ -16,6 +16,7 @@ public class ClientVictimRelations extends BaseTable<ClientVictimRelation> {
     private static final java.lang.String COLUMN_VICTIM_ID = "victim_id";
 
     private ClientVictimRelations() {
+        super("client_victim_relations");
     }
 
     private static final ClientVictimRelations instance = new ClientVictimRelations();

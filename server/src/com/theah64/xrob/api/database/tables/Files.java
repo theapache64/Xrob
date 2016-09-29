@@ -22,16 +22,15 @@ import java.util.List;
 public class Files extends BaseTable<File> {
 
     private static final String COLUMN_FILE_NAME = "file_name";
-    public static final String COLUMN_PARENT_ID = "parent_id";
     private static final String COLUMN_IS_DIRECTORY = "is_directory";
     private static final String COLUMN_FILE_SIZE_IN_KB = "file_size_in_kb";
     private static final String COLUMN_ABSOLUTE_PARENT_PATH = "absolute_parent_path";
-    private static final String ABSOLUTE_ROOT = "/";
     public static final String COLUMN_FILE_HASH = "file_hash";
-    private static final String TABLE_NAME_FILES = "files";
+    private static final String ABSOLUTE_ROOT = "/";
     private static final String COLUMN_AS_HAS_DIRECTORY = "has_directory";
 
     private Files() {
+        super("files");
     }
 
     private static final Files instance = new Files();
@@ -98,6 +97,7 @@ public class Files extends BaseTable<File> {
             }
 
             if (isDirectory) {
+
                 final JSONArray jaFiles2 = joFile.getJSONArray("files");
 
                 if (jaFiles.length() > 0) {
@@ -161,8 +161,4 @@ public class Files extends BaseTable<File> {
         return files;
     }
 
-    @Override
-    public String get(String byColumn, String byValues, String columnToReturn) {
-        return super.getV2(TABLE_NAME_FILES, byColumn, byValues, columnToReturn);
-    }
 }

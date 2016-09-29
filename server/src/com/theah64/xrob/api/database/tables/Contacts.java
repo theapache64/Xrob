@@ -24,16 +24,14 @@ public class Contacts extends BaseTable<Contact> {
     public static final String COLUMN_VICTIM_ID = "victim_id";
     private static final String KEY_PHONE_NUMBERS = "phone_numbers";
     private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
-    private static final String TABLE_NAME_CONTACTS = "contacts";
     private static final String COLUMN_AS_PRE_NAMES = "pre_names";
     private static final String COLUMN_AS_PHONE_NUMBERS = "phone_numbers";
     private static final String COLUMN_AS_PHONE_TYPES = "phone_types";
-    private static final String COLUMN_AS_TOTAL_CONTACTS = "total_contacts";
-    private static final String COLUMN_AS_SYNCED_AT = "synced_at";
 
     private static Contacts instance = new Contacts();
 
     private Contacts() {
+        super("contacts");
     }
 
     public static Contacts getInstance() {
@@ -131,7 +129,7 @@ public class Contacts extends BaseTable<Contact> {
     @Override
     public Contact get(String column1, String value1, String column2, String value2) {
         Contact contact = null;
-        final String query = String.format("SELECT id,name FROM contacts WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
+        final String query = String.format("SELECT id, name FROM contacts WHERE %s = ? AND %s = ? LIMIT 1", column1, column2);
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -272,11 +270,6 @@ public class Contacts extends BaseTable<Contact> {
 
     }
 
-    @Override
-    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        return update(TABLE_NAME_CONTACTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
-    }
-
     public List<Contact> getAll(String victimId) {
 
         List<Contact> contacts = null;
@@ -321,9 +314,4 @@ public class Contacts extends BaseTable<Contact> {
         return contacts;
     }
 
-
-    @Override
-    public int getTotal(String victimId) {
-        return super.getTotal(TABLE_NAME_CONTACTS, victimId);
-    }
 }

@@ -26,6 +26,13 @@ public class BaseTable<T> {
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
     private static final String COLUMN_AS_TOTAL_ROWS = "total_rows";
 
+    private final String tableName;
+
+    public BaseTable(String tableName) {
+        this.tableName = tableName;
+    }
+
+
     public T get(final String column, final String value) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
@@ -51,7 +58,29 @@ public class BaseTable<T> {
     }
 
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
+        boolean isEdited = false;
+        final String query = String.format("UPDATE %s SET %s = ? WHERE %s = ?;", tableName, updateColumn, whereColumn);
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, newUpdateColumnValue);
+            ps.setString(2, whereColumnValue);
+
+            isEdited = ps.executeUpdate() == 1;
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isEdited;
+
     }
 
     public T get(final String column1, final String value1, final String column2, final String value2) {
@@ -71,32 +100,6 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    protected boolean update(String tableName, String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
-
-        boolean isEdited = false;
-        final String query = String.format("UPDATE %s SET %s = ? WHERE %s = ?;", tableName, columnToUpdate, whereColumn);
-        final java.sql.Connection con = Connection.getConnection();
-
-        try {
-            final PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, valueToUpdate);
-            ps.setString(2, whereColumnValue);
-
-            isEdited = ps.executeUpdate() == 1;
-            ps.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return isEdited;
-    }
-
     protected boolean isExist(final T t) {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
@@ -105,11 +108,8 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public boolean isExist(final String whereColumn1, final String whereColumnValue1, final String whereColumn2, final String whereColumnValue2) {
-        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
-    }
 
-    public String getV2(String tableName, String byColumn, String byValue, String columnToReturn) {
+    public String getV2(String byColumn, String byValue, String columnToReturn) {
 
         final String query = String.format("SELECT %s FROM %s WHERE %s = ? ORDER BY id DESC LIMIT 1", columnToReturn, tableName, byColumn);
 
@@ -139,7 +139,7 @@ public class BaseTable<T> {
         return resultValue;
     }
 
-    public boolean isExist(String tableName, String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
+    public boolean isExist(String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
         boolean isExist = false;
         final String query = String.format("SELECT id FROM %s WHERE %s = ? AND %s = ? LIMIT 1", tableName, whereColumn1, whereColumn2);
         final java.sql.Connection con = Connection.getConnection();
@@ -192,7 +192,7 @@ public class BaseTable<T> {
     }
 
 
-    protected int getTotal(final String tableName, final String victimId) {
+    protected int getTotal(final String victimId) {
 
         int totalCount = 0;
         final String query = String.format("SELECT COUNT(id) AS total_rows FROM %s  WHERE victim_id = ?", tableName);
@@ -224,9 +224,6 @@ public class BaseTable<T> {
         return totalCount;
     }
 
-    public int getTotal(final String victimId) {
-        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
-    }
 
     protected static String[] getGroupDecatenated(String data) {
         if (data != null) {

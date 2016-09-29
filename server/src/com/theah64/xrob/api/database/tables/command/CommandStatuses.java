@@ -23,6 +23,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     public static final String COLUMN_STATUS_HAPPENED_AT = "status_happened_at";
 
     private CommandStatuses() {
+        super(tableName);
     }
 
     private static final CommandStatuses instance = new CommandStatuses();

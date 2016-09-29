@@ -23,6 +23,10 @@ public class Messages extends BaseTable<Message> {
     private static final String COLUMN_DELIVERED_AT = "delivered_at";
     private static Messages instance = new Messages();
 
+    public Messages() {
+        super("messages");
+    }
+
     public static Messages getInstance() {
         return instance;
     }
@@ -113,5 +117,4 @@ public class Messages extends BaseTable<Message> {
 
         return isAdded;
     }
-
 }

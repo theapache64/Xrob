@@ -23,6 +23,7 @@ public class Deliveries extends BaseTable<Delivery> {
     private static Deliveries instance = new Deliveries();
 
     private Deliveries() {
+        super("deliveries");
     }
 
     public static Deliveries getInstance() {
@@ -72,11 +73,6 @@ public class Deliveries extends BaseTable<Delivery> {
         }
     }
 
-    @Override
-    public String get(String byColumn, String byValues, String columnToReturn) {
-        return getV2(TABLE_NAME_DELIVERIES, byColumn, byValues, columnToReturn);
-    }
-
     public String getLastDeliveryTime(@Nullable final String type, String theVictimId) {
         String query = "SELECT UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM deliveries WHERE victim_id = ?";
         if (type != null) {
@@ -111,11 +107,6 @@ public class Deliveries extends BaseTable<Delivery> {
         }
 
         return relativeTime;
-    }
-
-    @Override
-    public int getTotal(String victimId) {
-        return super.getTotal(TABLE_NAME_DELIVERIES, victimId);
     }
 
     public List<Delivery> getAll(String victimId) {

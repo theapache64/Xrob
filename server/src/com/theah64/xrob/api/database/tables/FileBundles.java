@@ -2,8 +2,6 @@ package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.FileBundle;
-import com.theah64.xrob.api.utils.DarKnight;
-import com.theah64.xrob.api.utils.RandomString;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +18,7 @@ public class FileBundles extends BaseTable<FileBundle> {
     public static final String COLUMN_BUNDLE_HASH = "bundle_hash";
 
     private FileBundles() {
+        super("file_bundles");
     }
 
     private static final FileBundles instance = new FileBundles();
@@ -101,10 +100,5 @@ public class FileBundles extends BaseTable<FileBundle> {
             }
         }
         return fileBundles;
-    }
-
-    @Override
-    public String get(String byColumn, String byValues, String columnToReturn) {
-        return super.getV2(TABLE_NAME_FILE_BUNDLES, byColumn, byValues, columnToReturn);
     }
 }

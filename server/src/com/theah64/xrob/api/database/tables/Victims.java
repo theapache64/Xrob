@@ -15,7 +15,6 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_IMEI = "imei";
     public static final String COLUMN_FCM_ID = "fcm_id";
     public static final java.lang.String COLUMN_API_KEY = "api_key";
-    private static final String TABLE_VICTIMS = "victims";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_FCM_UPDATED_AT = "fcm_updated_at";
@@ -26,6 +25,7 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_DEVICE_INFO_DYNAMIC = "device_info_dynamic";
 
     private Victims() {
+        super("victims");
     }
 
     private static final Victims instance = new Victims();
@@ -142,13 +142,6 @@ public class Victims extends BaseTable<Victim> {
         return newVictimId;
     }
 
-    /**
-     * Used to get a specific column by the {byColumn} and {byValue}
-     */
-    @Override
-    public String get(String byColumn, String byValue, String columnToReturn) {
-        return super.getV2(TABLE_VICTIMS, byColumn, byValue, columnToReturn);
-    }
 
     @Override
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {

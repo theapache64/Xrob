@@ -125,30 +125,50 @@
                 </a>
             </div>
 
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+
+            <%int msgCount = Messages.getInstance().getTotal(theVictim.getId());%>
+
+            <%--Files--%>
+            <div class="col-lg-3">
+                <a href="/client/victim/messages/<%=victimCode%>">
+                    <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
+                        <p class="profile_grid_main_title">F
+                        </p>
+
+                        <p class="profile_grid_sub_title">Files</p>
+                    </div>
+                </a>
+            </div>
 
         </div>
 
-        <%
 
-            } else {
-                throw new PathInfo.PathInfoException("No connection established with this victim");
-            }
-
-        %>
     </div>
 
+    <%
 
-    <%
         } else {
-            throw new PathInfo.PathInfoException("Invalid victim code " + victimCode);
+            throw new PathInfo.PathInfoException("No connection established with this victim");
         }
-    } catch (PathInfo.PathInfoException e) {
-        e.printStackTrace();
+
     %>
-    <%=HtmlTemplates.getErrorHtml(e.getMessage())%>
-    <%
-        }
-    %>
+</div>
+
+
+<%
+    } else {
+        throw new PathInfo.PathInfoException("Invalid victim code " + victimCode);
+    }
+} catch (PathInfo.PathInfoException e) {
+    e.printStackTrace();
+%>
+<%=HtmlTemplates.getErrorHtml(e.getMessage())%>
+<%
+    }
+%>
 
 
 </div>

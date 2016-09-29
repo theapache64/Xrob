@@ -28,9 +28,9 @@ public class Clients extends BaseTable<Client> {
     public static final String REGEX_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final int API_KEY_LENGTH = 10;
     public static final String REGEX_CLIENT_CODE = "^[0-9]{10}$";
-    private static final String TABLE_NAME_CLIENTS = "clients";
 
     private Clients() {
+        super("clients");
     }
 
     private static final Clients instance = new Clients();
@@ -263,8 +263,4 @@ public class Clients extends BaseTable<Client> {
         return victims;
     }
 
-    @Override
-    public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
-        return super.update(TABLE_NAME_CLIENTS, whereColumn, whereColumnValue, updateColumn, newUpdateColumnValue);
-    }
 }
