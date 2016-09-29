@@ -116,4 +116,16 @@
         <url-pattern>/client/victim/files/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Messages-->
+    <servlet>
+        <servlet-name>VictimMessages</servlet-name>
+        <jsp-file>/WEB-INF/client_panel/victim/messages.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VictimMessages</servlet-name>
+        <url-pattern>/client/victim/messages/*</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

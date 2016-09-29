@@ -115,7 +115,7 @@
 
             <%--Files--%>
             <div class="col-lg-3">
-                <a href="<%=lastBundleHash!=null ? "/client/victim/files/" +victimCode + "/" + lastBundleHash : "" %>">
+                <a href="<%=lastBundleHash!=null ? "/client/victim/files/" +victimCode + "/" + lastBundleHash : "#" %>">
                     <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
                         <p class="profile_grid_main_title">F
                         </p>
@@ -131,14 +131,14 @@
 
             <%int msgCount = Messages.getInstance().getTotal(theVictim.getId());%>
 
-            <%--Files--%>
+            <%--Messages--%>
             <div class="col-lg-3">
-                <a href="/client/victim/messages/<%=victimCode%>">
-                    <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title">F
+                <a href="<%=msgCount>0 ? "/client/victim/messages/" +victimCode : "#"%>">
+                    <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">
+                        <p class="profile_grid_main_title"><%=msgCount%>
                         </p>
 
-                        <p class="profile_grid_sub_title">Files</p>
+                        <p class="profile_grid_sub_title">Messages</p>
                     </div>
                 </a>
             </div>

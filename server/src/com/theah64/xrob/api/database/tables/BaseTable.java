@@ -53,9 +53,6 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
-    public String get(final String byColumn, final String byValues, final String columnToReturn) {
-        throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
-    }
 
     public boolean update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) {
         boolean isEdited = false;
@@ -109,7 +106,7 @@ public class BaseTable<T> {
     }
 
 
-    public String getV2(String byColumn, String byValue, String columnToReturn) {
+    public String get(String byColumn, String byValue, String columnToReturn) {
 
         final String query = String.format("SELECT %s FROM %s WHERE %s = ? ORDER BY id DESC LIMIT 1", columnToReturn, tableName, byColumn);
 
@@ -192,7 +189,7 @@ public class BaseTable<T> {
     }
 
 
-    protected int getTotal(final String victimId) {
+    public int getTotal(final String victimId) {
 
         int totalCount = 0;
         final String query = String.format("SELECT COUNT(id) AS total_rows FROM %s  WHERE victim_id = ?", tableName);

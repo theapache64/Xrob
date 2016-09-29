@@ -117,4 +117,5 @@ public class Messages extends BaseTable<Message> {
 
         return isAdded;
     }
+
 }

@@ -19,11 +19,10 @@ public class CommandStatuses extends BaseTable<Command.Status> {
     public static final String COLUMN_COMMAND_ID = "command_id";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_STATUS_MESSAGE = "status_message";
-    private static final String TABLE_NAME_COMMAND_STATUSES = "command_statuses";
     public static final String COLUMN_STATUS_HAPPENED_AT = "status_happened_at";
 
     private CommandStatuses() {
-        super(tableName);
+        super("command_statuses");
     }
 
     private static final CommandStatuses instance = new CommandStatuses();
@@ -111,8 +110,4 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
     }
 
-    @Override
-    public boolean isExist(String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
-        return super.isExist(TABLE_NAME_COMMAND_STATUSES, whereColumn1, whereColumnValue1, whereColumn2, whereColumnValue2);
-    }
 }
