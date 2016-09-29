@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by theapache64 on 9/4/16.
@@ -21,6 +22,7 @@ public class Messages extends BaseTable<Message> {
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_CONTENT = "content";
     private static final String COLUMN_DELIVERED_AT = "delivered_at";
+    public static final String COLUMN_VICTIM_ID = "victim_id";
     private static Messages instance = new Messages();
 
     public Messages() {
@@ -118,4 +120,10 @@ public class Messages extends BaseTable<Message> {
         return isAdded;
     }
 
+    @Override
+    public List<Message> getAll(String whereColumn, String whereColumnValue) {
+        List<Message> messages = null;
+        //TODO: Return messages of the victim
+        return messages;
+    }
 }

@@ -277,17 +277,3 @@ FOR EACH ROW BEGIN
 END$$
 
 DELIMITER ;
-
-
-INSERT INTO xrob.clients (id, username, pass_hash, api_key, email, is_verified_email, is_premium_client, is_active, client_code, last_logged_at)
-VALUES (1, 'testuser', 'kd0BXTd3E1YabZGWqiTCCQ==', 'Yb3WAu3JPU', 'theapache64@gmail.com', 0, 0, 1, '1111111111',
-        '2016-09-16 21:42:06');
-INSERT INTO xrob.victims (id, victim_code, name, email, phone, fcm_id, fcm_updated_at, api_key, imei, device_name, device_hash, device_info_static , actions, is_active,last_logged_at)
-VALUES (1, 'Ieed0LYeYo', NULL, 'shifar@rainhopes.com', '8089510045',
-        'dKVioSY6lFo:APA91bHH28BRc5uR4dY_WKNKnNzZhc0kVW9Ha8gJAFYKCKZU6mhMuZCB2_lMD_Vq9REG0ki176kaG16spuplSBXa6sSqQzz401fkTO1RWR4r1ZBJUwtBqcaXrRQr62W5XQCjtLkp7VDS',
-        NULL, 'BCO6wFaWVI', '911478800901601', 'COOLPAD CP8676_I02', 'vFVqt2ZWedwCM1vTbunD8zIgIl61kpvrrCCDWcx5yA1wYOJW8M7ben6voDpQTD7H
-',
-        'Build.BOARD=unknown,Build.BOOTLOADER=unknown,Build.BRAND=Coolpad,Build.DEVICE=CP8676_I02,Build.FINGERPRINT=Coolpad/CP8676_I02/CP8676_I02:5.1/LMY47D/5.1.023.P1.151224.8676_I02:user/release-keys,Build.DISPLAY=V036,Build.HARDWARE=mt6735,Build.HOST=ubuntu,Build.ID=LMY47D,Build.PRODUCT=CP8676_I02,Build.SERIAL=FQEY69Z9HMMJSKFA,Build.getRadioVersion()=MOLY.LR9.W1444.MD.LWTG.MP.V16.P24~ 2015/09/14 10:02',
-        NULL, 1, '2016-09-16 21:46:17');
-INSERT INTO xrob.client_victim_relations (id, client_id, victim_id, last_logged_at) VALUES (1, 1, 1, '2016-09-16 21:49:53');
-
