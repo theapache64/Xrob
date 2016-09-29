@@ -225,4 +225,5 @@ public class MainActivity extends AppCompatActivity {
         //TODO: To be turned on. startService(new Intent(this, FileWalkerService.class));
     }
 
+
 }

