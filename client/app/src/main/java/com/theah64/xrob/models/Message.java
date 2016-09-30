@@ -6,6 +6,7 @@ package com.theah64.xrob.models;
 
 public class Message {
 
+    public static final String TYPE_INBOX = "inbox";
     private final int androidId;
     private final String from, content, type;
     private final long deliveryTime;

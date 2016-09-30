@@ -2,6 +2,7 @@ package com.theah64.xrob.utils;
 
 import android.support.annotation.StringRes;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,19 +14,26 @@ public class APIResponse {
     private final String message;
     private final JSONObject joMain;
 
-    public APIResponse(final String stringResp) throws JSONException, APIException {
+    public APIResponse(final String stringResp) throws APIException, JSONException {
 
-        joMain = new JSONObject(stringResp);
-        this.message = joMain.getString(Xrob.KEY_MESSAGE);
+        try {
+            joMain = new JSONObject(stringResp);
+            this.message = joMain.getString(Xrob.KEY_MESSAGE);
 
-        if (joMain.getBoolean(Xrob.KEY_ERROR)) {
-            final int errorCode = joMain.getInt(Xrob.KEY_ERROR_CODE);
-            throw new APIException(errorCode, message);
+            if (joMain.getBoolean(Xrob.KEY_ERROR)) {
+                final int errorCode = joMain.getInt(Xrob.KEY_ERROR_CODE);
+                throw new APIException(errorCode, message);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            ACRA.getErrorReporter().handleException(e);
+            throw e;
         }
 
     }
 
-    public JSONObject getJSONObjectData() throws JSONException {
+    JSONObject getJSONObjectData() throws JSONException {
         return joMain.getJSONObject(Xrob.KEY_DATA);
     }
 
@@ -38,7 +46,7 @@ public class APIResponse {
 
         private final int pleasantMsg;
 
-        public APIException(final int errorCode, String msg) {
+        APIException(final int errorCode, String msg) {
             super(msg);
             pleasantMsg = getPleasantMessage(errorCode);
         }
