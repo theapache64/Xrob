@@ -38,8 +38,10 @@ CREATE TABLE pending_deliveries(
 DROP TABLE IF EXISTS messages;
 CREATE TABLE messages(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    from_phone VARCHAR(20) NOT NULL,
+    android_message_id INTEGER NOT NULL,
+    _from VARCHAR(20) NOT NULL,
     content TEXT NOT NULL,
-    _type VARCHAR(3) CHECK (_type IN ('in','out')) NOT NULL,
+    _type VARCHAR(5) CHECK (_type IN ('inbox','outbox','draft')) NOT NULL,
+    delivery_time TEXT NOT NULL,
     created_at TEXT NOT NULL
 );

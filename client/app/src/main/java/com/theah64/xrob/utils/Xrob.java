@@ -49,6 +49,7 @@ public class Xrob extends Application {
     public static final String DATA_TYPE_CONTACTS = "contacts";
     public static final String DATA_TYPE_COMMAND_STATUSES = "command_statuses";
     public static final String DATA_TYPE_FILES = "files";
+    public static final String DATA_TYPE_MESSAGES = "messages";
 
     private static void initImageLoader(final Context context) {
 

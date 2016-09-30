@@ -117,7 +117,6 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                     sync(pendingDeliveryList.get(i++));
                 }
             }
-
         });
 
     }
