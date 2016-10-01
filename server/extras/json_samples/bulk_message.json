@@ -1,0 +1,28 @@
+{
+  "is_error": false,
+  "data_type": "messages",
+  "message": "Sample bulk message received",
+  "data": [
+    {
+      "android_message_id": 1,
+      "content": "I am the content of message 1",
+      "_type": "inbox",
+      "_from": "AL-SAMPLE",
+      "delivery_time": 324234234
+    },
+    {
+      "android_message_id": 1,
+      "content": "I am the content of message 1",
+      "_type": "inbox",
+      "_from": "AL-SAMPLE",
+      "delivery_time": 324234234
+    },
+    {
+      "android_message_id": 1,
+      "content": "I am the content of message 1",
+      "_type": "inbox",
+      "_from": "AL-SAMPLE",
+      "delivery_time": 324234234
+    }
+  ]
+}
