@@ -41,8 +41,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
-
+    protected synchronized Void doInBackground(String... strings) {
 
         pendingDeliveriesTable = PendingDeliveries.getInstance(getContext());
         pendingDeliveryList = pendingDeliveriesTable.getAll();
@@ -74,7 +73,9 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
      *
      * @param curDel
      */
-    private void sync(final PendingDelivery curDel) {
+    private synchronized void sync(final PendingDelivery curDel) {
+
+        Log.d(X, "Syncing pending delivery : " + curDel);
 
         final Request pdReq = new APIRequestBuilder("/save", apiKey)
                 .addParamIfNotNull(Xrob.KEY_DATA, curDel.getData())

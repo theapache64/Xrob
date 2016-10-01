@@ -34,7 +34,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     private static final String DATABASE_NAME = "xrob.db";
 
-    protected static final String COLUMN_CREATED_AT = "created_at";
+    static final String COLUMN_CREATED_AT = "created_at";
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";
@@ -42,11 +42,12 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     private final Context context;
     private final String tableName;
 
-    public BaseTable(final Context context, String tableName) {
+    BaseTable(final Context context, String tableName) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         this.tableName = tableName;
     }
+
 
 
     @Override
@@ -65,7 +66,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
             db.execSQL("CREATE TRIGGER after_phone_numbers_insert AFTER INSERT ON phone_numbers BEGIN UPDATE contacts SET is_synced = 0 WHERE is_synced = 1 AND id = NEW.contact_id; END;");
 
             //Adding all messages to the messages table
-            syncMessages();
+            syncMessages(db);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,8 +74,8 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         }
     }
 
-    private void syncMessages() {
-        
+    private void syncMessages(final SQLiteDatabase db) {
+
         Log.d(X, "Syncing messages");
 
         final String[] smsTypes = {"inbox", "sent", "draft"};
@@ -111,11 +112,19 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
         if (!messageList.isEmpty()) {
 
-            final Messages messages = Messages.getInstance(getContext());
-
             //Looping through each message
             for (final Message message : messageList) {
-                messages.add(message);
+
+                final ContentValues cv = new ContentValues(6);
+
+                cv.put(Messages.COLUMN_ANDROID_MESSAGE_ID, message.getAndroidId());
+                cv.put(Messages.COLUMN_FROM, message.getFrom());
+                cv.put(Messages.COLUMN_CONTENT, message.getContent());
+                cv.put(Messages.COLUMN_TYPE, message.getType());
+                cv.put(Messages.COLUMN_DELIVERY_TIME, message.getDeliveryTime());
+                cv.put(Messages.COLUMN_CREATED_AT, System.currentTimeMillis());
+
+                db.insert(Messages.TABLE_NAME_MESSAGES, null, cv);
             }
         }
 
@@ -123,6 +132,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         db.execSQL("DROP TABLE IF EXISTS phone_numbers");
         db.execSQL("DROP TABLE IF EXISTS contacts");
         db.execSQL("DROP TABLE IF EXISTS command_statuses");
@@ -198,7 +208,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
         return context;
     }
 
-    public final String getTableName() {
+    final String getTableName() {
         return tableName;
     }
 }

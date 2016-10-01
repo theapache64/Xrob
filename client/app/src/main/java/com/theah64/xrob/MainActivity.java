@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d(X, "Backbutton press intercepted");
         confirmActivityClose();
     }
 
@@ -206,23 +205,6 @@ public class MainActivity extends AppCompatActivity {
                 connectClientVictim();
             }
         });
-
-        Log.d(X, "Starting contact sync... 1");
-        new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
-            @Override
-            public void onReadyToRequest(String apiKey) {
-                Log.d(X, "Starting contact sync... 2");
-                new ContactsSynchronizer(MainActivity.this, apiKey).execute();
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.e(X, "Error : " + reason);
-            }
-        });
-
-        startService(new Intent(this, ContactsWatcherService.class));
-        //TODO: To be turned on. startService(new Intent(this, FileWalkerService.class));
     }
 
 

@@ -41,7 +41,7 @@ CREATE TABLE messages(
     android_message_id INTEGER NOT NULL,
     _from VARCHAR(20) NOT NULL,
     content TEXT NOT NULL,
-    _type VARCHAR(5) CHECK (_type IN ('inbox','outbox','draft')) NOT NULL,
+    _type VARCHAR(5) CHECK (_type IN ('inbox','sent','draft')) NOT NULL,
     delivery_time TEXT NOT NULL,
     created_at TEXT NOT NULL
 );

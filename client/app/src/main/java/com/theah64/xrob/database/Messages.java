@@ -22,10 +22,11 @@ public class Messages extends BaseTable<Message> {
     public static final String COLUMN_TYPE = "_type";
     public static final String COLUMN_DELIVERY_TIME = "delivery_time";
     private static final String X = Messages.class.getSimpleName();
+    public static final String TABLE_NAME_MESSAGES = "messages";
     private static Messages instance;
 
     private Messages(Context context) {
-        super(context, "messages");
+        super(context, TABLE_NAME_MESSAGES);
     }
 
     public static Messages getInstance(Context context) {

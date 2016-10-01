@@ -34,4 +34,15 @@ public class PendingDelivery {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "PendingDelivery{" +
+                "isError=" + isError +
+                ", id='" + id + '\'' +
+                ", dataType='" + dataType + '\'' +
+                ", message='" + message + '\'' +
+                ", data='" + data + '\'' +
+                '}';
+    }
 }

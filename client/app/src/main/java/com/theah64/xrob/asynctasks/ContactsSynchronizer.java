@@ -58,7 +58,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
                 @Override
                 public void onReadyToRequest(String apiKey) {
-                    Log.d(X, "Starting contact sync... 8");
+                    Log.d(X, "Starting contact sync... 7");
                     push(getContext(), getApiKey());
                 }
 
@@ -69,7 +69,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
             });
         } else {
-            Log.d(X, "Starting contact sync... 7");
+            Log.d(X, "Starting contact sync... 8");
         }
 
 
@@ -79,7 +79,6 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
     /**
      * To sync system contacts to xrob.contacts
      *
-     * @param context
      * @return boolean true if sync needed
      */
     private static synchronized boolean refreshContacts(Context context) {
@@ -170,7 +169,6 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                                     throw new IllegalArgumentException("Failed to add phone number of " + name + " - " + phone);
                                 }
 
-
                             }
 
                         } while (pCur.moveToNext());
@@ -202,7 +200,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     }
 
-    public static synchronized void push(final Context context, final String apiKey) {
+    private static synchronized void push(final Context context, final String apiKey) {
         Log.d(X, "Starting contact sync... 9");
         final Contacts contactsTable = Contacts.getInstance(context);
         final List<Contact> unSyncedContacts = contactsTable.getNonSyncedContacts();
@@ -257,7 +255,7 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                 if (isAdded) {
                     //Synced data collected
                     contactsTable.setAllContactsAndNumbersSynced();
-                    new PendingDeliverySynchronizer(context, apiKey).execute();
+                    //new PendingDeliverySynchronizer(context, apiKey).execute();
                 } else {
                     //TSH
                     ACRA.getErrorReporter().handleException(new Exception("Failed to save contacts to pending delivery system"));
