@@ -43,6 +43,8 @@ public class Messages extends BaseTable<Message> {
     @Override
     public boolean add(final String victimId, JSONObject jOb) {
 
+        //TODO: need to modify
+
         boolean isAdded = true;
 
         final String existenceQuery = "SELECT id FROM messages WHERE phone = ? AND content = ? AND delivered_at = ? AND _type = ? LIMIT 1";
