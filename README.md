@@ -10,8 +10,8 @@ A spy application, designed for android. (Under construction).
 - Client-Victim connected by
 
 ### Client side
-- Pending delivery management
-- Create file sync command
+~- Pending delivery management~
+~- Create file sync command~
 
 
 ## Pending features
