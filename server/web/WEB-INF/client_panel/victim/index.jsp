@@ -133,7 +133,7 @@
 
             <%--Messages--%>
             <div class="col-lg-3">
-                <a href="<%=msgCount>0 ? "/client/victim/messages/" +victimCode : "#"%>">
+                <a href="<%=msgCount>0 ? "/client/victim/messages/" +victimCode + "/inbox" : "#"%>">
                     <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">
                         <p class="profile_grid_main_title"><%=msgCount%>
                         </p>
