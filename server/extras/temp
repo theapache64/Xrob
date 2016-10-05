@@ -1,0 +1,9 @@
+SELECT
+m._from,
+m.content,
+m.delivery_time,
+UNIX_TIMESTAMP(m.last_logged_at) AS synced_at,
+c.name AS contact_name
+FROM messages m
+LEFT JOIN contacts c ON m.victim_id = c.victim_id
+WHERE m.victim_id = ? AND m._type = ?

@@ -11,14 +11,14 @@
       "delivery_time": 324234234
     },
     {
-      "android_message_id": 1,
+      "android_message_id": 2,
       "content": "I am the content of message 1",
       "_type": "inbox",
       "_from": "AL-SAMPLE",
       "delivery_time": 324234234
     },
     {
-      "android_message_id": 1,
+      "android_message_id": 3,
       "content": "I am the content of message 1",
       "_type": "inbox",
       "_from": "AL-SAMPLE",

@@ -231,11 +231,12 @@ CREATE TABLE IF NOT EXISTS `media` (
     ON UPDATE CASCADE
 );
 
+
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE IF NOT EXISTS `messages` (
   `id`                 INT(11)                         NOT NULL AUTO_INCREMENT,
   `victim_id`          INT(11)                         NOT NULL,
-  `android_contact_id` INT(11)                         NOT NULL,
+  `android_message_id` INT(11)                         NOT NULL,
   `_from`              VARCHAR(50)                     NOT NULL,
   `content`            TEXT                            NOT NULL,
   `_type`              ENUM ('inbox', 'sent', 'draft') NOT NULL,

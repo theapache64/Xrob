@@ -107,7 +107,7 @@ public class Messages extends BaseTable<Message> {
     @Override
     public List<Message> getAll(String whereColumn, String whereColumnValue) {
         List<Message> messages = null;
-        //TODO: Return messages of the victim
+        final String query = "SELECT ";
         return messages;
     }
 }
