@@ -27,16 +27,19 @@ public class FCMSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     private static final String X = FCMSynchronizer.class.getSimpleName();
     private final String newFcmId;
+    private final boolean isFCMSynced;
 
     public FCMSynchronizer(Context context, String apiKey) {
         super(context, apiKey);
-        this.newFcmId = PrefUtils.getInstance(context).getString(PrefUtils.KEY_FCM_ID);
+        final PrefUtils prefUtils = PrefUtils.getInstance(context);
+        this.newFcmId = prefUtils.getString(PrefUtils.KEY_FCM_ID);
+        this.isFCMSynced = prefUtils.getBoolean(PrefUtils.KEY_IS_FCM_SYNCED);
     }
 
     @Override
     protected Void doInBackground(String... strings) {
 
-        if (newFcmId != null) {
+        if (newFcmId != null && !isFCMSynced) {
             new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override
                 public void onReadyToRequest(String apiKey) {
@@ -71,8 +74,6 @@ public class FCMSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                     Log.e(X, "Failed to update fcm : " + reason);
                 }
             });
-        } else {
-            Log.e(X, "FCM ID is null , so not syncing...");
         }
 
         return null;
