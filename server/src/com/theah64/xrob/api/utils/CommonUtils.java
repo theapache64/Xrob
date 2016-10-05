@@ -20,4 +20,8 @@ public class CommonUtils {
     public static String hyphenIfNull(String data) {
         return data == null ? "-" : data;
     }
+
+    public static String emptyIfNull(String data) {
+        return data == null ? "" : data;
+    }
 }
