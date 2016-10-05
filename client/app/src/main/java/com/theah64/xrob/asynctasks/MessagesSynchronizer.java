@@ -131,7 +131,7 @@ public class MessagesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
             jaMessages.put(joMessage);
         }
 
-        
+
         return jaMessages;
     }
 }

