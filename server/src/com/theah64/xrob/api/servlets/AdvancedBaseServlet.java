@@ -46,9 +46,6 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
             e.printStackTrace();
             out.write(new APIResponse(e.getMessage()).toString());
         }
-
-        out.flush();
-        out.close();
     }
 
 
