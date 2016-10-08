@@ -72,7 +72,7 @@ public class CommandCenter {
         new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
             @Override
             public void onReadyToRequest(String apiKey) {
-                new CommandStatusesSynchronizer(context, apiKey).execute(apiKey);
+                new CommandStatusesSynchronizer(context, apiKey).execute();
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.theah64.xrob.commandcenter;
 
+import com.theah64.xrob.commandcenter.commands.CustomCommand;
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
 import com.theah64.xrob.commandcenter.commands.FileSyncCommand;
 import com.theah64.xrob.models.Command;
@@ -10,9 +11,9 @@ import org.apache.commons.cli.ParseException;
 /**
  * Created by theapache64 on 14/9/16,7:49 PM.
  */
-public class CommandFactory {
+class CommandFactory {
 
-    public static BaseCommand getCommand(final Command command) throws BaseCommand.CommandException, ParseException {
+    static BaseCommand getCommand(final Command command) throws BaseCommand.CommandException, ParseException {
 
         final String commandType = getCommandType(command.getCommand());
 
@@ -23,6 +24,9 @@ public class CommandFactory {
 
             case Command.COMMAND_FSYNC:
                 return new FileSyncCommand(command.getCommand());
+
+            case Command.COMMAND_CUSTOM:
+                return new CustomCommand(command.getCommand());
 
             default:
                 throw new BaseCommand.CommandException("Command not defined " + commandType);

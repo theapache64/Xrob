@@ -37,7 +37,7 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
     }
 
     @Override
-    protected synchronized Void  doInBackground(String... strings) {
+    protected synchronized Void doInBackground(String... strings) {
 
         Log.d(X, "Starting command status syncer...");
 
@@ -61,7 +61,7 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
                 Log.d(X, "How's this : " + jaStatuses);
 
-                final Request commandSyncRequest = new APIRequestBuilder("/save", strings[0])
+                final Request commandSyncRequest = new APIRequestBuilder("/save", getApiKey())
                         .addParam(Xrob.KEY_ERROR, "false")
                         .addParam(Xrob.KEY_DATA_TYPE, Xrob.DATA_TYPE_COMMAND_STATUSES)
                         .addParam(Xrob.KEY_MESSAGE, statusList.size() + " status(es) added")
