@@ -14,7 +14,7 @@ import java.util.List;
 public class Command {
 
     public static final String COMMAND_NOTIFY = "notify";
-    public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify|fsync).+";
+    public static final String REGEX_VALID_COMMAND = "^xrob\\s(?:notify|fsync|custom|lpixel).+";
 
     private String id;
     private final String command;

