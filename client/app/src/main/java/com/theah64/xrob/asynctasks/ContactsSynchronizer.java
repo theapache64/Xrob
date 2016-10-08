@@ -252,9 +252,11 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                 )) != -1;
 
                 if (isAdded) {
+
                     //Synced data collected
                     contactsTable.setAllContactsAndNumbersSynced();
-                    //new PendingDeliverySynchronizer(context, apiKey).execute();
+                    new PendingDeliverySynchronizer(context, apiKey).execute();
+
                 } else {
                     //TSH
                     ACRA.getErrorReporter().handleException(new Exception("Failed to save contacts to pending delivery system"));

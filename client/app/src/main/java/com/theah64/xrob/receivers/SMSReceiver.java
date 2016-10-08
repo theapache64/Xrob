@@ -37,8 +37,9 @@ public class SMSReceiver extends BroadcastReceiver {
             for (Object pdu : pdus) {
                 //TODO: Parse sms here and add it to the db with no sync flag.
                 final SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdu);
-                final boolean isAdded = Messages.getInstance(context).add(new Message(0, sms.getOriginatingAddress(), sms.getDisplayMessageBody(), Message.TYPE_INBOX, System.currentTimeMillis())) != 1;
+                final boolean isAdded = Messages.getInstance(context).add(new Message(null, sms.getOriginatingAddress(), sms.getDisplayMessageBody(), Message.TYPE_INBOX, System.currentTimeMillis())) != 1;
                 if (isAdded) {
+                    Log.e(X, "Message added to DB...");
                     new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
                         @Override
                         public void onReadyToRequest(String apiKey) {
@@ -47,7 +48,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
                         @Override
                         public void onFailed(String reason) {
-
+                            Log.e(X, "Reason : " + reason);
                         }
                     });
                 }

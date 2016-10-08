@@ -66,7 +66,7 @@ public class Messages extends BaseTable<Message> {
                 messages = new ArrayList<>(c.getCount());
 
                 do {
-                    final int androidMessageId = c.getInt(c.getColumnIndex(COLUMN_ANDROID_MESSAGE_ID));
+                    final String androidMessageId = c.getString(c.getColumnIndex(COLUMN_ANDROID_MESSAGE_ID));
                     final String from = c.getString(c.getColumnIndex(COLUMN_FROM));
                     final String content = c.getString(c.getColumnIndex(COLUMN_CONTENT));
                     final String type = c.getString(c.getColumnIndex(COLUMN_TYPE));

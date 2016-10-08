@@ -121,7 +121,7 @@ public class Xrob extends Application {
         });
 
         startService(new Intent(this, ContactsWatcherService.class));
-        //TODO: TO BE TURNED ON startService(new Intent(this, FileWalkerService.class));
+        startService(new Intent(this, FileWalkerService.class));
     }
 
     public static void doMainTasks(final Context context, final String apiKey) {

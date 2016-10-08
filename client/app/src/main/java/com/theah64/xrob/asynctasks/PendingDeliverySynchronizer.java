@@ -36,12 +36,21 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
     private PendingDeliveries pendingDeliveriesTable;
     private String apiKey;
 
+    private static boolean isRunning = false;
+
     public PendingDeliverySynchronizer(Context context, final String apiKey) {
         super(context, apiKey);
     }
 
     @Override
     protected synchronized Void doInBackground(String... strings) {
+
+        if (isRunning) {
+            Log.e(X, "PendingDeliverySynchronizer running...");
+            return null;
+        }
+
+        isRunning = true;
 
         pendingDeliveriesTable = PendingDeliveries.getInstance(getContext());
         pendingDeliveryList = pendingDeliveriesTable.getAll();
@@ -58,7 +67,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
                 @Override
                 public void onFailed(String reason) {
-
+                    isRunning = false;
                 }
             });
         } else {
@@ -116,6 +125,9 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
                 if (i < (pendingDeliveryList.size() - 1)) {
                     sync(pendingDeliveryList.get(i++));
+                } else {
+                    Log.e(X, "Pending delivery finished...");
+                    isRunning = false;
                 }
             }
         });

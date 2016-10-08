@@ -37,6 +37,7 @@ public class MessagesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     public MessagesSynchronizer(Context context, String apiKey) {
         super(context, apiKey);
+        Log.d(X, "Launching message synchronizer...");
     }
 
     @Override

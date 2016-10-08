@@ -7,11 +7,11 @@ package com.theah64.xrob.models;
 public class Message {
 
     public static final String TYPE_INBOX = "inbox";
-    private final int androidId;
+    private final String androidId;
     private final String from, content, type;
     private final long deliveryTime;
 
-    public Message(int androidId, String from, String content, String type, long deliveryTime) {
+    public Message(String androidId, String from, String content, String type, long deliveryTime) {
         this.androidId = androidId;
         this.from = from;
         this.content = content;
@@ -19,7 +19,7 @@ public class Message {
         this.deliveryTime = deliveryTime;
     }
 
-    public int getAndroidId() {
+    public String getAndroidId() {
         return androidId;
     }
 

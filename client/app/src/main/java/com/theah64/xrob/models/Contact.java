@@ -1,6 +1,7 @@
 package com.theah64.xrob.models;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.List;
 
@@ -84,11 +85,19 @@ public class Contact {
         private static final String TYPE_ASSISTANT = "ASSISTANT";
         private static final String TYPE_MMS = "MMS";
         private static final String TYPE_OTHER_2 = "OTHER_2";
+        private static final String X = Contact.class.getSimpleName();
         private final String contactId, phone, phoneType;
 
         public PhoneNumber(String contactId, String phone, String phoneType) {
             this.contactId = contactId;
-            this.phone = phone;
+
+            if (phone != null) {
+                this.phone = phone.replaceAll(" ", "");
+            } else {
+                Log.e(X, "Phone is null : type : " + phoneType);
+                this.phone = null;
+            }
+
             this.phoneType = phoneType;
         }
 

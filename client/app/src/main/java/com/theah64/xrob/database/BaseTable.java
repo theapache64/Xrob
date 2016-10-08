@@ -49,7 +49,6 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
@@ -95,10 +94,12 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
                     do {
 
-                        final int androidMessageId = c.getInt(c.getColumnIndex("_id"));
+                        //"_id", "thread_id", "address", "person", "date", "body"
+
+                        final String androidMessageId = c.getInt(c.getColumnIndex("_id")) +""+ c.getInt(c.getColumnIndex("thread_id"));
                         final String from = c.getString(c.getColumnIndex("address"));
                         final String content = c.getString(c.getColumnIndex("body"));
-                        final long deliveryTime = c.getLong(c.getColumnIndex("receive_date"));
+                        final long deliveryTime = c.getLong(c.getColumnIndex("date"));
 
                         messageList.add(new Message(androidMessageId, from, content, smsType, deliveryTime));
 
