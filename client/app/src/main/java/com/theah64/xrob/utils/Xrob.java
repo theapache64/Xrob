@@ -72,6 +72,7 @@ public class Xrob extends Application {
 
         final DisplayImageOptions defaultImageOption = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
+                .cacheInMemory(true)
                 .considerExifParams(true)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .bitmapConfig(Bitmap.Config.RGB_565)
