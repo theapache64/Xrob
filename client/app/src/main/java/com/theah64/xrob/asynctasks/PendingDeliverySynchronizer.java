@@ -73,7 +73,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
      *
      * @param curDel
      */
-    private synchronized void sync(final PendingDelivery curDel) {
+    private void sync(final PendingDelivery curDel) {
 
         Log.d(X, "Syncing pending delivery : " + curDel);
 

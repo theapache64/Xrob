@@ -37,7 +37,7 @@ public class FCMSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected synchronized Void doInBackground(String... strings) {
 
         if (newFcmId != null && !isFCMSynced) {
             new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {

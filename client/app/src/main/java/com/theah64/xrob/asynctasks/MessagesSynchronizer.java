@@ -2,6 +2,7 @@ package com.theah64.xrob.asynctasks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import com.theah64.xrob.database.Messages;
 import com.theah64.xrob.database.PendingDeliveries;
@@ -32,12 +33,14 @@ import okhttp3.Response;
 
 public class MessagesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
+    private static final String X = MessagesSynchronizer.class.getSimpleName();
+
     public MessagesSynchronizer(Context context, String apiKey) {
         super(context, apiKey);
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected synchronized Void doInBackground(String... strings) {
 
         final Messages messages = Messages.getInstance(getContext());
 
@@ -79,6 +82,7 @@ public class MessagesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                                     onFailed(e.getMessage());
                                 } catch (APIResponse.APIException e) {
                                     e.printStackTrace();
+                                    pds.add(new PendingDelivery(null, true, Xrob.DATA_TYPE_MESSAGES, null, "API Error: " + e.getMessage()));
                                 }
                             }
                         });
@@ -93,10 +97,11 @@ public class MessagesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
                                 null, false,
                                 Xrob.DATA_TYPE_MESSAGES,
                                 jaMessagesData.toString(),
-                                String.format("%d message(s) retrieved", messagesToSync.size())
+                                String.format("%d message(s) retrieved - PD (%s)", messagesToSync.size(), reason)
                         );
 
                         final boolean isAdded = pds.add(pd) != -1;
+
                         if (isAdded) {
                             //Deleting data from
                             messages.deleteAll();

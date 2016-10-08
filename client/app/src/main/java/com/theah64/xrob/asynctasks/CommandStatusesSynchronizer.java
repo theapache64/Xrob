@@ -37,7 +37,7 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
     }
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected synchronized Void  doInBackground(String... strings) {
 
         Log.d(X, "Starting command status syncer...");
 

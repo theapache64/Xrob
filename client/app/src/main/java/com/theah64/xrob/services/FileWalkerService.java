@@ -164,7 +164,7 @@ public class FileWalkerService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public synchronized int onStartCommand(Intent intent, int flags, int startId) {
 
         //Collections.reverse(fileNodes);
         Log.d("X", "File walker started");

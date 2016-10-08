@@ -39,7 +39,7 @@ public class NotificationPopper extends AsyncTask<Void, Void, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(Void... voids) {
+    protected synchronized Bitmap doInBackground(Void... voids) {
         //Load image here
         if (notificationCommand.getImageUrl() != null) {
             return ImageLoader.getInstance().loadImageSync(notificationCommand.getImageUrl());

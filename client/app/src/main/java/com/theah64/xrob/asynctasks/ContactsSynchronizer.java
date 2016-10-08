@@ -42,9 +42,8 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
         Log.d(X, "Starting contact sync... 3");
     }
 
-
     @Override
-    protected Void doInBackground(String... string) {
+    protected synchronized Void doInBackground(String... string) {
 
         Log.d(X, "Starting contact sync... 4");
 
