@@ -28,6 +28,7 @@ import okhttp3.Response;
  */
 public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
+    //private static boolean isRunning = false;
 
     private static final String X = CommandStatusesSynchronizer.class.getSimpleName();
     private static final String KEY_STATUS_HAPPENED_AT = "status_happened_at";
@@ -38,6 +39,13 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
     @Override
     protected synchronized Void doInBackground(String... strings) {
+
+        /*if (isRunning) {
+            Log.e(X, "Command status sync in process");
+            return null;
+        }*/
+
+        //isRunning = true;
 
         Log.d(X, "Starting command status syncer...");
 
@@ -73,10 +81,13 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                     public void onFailure(Call call, IOException e) {
                         Log.e(X, "Failed to sync command statuses");
                         e.printStackTrace();
+                        //isRunning = false;
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+
+
                         try {
                             final String stringResp = OkHttpUtils.logAndGetStringBody(response);
                             new APIResponse(stringResp);
@@ -84,14 +95,19 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                         } catch (JSONException | APIResponse.APIException e) {
                             e.printStackTrace();
                         }
+
+                        //isRunning = false;
                     }
                 });
 
+            } else {
+                //isRunning = false;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
             ACRA.getErrorReporter().handleException(e);
+            //isRunning = false;
         }
 
         return null;

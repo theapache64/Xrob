@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS command_statuses;
 CREATE TABLE command_statuses(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     command_id INTEGER NOT NULL,
-    status VARCHAR(10) CHECK (status IN ('DELIVERED','FINISHED','FAILED')) NOT NULL,
+    status VARCHAR(10) CHECK (status IN ('DELIVERED','FINISHED','INFO','FAILED')) NOT NULL,
     status_message TEXT NOT NULL,
     created_at TEXT NOT NULL
 );

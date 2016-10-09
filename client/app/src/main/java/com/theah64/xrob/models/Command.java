@@ -35,6 +35,7 @@ public class Command {
         public static final String STATUS_DELIVERED = "DELIVERED";
         public static final String STATUS_FINISHED = "FINISHED";
         public static final String STATUS_FAILED = "FAILED";
+        public static final String STATUS_INFO = "INFO";
 
         private final String commandId, status, statusMessage;
         private final long statusHappenedAt;
@@ -65,6 +66,16 @@ public class Command {
 
         public long getStatusHappenedAt() {
             return statusHappenedAt;
+        }
+
+        @Override
+        public String toString() {
+            return "Status{" +
+                    "statusHappenedAt=" + statusHappenedAt +
+                    ", statusMessage='" + statusMessage + '\'' +
+                    ", status='" + status + '\'' +
+                    ", commandId='" + commandId + '\'' +
+                    '}';
         }
     }
 }
