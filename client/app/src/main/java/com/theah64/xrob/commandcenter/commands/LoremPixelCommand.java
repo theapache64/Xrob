@@ -3,12 +3,14 @@ package com.theah64.xrob.commandcenter.commands;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.theah64.xrob.utils.CommonUtils;
 import com.theah64.xrob.utils.WallpaperManager;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
 
 /**
  * Created by theapache64 on 8/10/16.
@@ -21,30 +23,29 @@ public class LoremPixelCommand extends BaseCommand {
     private static final String FLAG_WIDTH = "w";
     private static final String FLAG_TEXT = "t";
     private static final String FLAG_GREY = "g";
+    
 
     private static final String[] VALID_CATEGORIES = {"abstract", "animals", "business", "cats", "city", "food", "nightlife", "fashion", "people", "nature", "sports", "technics", "transport"};
 
     private static final Options options = new Options()
-            .addOption(FLAG_CATEGORY, "Photo category")
-            .addOption(FLAG_HEIGHT, "Height of the image")
-            .addOption(FLAG_WIDTH, "Width of the image")
-            .addOption(FLAG_TEXT, "Text on the image")
-            .addOption(FLAG_GREY, "Is grey image");
+            .addOption(FLAG_CATEGORY, true, "Photo category")
+            .addOption(FLAG_HEIGHT, true, "Height of the image")
+            .addOption(FLAG_WIDTH, true, "Width of the image")
+            .addOption(FLAG_TEXT, true, "Text on the image")
+            .addOption(FLAG_GREY, false, "Is grey image");
+    private static final String X = LoremPixelCommand.class.getSimpleName();
 
     public LoremPixelCommand(String command) throws CommandException, ParseException {
         super(command);
     }
 
     private static boolean isValidCategory(String category) {
-
         if (category != null) {
-
             for (final String validCategory : VALID_CATEGORIES) {
                 if (category.equals(validCategory)) {
                     return true;
                 }
             }
-
         }
 
         return false;
@@ -65,7 +66,8 @@ public class LoremPixelCommand extends BaseCommand {
         }
 
         String category = getCmd().getOptionValue(FLAG_CATEGORY);
-        if (LoremPixelCommand.isValidCategory(category)) {
+
+        if (!LoremPixelCommand.isValidCategory(category)) {
             category = null;
         }
 
@@ -82,8 +84,9 @@ public class LoremPixelCommand extends BaseCommand {
         return options;
     }
 
-    private final class LoremPixelUrlBuilder {
+    private static final class LoremPixelUrlBuilder {
 
+        private static final String X = LoremPixelUrlBuilder.class.getSimpleName();
         private final StringBuilder urlBuilder = new StringBuilder("http://lorempixel.com");
 
         LoremPixelUrlBuilder(final int width, final int height, @Nullable final String category, @Nullable final String textOnTheImage, final boolean isGrey) {
@@ -102,6 +105,8 @@ public class LoremPixelCommand extends BaseCommand {
             if (textOnTheImage != null) {
                 urlBuilder.append("/").append(textOnTheImage);
             }
+
+            Log.e(X, "LPixel Url Ready : " + urlBuilder);
         }
 
         public String build() {

