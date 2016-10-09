@@ -103,6 +103,7 @@ public class Command {
         public static final String STATUS_DELIVERED = "DELIVERED";
         public static final String STATUS_FINISHED = "FINISHED";
         public static final String STATUS_FAILED = "FAILED";
+        public static final String STATUS_INFO = "INFO";
 
         private final String status, statusMessage, relativeCommandReportTime, relativeCommandHappenedTime, commandId;
 
@@ -144,6 +145,8 @@ public class Command {
                     return "label-success";
                 case STATUS_FAILED:
                     return "label-danger";
+                case STATUS_INFO:
+                    return "label-warning";
                 default:
                     return "label-info";
             }
@@ -167,6 +170,7 @@ public class Command {
                 case STATUS_DELIVERED:
                 case STATUS_FINISHED:
                 case STATUS_FAILED:
+                case STATUS_INFO:
                     return true;
                 default:
                     return false;

@@ -152,7 +152,7 @@ DROP TABLE IF EXISTS `command_statuses`;
 CREATE TABLE IF NOT EXISTS `command_statuses` (
   `id`                 INT(11)                                          NOT NULL AUTO_INCREMENT,
   `command_id`         INT                                              NOT NULL,
-  `status`             ENUM ('SENT', 'DELIVERED', 'FINISHED', 'FAILED') NOT NULL DEFAULT 'SENT',
+  `status`             ENUM ('SENT', 'DELIVERED', 'INFO', 'FINISHED', 'FAILED') NOT NULL DEFAULT 'SENT',
   `status_message`     TEXT                                             NOT NULL,
   `status_happened_at` VARCHAR(20)                                      NOT NULL,
   `last_logged_at`     TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

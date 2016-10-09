@@ -83,7 +83,8 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
                 if (Command.Status.isValid(status)) {
 
-                    final boolean isStatusAlreadyExists = cStatuesTable.isExist(CommandStatuses.COLUMN_COMMAND_ID, commandId, CommandStatuses.COLUMN_STATUS, status);
+                    //info status can be multiple.
+                    final boolean isStatusAlreadyExists = cStatuesTable.isExist(CommandStatuses.COLUMN_COMMAND_ID, commandId, CommandStatuses.COLUMN_STATUS, status) && !status.equals(Command.Status.STATUS_INFO);
 
                     final long commandProcessedAt = joCommandStatus.getLong(CommandStatuses.COLUMN_STATUS_HAPPENED_AT);
 
