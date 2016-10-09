@@ -12,6 +12,8 @@ import com.theah64.xrob.utils.WallpaperManager;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.util.Locale;
+
 
 /**
  * Created by theapache64 on 8/10/16.
@@ -60,7 +62,7 @@ public class LoremPixelCommand extends BaseCommand {
     }
 
     @Override
-    public void handle(Context context, Callback callback) {
+    public void handle(final Context context, final Callback callback) {
 
         int width = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_WIDTH));
         int height = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_HEIGHT));
@@ -100,7 +102,22 @@ public class LoremPixelCommand extends BaseCommand {
 
                 final int totalTime = count * interval;
 
-                new CountDownTimer(totalTime, interval)
+
+                callback.onSuccess(String.format(Locale.getDefault(), "Timer started with count of %d and interval of %d", count, interval));
+
+                //Starting timer
+                new CountDownTimer(totalTime, interval) {
+                    @Override
+                    public void onTick(long l) {
+                        WallpaperManager.setWallpaper(context, loremImageUrl, callback);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        callback.onSuccess("Timer finished :)");
+                    }
+
+                }.start();
 
             } else {
                 callback.onError("Count is not a valid number");
