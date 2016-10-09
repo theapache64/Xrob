@@ -21,16 +21,17 @@ import java.io.IOException;
 public class WallpaperManager {
 
     //no cache config.
-    private static final DisplayImageOptions options = new DisplayImageOptions.Builder()
+    //TODO: DEBUG -DISABLED.
+    /*private static final DisplayImageOptions options = new DisplayImageOptions.Builder()
             .bitmapConfig(Bitmap.Config.RGB_565)
             .cacheInMemory(false)
             .cacheOnDisk(false)
             .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-            .build();
+            .build();*/
 
     public static void setWallpaper(final Context context, final String imageUrl, final BaseCommand.Callback callback, final boolean isInLoop) {
 
-        ImageLoader.getInstance().loadImage(imageUrl, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(imageUrl, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 

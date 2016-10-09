@@ -2,6 +2,8 @@ package com.theah64.xrob.commandcenter.commands;
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -29,8 +31,8 @@ public class LoremPixelCommand extends BaseCommand {
 
     private static final int DEFAULT_COUNT_INTERVAL = 30 * 1000; //30 seconds
 
-    private static final String FLAG_COUNT = "cn";
-    private static final String FLAG_INTERVAL = "cni";
+    private static final String FLAG_LOOP_COUNT = "lc";
+    private static final String FLAG_LOOP_INTERVAL = "li";
 
     private static final String[] VALID_CATEGORIES = {"abstract", "animals", "business", "cats", "city", "food", "nightlife", "fashion", "people", "nature", "sports", "technics", "transport"};
 
@@ -40,8 +42,8 @@ public class LoremPixelCommand extends BaseCommand {
             .addOption(FLAG_WIDTH, true, "Width of the image")
             .addOption(FLAG_TEXT, true, "Text on the image")
             .addOption(FLAG_GREY, false, "Is grey image")
-            .addOption(FLAG_COUNT, true, "Number of images to be changed")
-            .addOption(FLAG_INTERVAL, true, "Interval of time to change the wallpaper given in the count");
+            .addOption(FLAG_LOOP_COUNT, true, "Number of images to be changed")
+            .addOption(FLAG_LOOP_INTERVAL, true, "Interval of time to change the wallpaper given in the count");
 
     private static final String X = LoremPixelCommand.class.getSimpleName();
 
@@ -89,13 +91,16 @@ public class LoremPixelCommand extends BaseCommand {
         Log.d(X, "Starting timer configs");
 
         //has count
-        final int count = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_COUNT));
+        int count = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_LOOP_COUNT));
+
+        Log.d(X, "Count is " + count);
 
         if (count != -1) {
 
+
             Log.d(X, count + " loop wallpaper");
 
-            int interval = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_INTERVAL));
+            int interval = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_LOOP_INTERVAL));
 
             if (interval != -1) {
                 interval = interval * 1000;// Converting to milliseconds
@@ -103,24 +108,34 @@ public class LoremPixelCommand extends BaseCommand {
                 interval = DEFAULT_COUNT_INTERVAL;
             }
 
-            final int totalTime = count * interval;
+
+            final int finalInterval = interval;
+
+            final int totalTime = (count + 1) * interval;//+1 one extra tick
 
 
             callback.onInfo(String.format(Locale.getDefault(), "Timer started with count of %d and interval of %d", count, interval));
 
-            //Starting timer
-            new CountDownTimer(totalTime, interval) {
-                @Override
-                public void onTick(long l) {
-                    WallpaperManager.setWallpaper(context, loremImageUrl, callback, true);
-                }
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                 @Override
-                public void onFinish() {
-                    callback.onSuccess("Timer finished :)");
-                }
+                public void run() {
 
-            }.start();
+                    //Starting timer
+                    new CountDownTimer(totalTime, finalInterval) {
+                        @Override
+                        public void onTick(long l) {
+                            WallpaperManager.setWallpaper(context, loremImageUrl, callback, true);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            callback.onSuccess("Timer finished :)");
+                        }
+
+                    }.start();
+                }
+            });
 
         } else {
 

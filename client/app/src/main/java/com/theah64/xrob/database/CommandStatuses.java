@@ -38,6 +38,9 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
     @Override
     public void addv2(Command.Status status) throws RuntimeException {
+
+        Log.d(X, "Adding new status to the db: " + status);
+
         final SQLiteDatabase db = this.getWritableDatabase();
 
         final ContentValues cv = new ContentValues(4);

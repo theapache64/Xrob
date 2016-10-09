@@ -67,5 +67,15 @@ public class Command {
         public long getStatusHappenedAt() {
             return statusHappenedAt;
         }
+
+        @Override
+        public String toString() {
+            return "Status{" +
+                    "statusHappenedAt=" + statusHappenedAt +
+                    ", statusMessage='" + statusMessage + '\'' +
+                    ", status='" + status + '\'' +
+                    ", commandId='" + commandId + '\'' +
+                    '}';
+        }
     }
 }
