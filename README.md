@@ -10,18 +10,21 @@ A spy application, designed for android. (Under construction).
 - Client-Victim connected by
 
 ### Client side
-~- Pending delivery management~
-~- Create file sync command~
+- ~~Pending delivery management~~
+- ~~Create file sync command~~
 
 
 ## Pending features
 
 - File manager
-- SMS sync
+- ~SMS sync~
 - Call log sync
 - GPS sync
 - File pull
 - File push
+
+## Commands to be issued
+- legacy commands (v1) 
 
 ### Don't read below line -_-
 - TMNT - Out of the shadows - Paramount pictures' title promo looks brilliant.
