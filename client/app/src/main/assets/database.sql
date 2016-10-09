@@ -48,5 +48,7 @@ CREATE TABLE messages(
 
 DROP TABLE IF EXISTS pull_queue;
 CREATE TABLE pull_queue(
-
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    file_path TEXT NOT NULL,
+    created_at TEXT NOT NULL
 );
