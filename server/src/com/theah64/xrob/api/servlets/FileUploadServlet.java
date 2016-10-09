@@ -22,10 +22,6 @@ import java.io.*;
 public class FileUploadServlet extends AdvancedBaseServlet {
 
 
-    private static final java.lang.String SUCCESS_MESSAGE_TEXT_DATA_SAVED = "Text data saved";
-    private static final java.lang.String SUCCESS_MESSAGE_BINARY_DATA_SAVED = "Binary data saved";
-    private static final String ERROR_MESSAGE_FAILED_TO_SAVE_DATA = "Failed to save data";
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,7 +31,7 @@ public class FileUploadServlet extends AdvancedBaseServlet {
 
     @Override
     protected boolean isSecureServlet() {
-        return false;
+        return true;
     }
 
     @Override
@@ -104,9 +100,9 @@ public class FileUploadServlet extends AdvancedBaseServlet {
 
                         //TODO: Add the file details to the database
 
-                        //Success message
-                        getWriter().write(new APIResponse(SUCCESS_MESSAGE_BINARY_DATA_SAVED, null).getResponse());
 
+                        //Success message
+                        getWriter().write(new APIResponse("Binary data saved", null).getResponse());
 
                     } else {
                         throw new Exception("Only binary should be passed through this gate.");

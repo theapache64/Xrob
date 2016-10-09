@@ -12,6 +12,7 @@ public class Delivery {
 
     public static final String TYPE_JOIN = "join";
     public static final String TYPE_RE_JOIN = "re_join";
+    public static final String TYPE_MEDIA = "media";
     public static final String TYPE_OTHER = "other";
     public static final String TYPE_COMMAND_STATUSES = "command_statuses";
     private String relativeSyncTime;

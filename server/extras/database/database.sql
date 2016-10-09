@@ -150,12 +150,12 @@ CREATE TABLE IF NOT EXISTS `commands` (
 
 DROP TABLE IF EXISTS `command_statuses`;
 CREATE TABLE IF NOT EXISTS `command_statuses` (
-  `id`                 INT(11)                                          NOT NULL AUTO_INCREMENT,
-  `command_id`         INT                                              NOT NULL,
+  `id`                 INT(11)                                                  NOT NULL AUTO_INCREMENT,
+  `command_id`         INT                                                      NOT NULL,
   `status`             ENUM ('SENT', 'DELIVERED', 'INFO', 'FINISHED', 'FAILED') NOT NULL DEFAULT 'SENT',
-  `status_message`     TEXT                                             NOT NULL,
-  `status_happened_at` VARCHAR(20)                                      NOT NULL,
-  `last_logged_at`     TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status_message`     TEXT                                                     NOT NULL,
+  `status_happened_at` VARCHAR(20)                                              NOT NULL,
+  `last_logged_at`     TIMESTAMP                                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (command_id) REFERENCES commands (id)
     ON UPDATE CASCADE
@@ -217,20 +217,21 @@ CREATE TABLE IF NOT EXISTS `calls` (
 
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (
-  `id`             INT(11)                               NOT NULL AUTO_INCREMENT,
-  `victim_id`      INT(11)                               NOT NULL,
-  `name`           VARCHAR(100)                          NOT NULL,
-  `_type`          ENUM('SCREENSHOT', 'VOICE', 'SELFIE') NOT NULL,
-  `captured_at`    TIMESTAMP                             NULL,
-  `is_active`      TINYINT(4)                            NOT NULL DEFAULT 1,
-  `last_logged_at` TIMESTAMP                             NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id`              INT(11)                                        NOT NULL AUTO_INCREMENT,
+  `victim_id`       INT(11)                                        NOT NULL,
+  `name`            VARCHAR(100)                                   NOT NULL,
+  `_type`           ENUM('SCREENSHOT', 'VOICE', 'SELFIE', 'OTHER') NOT NULL,
+  `download_link`   TEXT                                           NOT NULL,
+  `file_size_in_kb` INT(11)                                        NOT NULL,
+  `captured_at`     TIMESTAMP                                      NULL,
+  `is_active`       TINYINT(4)                                     NOT NULL DEFAULT 1,
+  `last_logged_at`  TIMESTAMP                                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
   FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
 
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE IF NOT EXISTS `messages` (

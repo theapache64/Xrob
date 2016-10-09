@@ -74,7 +74,6 @@ public class JSONPostServlet extends AdvancedBaseServlet {
                         //The delivery is not about the binary, but TEXT, so we need to save the data to the appropriate db table.
                         final BaseTable dbTable = BaseTable.Factory.getTable(dataType);
 
-
                         dbTable.addv2(victimId, jaData);
 
                         //Save delivery details

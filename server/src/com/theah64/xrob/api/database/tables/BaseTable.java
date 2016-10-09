@@ -178,6 +178,9 @@ public class BaseTable<T> {
                 case Delivery.TYPE_COMMAND_STATUSES:
                     return CommandStatuses.getInstance();
 
+                case Delivery.TYPE_MEDIA:
+                    return Media.getInstance();
+
                 default:
                     throw new IllegalArgumentException("No table defined for the type " + deliveryType);
             }
