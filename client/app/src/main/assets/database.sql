@@ -45,3 +45,8 @@ CREATE TABLE messages(
     delivery_time TEXT NOT NULL,
     created_at TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS pull_queue;
+CREATE TABLE pull_queue(
+
+);
