@@ -98,7 +98,9 @@ public class LoremPixelCommand extends BaseCommand {
                     interval = DEFAULT_COUNT_INTERVAL;
                 }
 
-                new CountDownTimer()
+                final int totalTime = count * interval;
+
+                new CountDownTimer(totalTime, interval)
 
             } else {
                 callback.onError("Count is not a valid number");
