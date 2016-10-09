@@ -56,6 +56,9 @@ public abstract class BaseCommand {
 
     public interface Callback {
         void onError(final String message);
+
+        void onInfo(final String message);
+
         void onSuccess(final String message);
     }
 

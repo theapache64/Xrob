@@ -43,12 +43,21 @@ public class CommandCenter {
                 theCommand.handle(context, new BaseCommand.Callback() {
                     @Override
                     public void onError(String message) {
+                        Log.e(X, message);
                         commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FAILED, message));
                         syncCommandStatus(context);
                     }
 
                     @Override
+                    public void onInfo(String message) {
+                        Log.i(X, message);
+                        commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_INFO, message));
+                        syncCommandStatus(context);
+                    }
+
+                    @Override
                     public void onSuccess(String message) {
+                        Log.d(X, message);
                         commandStatusesTable.addv2(new Command.Status(commandId, Command.Status.STATUS_FINISHED, message));
                         syncCommandStatus(context);
                     }

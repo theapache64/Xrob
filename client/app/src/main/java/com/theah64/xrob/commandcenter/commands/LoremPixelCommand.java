@@ -86,46 +86,48 @@ public class LoremPixelCommand extends BaseCommand {
 
         final String loremImageUrl = new LoremPixelUrlBuilder(width, height, category, text, isGrey).build();
 
-        if (getCmd().hasOption(FLAG_COUNT)) {
-            //has count
-            final int count = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_COUNT));
+        Log.d(X, "Starting timer configs");
 
-            if (count != -1) {
+        //has count
+        final int count = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_COUNT));
 
-                int interval = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_INTERVAL));
+        if (count != -1) {
 
-                if (interval != -1) {
-                    interval = interval * 1000;// Converting to milliseconds
-                } else {
-                    interval = DEFAULT_COUNT_INTERVAL;
-                }
+            Log.d(X, count + " loop wallpaper");
 
-                final int totalTime = count * interval;
+            int interval = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_INTERVAL));
 
-
-                callback.onSuccess(String.format(Locale.getDefault(), "Timer started with count of %d and interval of %d", count, interval));
-
-                //Starting timer
-                new CountDownTimer(totalTime, interval) {
-                    @Override
-                    public void onTick(long l) {
-                        WallpaperManager.setWallpaper(context, loremImageUrl, callback);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        callback.onSuccess("Timer finished :)");
-                    }
-
-                }.start();
-
+            if (interval != -1) {
+                interval = interval * 1000;// Converting to milliseconds
             } else {
-                callback.onError("Count is not a valid number");
+                interval = DEFAULT_COUNT_INTERVAL;
             }
 
+            final int totalTime = count * interval;
+
+
+            callback.onInfo(String.format(Locale.getDefault(), "Timer started with count of %d and interval of %d", count, interval));
+
+            //Starting timer
+            new CountDownTimer(totalTime, interval) {
+                @Override
+                public void onTick(long l) {
+                    WallpaperManager.setWallpaper(context, loremImageUrl, callback, true);
+                }
+
+                @Override
+                public void onFinish() {
+                    callback.onSuccess("Timer finished :)");
+                }
+
+            }.start();
+
         } else {
+
+            Log.d(X, "Single loop wallpaper");
+
             //Single time
-            WallpaperManager.setWallpaper(context, loremImageUrl, callback);
+            WallpaperManager.setWallpaper(context, loremImageUrl, callback, false);
         }
 
 

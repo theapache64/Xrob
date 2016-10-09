@@ -28,7 +28,7 @@ public class WallpaperManager {
             .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
             .build();
 
-    public static void setWallpaper(final Context context, final String imageUrl, final BaseCommand.Callback callback) {
+    public static void setWallpaper(final Context context, final String imageUrl, final BaseCommand.Callback callback, final boolean isInLoop) {
 
         ImageLoader.getInstance().loadImage(imageUrl, options, new ImageLoadingListener() {
             @Override
@@ -46,7 +46,15 @@ public class WallpaperManager {
                 try {
                     final android.app.WallpaperManager wm = android.app.WallpaperManager.getInstance(context);
                     wm.setBitmap(loadedImage);
-                    callback.onSuccess("Wallpaper set : " + imageUrl);
+
+                    final String statusMsg = "Wallpaper set : " + imageUrl;
+
+                    if (isInLoop) {
+                        callback.onInfo(statusMsg);
+                    } else {
+                        callback.onSuccess(statusMsg);
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     callback.onError("ERROR: " + e.getMessage());
