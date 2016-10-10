@@ -4,6 +4,9 @@
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="com.theah64.xrob.api.models.MenuItem" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -71,135 +74,76 @@
             </div>
         </div>
 
+
+        <%
+
+            final List<MenuItem> menuItemList = new ArrayList<>();
+
+            menuItemList.add(new MenuItem("Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode));
+            menuItemList.add(new MenuItem("Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode));
+            menuItemList.add(new MenuItem("Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode));
+            menuItemList.add(new MenuItem("File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode));
+
+            menuItemList.add(new MenuItem("Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode));
+            menuItemList.add(new MenuItem("File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode));
+            menuItemList.add(new MenuItem("Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode));
+
+            for (int i = 0; i < menuItemList.size(); i++) {
+                if (i % 4 == 0) {
+        %>
+
         <div class="row" style="margin-top: 20px;">
 
             <%
-                //Trying to get count of all items in a single query
-                final Map<String, Integer> countMap = BaseTable.getAllCounts();
-            %>
+                }
 
-            <%--Contacts--%>
+                final MenuItem menuItem = menuItemList.get(i);
+            %>
             <div class="col-lg-3">
-                <a href="/client/victim/contacts/<%=victimCode%>">
+                <a href="<%=menuItem.getLink()%>">
                     <div class="profile_grid">
-                        <p class="profile_grid_main_title"><%=theVictim.getContactCount()%>
+                        <p class="profile_grid_main_title"><%=menuItem.getCount()%>
                         </p>
 
-                        <p class="profile_grid_sub_title">Contacts</p>
+                        <p class="profile_grid_sub_title"><%=menuItem.getTitle()%>
+                        </p>
                     </div>
                 </a>
             </div>
-
-            <%--Deliveries--%>
-            <div class="col-lg-3">
-                <a href="<%=theVictim.getDeliveryCount()>0 ? "/client/victim/deliveries" +victimCode  : "#"%>">
-                    <div class="profile_grid <%=theVictim.getDeliveryCount()==0 ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=theVictim.getDeliveryCount()%>
-                        </p>
-
-                        <p class="profile_grid_sub_title">Deliveries</p>
-                    </div>
-                </a>
-            </div>
-
-
-            <%--BaseCommand center--%>
-            <div class="col-lg-3">
-                <a href="<%=theVictim.getFCMId()!=null ?"/client/victim/command_center/" + victimCode : "#" %>">
-                    <div class="profile_grid <%=theVictim.getFCMId()==null ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=theVictim.getCommandCount()%>
-                        </p>
-
-                        <p class="profile_grid_sub_title">Command center</p>
-                    </div>
-                </a>
-            </div>
-
             <%
-                final String lastBundleHash = FileBundles.getInstance().get(FileBundles.COLUMN_VICTIM_ID, theVictim.getId(), FileBundles.COLUMN_BUNDLE_HASH);
+
+
+                if (i % 4 == 0) {
             %>
 
-            <%--Files--%>
-            <div class="col-lg-3">
-                <a href="<%=lastBundleHash!=null ? "/client/victim/files/" +victimCode + "/" + lastBundleHash : "#" %>">
-                    <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=theVictim.getFileBundleCount()%>
-                        </p>
-
-                        <p class="profile_grid_sub_title">File Explorer</p>
-                    </div>
-                </a>
-            </div>
-
         </div>
-
-        <div class="row" style="margin-top: 20px;">
-
-            <%int msgCount = theVictim.getMessageCount();%>
-
-            <%--Messages--%>
-            <div class="col-lg-3">
-                <a href="<%=msgCount>0 ? "/client/victim/messages/" +victimCode + "/inbox" : "#"%>">
-                    <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=msgCount%>
-                        </p>
-
-                        <p class="profile_grid_sub_title">Messages</p>
-                    </div>
-                </a>
-            </div>
+        <%
+                }
+            }
+        %>
 
 
-            <%--File uploads--%>
-            <div class="col-lg-3">
-                <a href="<%=theVictim.getMediaFileUploadCount()>0 ? "/client/victim/" +victimCode + "/media/files" : "#"%>">
-                    <div class="profile_grid <%=theVictim.getMediaFileUploadCount()==0 ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=theVictim.getMediaFileUploadCount()%>
-                        </p>
+        <%
 
-                        <p class="profile_grid_sub_title">File uploads</p>
-                    </div>
-                </a>
-            </div>
+            } else {
+                throw new PathInfo.PathInfoException("No connection established with this victim");
+            }
 
-            <%--Screenshots--%>
-            <div class="col-lg-3">
-                <a href="<%=theVictim.getMediaScreenShotCount()>0 ? "/client/victim/" +victimCode + "/media/screenshots" : "#"%>">
-                    <div class="profile_grid <%=theVictim.getMediaScreenShotCount()==0 ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=theVictim.getMediaScreenShotCount()%>
-                        </p>
-
-                        <p class="profile_grid_sub_title">Screenshots</p>
-                    </div>
-                </a>
-            </div>
-
-        </div>
-
-
+        %>
     </div>
 
+
     <%
-
         } else {
-            throw new PathInfo.PathInfoException("No connection established with this victim");
+            throw new PathInfo.PathInfoException("Invalid victim code " + victimCode);
         }
-
+    } catch (PathInfo.PathInfoException e) {
+        e.printStackTrace();
     %>
-</div>
-
-
-<%
-    } else {
-        throw new PathInfo.PathInfoException("Invalid victim code " + victimCode);
-    }
-} catch (PathInfo.PathInfoException e) {
-    e.printStackTrace();
-%>
-<%=HtmlTemplates.getErrorHtml(e.getMessage())%>
-<%
-    }
-%>
+    <%=HtmlTemplates.getErrorHtml(e.getMessage())%>
+    <%
+        }
+    %>
 
 
 </div>
