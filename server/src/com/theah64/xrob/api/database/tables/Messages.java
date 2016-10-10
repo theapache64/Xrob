@@ -25,10 +25,11 @@ public class Messages extends BaseTable<Message> {
     private static final String COLUMN_ANDROID_MESSAGE_ID = "android_message_id";
     private static final String COLUMN_TYPE = "_type";
     private static final String COLUMN_FROM = "_from";
+    public static final String TABLE_NAME_MESSAGES = "messages";
     private static Messages instance = new Messages();
 
     public Messages() {
-        super("messages");
+        super(TABLE_NAME_MESSAGES);
     }
 
     public static Messages getInstance() {

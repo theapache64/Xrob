@@ -27,11 +27,12 @@ public class Contacts extends BaseTable<Contact> {
     private static final String COLUMN_AS_PRE_NAMES = "pre_names";
     private static final String COLUMN_AS_PHONE_NUMBERS = "phone_numbers";
     private static final String COLUMN_AS_PHONE_TYPES = "phone_types";
+    public static final String TABLE_NAME_CONTACTS = "contacts";
 
     private static Contacts instance = new Contacts();
 
     private Contacts() {
-        super("contacts");
+        super(TABLE_NAME_CONTACTS);
     }
 
     public static Contacts getInstance() {

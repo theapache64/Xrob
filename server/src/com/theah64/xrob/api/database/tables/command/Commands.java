@@ -22,9 +22,10 @@ public class Commands extends BaseTable<Command> {
     private static final String COLUMN_AS_COMMAND_STATUSES_REPORTED_AT = "command_statuses_reported_at";
     private static final String COLUMN_AS_COMMAND_STATUSES_HAPPENED_AT = "command_statuses_happened_at";
     public static final String COLUMN_VICTIM_ID = "victim_id";
+    public static final String TABLE_NAME_COMMANDS = "commands";
 
     private Commands() {
-        super("commands");
+        super(TABLE_NAME_COMMANDS);
     }
 
     private static final Commands instance = new Commands();

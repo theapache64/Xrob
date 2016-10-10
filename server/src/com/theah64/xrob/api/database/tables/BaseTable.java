@@ -37,6 +37,8 @@ public class BaseTable<T> {
 
     public static Map<String, Integer> getAllCounts() {
         final Map<String, Integer> countMap = new HashMap<>();
+
+        return countMap;
     }
 
 

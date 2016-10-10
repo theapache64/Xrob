@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Deliveries extends BaseTable<Delivery> {
 
-    private static final String TABLE_NAME_DELIVERIES = "deliveries";
+    static final String TABLE_NAME_DELIVERIES = "deliveries";
     private static final String COLUMN_DATA_TYPE = "data_type";
     private static final String COLUMN_MESSAGE = "message";
     private static Deliveries instance = new Deliveries();

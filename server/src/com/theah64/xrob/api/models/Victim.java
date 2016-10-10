@@ -1,5 +1,7 @@
 package com.theah64.xrob.api.models;
 
+import com.theah64.xrob.api.utils.clientpanel.TimeUtils;
+
 /**
  * Created by theapache64 on 10/13/2015.
  */
@@ -21,8 +23,11 @@ public class Victim {
     private final String createdAt;
     private final boolean isActive;
     private final String victimCode;
+    private final String relativeLastDeliveryTime;
 
-    public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String deviceInfoDynamic, String actions, String createdAt, boolean isActive, String victimCode) {
+    private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount;
+
+    public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String deviceInfoDynamic, String actions, String createdAt, boolean isActive, String victimCode, long lastDeliveryEpoch) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -38,8 +43,41 @@ public class Victim {
         this.createdAt = createdAt;
         this.isActive = isActive;
         this.victimCode = victimCode;
+        this.relativeLastDeliveryTime = lastDeliveryEpoch > 0 ? TimeUtils.getRelativeTime(false, lastDeliveryEpoch) : null;
     }
 
+    public void setCounts(int contactCount, int deliveryCount, int commandCount, int fileBundleCount, int messageCount) {
+        this.contactCount = contactCount;
+        this.deliveryCount = deliveryCount;
+        this.commandCount = commandCount;
+        this.fileBundleCount = fileBundleCount;
+        this.messageCount = messageCount;
+    }
+
+
+    public int getContactCount() {
+        return contactCount;
+    }
+
+    public int getDeliveryCount() {
+        return deliveryCount;
+    }
+
+    public int getCommandCount() {
+        return commandCount;
+    }
+
+    public int getFileBundleCount() {
+        return fileBundleCount;
+    }
+
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public String getRelativeLastDeliveryTime() {
+        return relativeLastDeliveryTime;
+    }
 
     public String getApiKey() {
         return apiKey;
