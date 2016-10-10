@@ -92,8 +92,8 @@
 
             <%--Deliveries--%>
             <div class="col-lg-3">
-                <a href="/client/victim/deliveries/<%=victimCode%>">
-                    <div class="profile_grid">
+                <a href="<%=theVictim.getDeliveryCount()>0 ? "/client/victim/deliveries" +victimCode  : "#"%>">
+                    <div class="profile_grid <%=theVictim.getDeliveryCount()==0 ? "inactive" : ""%>">
                         <p class="profile_grid_main_title"><%=theVictim.getDeliveryCount()%>
                         </p>
 
