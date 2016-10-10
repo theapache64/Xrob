@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   `id`              INT(11)                                        NOT NULL AUTO_INCREMENT,
   `victim_id`       INT(11)                                        NOT NULL,
   `name`            VARCHAR(100)                                   NOT NULL,
-  `_type`           ENUM('SCREENSHOT', 'VOICE', 'SELFIE', 'OTHER') NOT NULL,
+  `_type`           ENUM('SCREENSHOT', 'VOICE', 'SELFIE', 'FILE') NOT NULL,
   `download_link`   TEXT                                           NOT NULL,
   `file_size_in_kb` INT(11)                                        NOT NULL,
   `captured_at`     TIMESTAMP                                      NULL,
