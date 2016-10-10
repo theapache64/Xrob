@@ -157,7 +157,7 @@
                         <p class="profile_grid_main_title"><%=theVictim.getMediaFileUploadCount()%>
                         </p>
 
-                        <p class="profile_grid_sub_title">Media</p>
+                        <p class="profile_grid_sub_title">File uploads</p>
                     </div>
                 </a>
             </div>

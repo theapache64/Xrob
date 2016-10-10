@@ -80,7 +80,7 @@ public class INServlet extends AdvancedBaseServlet {
 
             final Victim newVictim = new Victim(null, name, email, phone, imei, deviceHash, apiKey, fcmId, deviceName, deviceInfoStatic, deviceInfoDynamic, null, null, true,
                     RandomString.getRandomString(Victim.VICTIM_CODE_LENGTH),
-                    relativeLastDeliveryTime);
+                    0);
 
             final String victimId = victimsTable.addv3(newVictim);
 
