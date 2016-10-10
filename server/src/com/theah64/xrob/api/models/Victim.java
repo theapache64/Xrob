@@ -27,6 +27,7 @@ public class Victim {
 
     private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount;
     private int mediaFileUploadCount;
+    private int mediaScreenShotCount;
 
     public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String deviceInfoDynamic, String actions, String createdAt, boolean isActive, String victimCode, long lastDeliveryEpoch) {
         this.id = id;
@@ -177,5 +178,9 @@ public class Victim {
     public int getMediaFileUploadCount() {
         //TODO: SET
         return mediaFileUploadCount;
+    }
+
+    public int getMediaScreenShotCount() {
+        return mediaScreenShotCount;
     }
 }

