@@ -12,7 +12,10 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by theapache64 on 11/22/2015.
@@ -30,6 +33,10 @@ public class BaseTable<T> {
 
     public BaseTable(String tableName) {
         this.tableName = tableName;
+    }
+
+    public static Map<String, Integer> getAllCounts() {
+        final Map<String, Integer> countMap = new HashMap<>();
     }
 
 

