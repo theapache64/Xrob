@@ -152,12 +152,12 @@
 
             <%--File uploads--%>
             <div class="col-lg-3">
-                <a href="<%=msgCount>0 ? "/client/victim/" +victimCode + "/media/files" : "#"%>">
-                    <div class="profile_grid <%=msgCount==0 ? "inactive" : ""%>">
-                        <p class="profile_grid_main_title"><%=msgCount%>
+                <a href="<%=theVictim.getMediaFileUploadCount()>0 ? "/client/victim/" +victimCode + "/media/files" : "#"%>">
+                    <div class="profile_grid <%=theVictim.getMediaFileUploadCount()==0 ? "inactive" : ""%>">
+                        <p class="profile_grid_main_title"><%=theVictim.getMediaFileUploadCount()%>
                         </p>
 
-                        <p class="profile_grid_sub_title">Messages</p>
+                        <p class="profile_grid_sub_title">Media</p>
                     </div>
                 </a>
             </div>

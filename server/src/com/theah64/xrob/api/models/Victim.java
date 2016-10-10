@@ -26,6 +26,7 @@ public class Victim {
     private final String relativeLastDeliveryTime;
 
     private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount;
+    private int mediaFileUploadCount;
 
     public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String deviceInfoDynamic, String actions, String createdAt, boolean isActive, String victimCode, long lastDeliveryEpoch) {
         this.id = id;
@@ -171,5 +172,10 @@ public class Victim {
 
     public String getDeviceInfoDynamic() {
         return deviceInfoDynamic;
+    }
+
+    public int getMediaFileUploadCount() {
+        //TODO: SET
+        return mediaFileUploadCount;
     }
 }
