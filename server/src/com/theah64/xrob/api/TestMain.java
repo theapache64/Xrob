@@ -16,7 +16,10 @@ public class TestMain {
 
 
     public static void main(String[] args) throws JSONException {
-        System.out.println(new FileWalker("lab/testdir").walk());
+
+        for (int i = 0; i < 7; i++) {
+            System.out.println(i + " % " + 4 + " = " + (i % 4));
+        }
 
     }
 

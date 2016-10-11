@@ -7,6 +7,7 @@
 <%@ page import="com.theah64.xrob.api.models.MenuItem" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.awt.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -77,48 +78,40 @@
 
         <%
 
-            final List<MenuItem> menuItemList = new ArrayList<>();
+            final MenuItem[] menuItems = new MenuItem[]{
 
-            menuItemList.add(new MenuItem("Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode));
-            menuItemList.add(new MenuItem("Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode));
-            menuItemList.add(new MenuItem("Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode));
-            menuItemList.add(new MenuItem("File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode));
+                    new MenuItem("Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode),
+                    new MenuItem("Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode),
+                    new MenuItem("Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode),
+                    new MenuItem("File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode),
 
-            menuItemList.add(new MenuItem("Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode));
-            menuItemList.add(new MenuItem("File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode));
-            menuItemList.add(new MenuItem("Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode));
+                    new MenuItem("Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
+                    new MenuItem("File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode),
+                    new MenuItem("Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
 
-            for (int i = 0; i < menuItemList.size(); i++) {
-                if (i % 4 == 0) {
+            };
+
+
+            for (int i = 0; i < menuItems.length; i++) {
+
+
+
+            final MenuItem menuItem = menuItems[i];
         %>
+        <div class="col-md-3">
+            <a href="<%=menuItem.getLink()%>">
+                <div class="profile_grid">
+                    <p class="profile_grid_main_title"><%=menuItem.getCount()%>
+                    </p>
 
-        <div class="row" style="margin-top: 20px;">
-
-            <%
-                }
-
-                final MenuItem menuItem = menuItemList.get(i);
-            %>
-            <div class="col-lg-3">
-                <a href="<%=menuItem.getLink()%>">
-                    <div class="profile_grid">
-                        <p class="profile_grid_main_title"><%=menuItem.getCount()%>
-                        </p>
-
-                        <p class="profile_grid_sub_title"><%=menuItem.getTitle()%>
-                        </p>
-                    </div>
-                </a>
-            </div>
-            <%
-
-
-                if (i % 4 == 0) {
-            %>
-
+                    <p class="profile_grid_sub_title"><%=menuItem.getTitle()%>
+                    </p>
+                </div>
+            </a>
         </div>
         <%
-                }
+
+
             }
         %>
 
