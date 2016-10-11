@@ -125,7 +125,9 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
                 //Delete previously posted request from db
                 if (isDeleteFromDb) {
+
                     final boolean isDeleted = pendingDeliveriesTable.delete(PendingDeliveries.COLUMN_ID, curDel.getId());
+
                     if (!isDeleted) {
                         throw new IllegalArgumentException("Failed to delete pending delivery : " + curDel);
                     }

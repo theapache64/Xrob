@@ -3,6 +3,7 @@ package com.theah64.xrob.commandcenter;
 import com.theah64.xrob.commandcenter.commands.CustomCommand;
 import com.theah64.xrob.commandcenter.commands.BaseCommand;
 import com.theah64.xrob.commandcenter.commands.FileSyncCommand;
+import com.theah64.xrob.commandcenter.commands.HotDog;
 import com.theah64.xrob.commandcenter.commands.LoremPixelCommand;
 import com.theah64.xrob.commandcenter.commands.RingBabyCommand;
 import com.theah64.xrob.models.Command;
@@ -35,6 +36,9 @@ class CommandFactory {
 
             case Command.COMMAND_RINGBABY:
                 return new RingBabyCommand(command.getCommand());
+
+            case Command.COMMAND_HOTDOG:
+                return new HotDog(command.getCommand());
 
             default:
                 throw new BaseCommand.CommandException("Command not defined " + commandType);
