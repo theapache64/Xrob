@@ -20,6 +20,7 @@ public class PendingDeliveries extends BaseTable<PendingDelivery> {
     private static final String COLUMN_MESSAGE = "message";
     private static final String COLUMN_IS_ERROR = "is_error";
     private static final String X = PendingDeliveries.class.getSimpleName();
+    public static final String COLUMN_IS_BEING_UPLOADED = "is_being_uploaded";
     private static PendingDeliveries instance;
 
     private PendingDeliveries(Context context) {
@@ -62,10 +63,12 @@ public class PendingDeliveries extends BaseTable<PendingDelivery> {
     public List<PendingDelivery> getAll() {
 
         List<PendingDelivery> pendingDeliveries = null;
+
+        //Retrvng real pending deliveries
         final Cursor cursor = this.getReadableDatabase().query(
                 super.getTableName(),
                 new String[]{COLUMN_ID, COLUMN_DATA_TYPE, COLUMN_DATA, COLUMN_MESSAGE, COLUMN_IS_ERROR},
-                null, null, null, null, null
+                COLUMN_IS_BEING_UPLOADED + " = ?", new String[]{"0"}, null, null, null
         );
 
         if (cursor.moveToFirst()) {
@@ -86,7 +89,6 @@ public class PendingDeliveries extends BaseTable<PendingDelivery> {
 
         return pendingDeliveries;
     }
-
 
 
 }

@@ -93,16 +93,21 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                 .addParamIfNotNull(Xrob.KEY_ERROR, String.valueOf(curDel.isError()))
                 .build();
 
+        //Setting delivery b-upload flag to true
+        pendingDeliveriesTable.update(PendingDeliveries.COLUMN_ID, curDel.getId(), PendingDeliveries.COLUMN_IS_BEING_UPLOADED, PendingDeliveries.TRUE);
 
         OkHttpUtils.getInstance().getClient().newCall(pdReq).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                pendingDeliveriesTable.update(PendingDeliveries.COLUMN_ID, curDel.getId(), PendingDeliveries.COLUMN_IS_BEING_UPLOADED, PendingDeliveries.FALSE);
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
+                    pendingDeliveriesTable.update(PendingDeliveries.COLUMN_ID, curDel.getId(), PendingDeliveries.COLUMN_IS_BEING_UPLOADED, PendingDeliveries.FALSE);
+
                     new APIResponse(OkHttpUtils.logAndGetStringBody(response));
 
                     //That's done, now do next.
@@ -120,7 +125,12 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
                 //Delete previously posted request from db
                 if (isDeleteFromDb) {
-                    pendingDeliveriesTable.delete(PendingDeliveries.COLUMN_ID, curDel.getId());
+
+                    final boolean isDeleted = pendingDeliveriesTable.delete(PendingDeliveries.COLUMN_ID, curDel.getId());
+
+                    if (!isDeleted) {
+                        throw new IllegalArgumentException("Failed to delete pending delivery : " + curDel);
+                    }
                 }
 
                 if (i < (pendingDeliveryList.size() - 1)) {

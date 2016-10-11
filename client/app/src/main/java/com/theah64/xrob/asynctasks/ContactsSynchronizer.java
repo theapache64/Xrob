@@ -151,8 +151,16 @@ public class ContactsSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
                         do {
 
-                            final String phone = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String phone = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
                             final String phoneType = Contact.PhoneNumber.getTypeString(pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
+
+                            if (phone != null) {
+                                phone = phone.replaceAll(" ", "");
+                            } else {
+                                throw new IllegalArgumentException("TSH");
+                            }
+
 
                             final boolean isExist = phoneNumbersTable.get(PhoneNumbers.COLUMN_PHONE_NUMBER, phone, PhoneNumbers.COLUMN_CONTACT_ID, contact.getId()) != null;
 
