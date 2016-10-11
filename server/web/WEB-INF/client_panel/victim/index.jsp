@@ -76,31 +76,30 @@
 
             final MenuItem[] menuItems = new MenuItem[]{
 
-                    new MenuItem("Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode),
-                    new MenuItem("Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode),
-                    new MenuItem("Command Center", theVictim.getFCMId() != null ? theVictim.getCommandCount() : 0, "/client/victim/command_center/" + victimCode),
-                    new MenuItem("File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode),
+                    new MenuItem(0, "Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode),
+                    new MenuItem(1, "Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode),
+                    new MenuItem(2, "Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode),
+                    new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode),
 
-                    new MenuItem("Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
-                    new MenuItem("File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode),
-                    new MenuItem("Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
+                    new MenuItem(4, "Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
+                    new MenuItem(5, "File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode),
+                    new MenuItem(6, "Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
             };
 
 
             for (int i = 0; i < menuItems.length; i++) {
 
-                if (i % 4 == 0) {
-        %>
-        <br>
-        <%
-            }
 
-            final MenuItem menuItem = menuItems[i];
+                final MenuItem menuItem = menuItems[i];
         %>
 
-        <div class="col-md-3">
-            <a href="<%=menuItem.getCount()>0 ? menuItem.getLink() : "#"%>">
-                <div class="profile_grid <%=menuItem.getCount()<0 ? "inactive" : ""%>">
+        <div class="col-md-3" style="margin-bottom: 10px">
+            <%
+                if (menuItem.getMenuId() == 2) {
+
+            %>
+            <a href="<%=theVictim.getFCMId()!=null ? menuItem.getLink() : "#"%>">
+                <div class="profile_grid <%=theVictim.getFCMId()==null ? "inactive" : ""%>">
                     <p class="profile_grid_main_title"><%=menuItem.getCount()%>
                     </p>
 
@@ -108,9 +107,27 @@
                     </p>
                 </div>
             </a>
-        </div>
-        <%
+            <%
 
+            } else {
+            %>
+            <a href="<%=menuItem.getCount() > 0 ? menuItem.getLink() : "#"%>">
+                <div class="profile_grid <%=menuItem.getCount()<=0 ? "inactive" : ""%>">
+                    <p class="profile_grid_main_title"><%=menuItem.getCount()%>
+                    </p>
+
+                    <p class="profile_grid_sub_title"><%=menuItem.getTitle()%>
+                    </p>
+                </div>
+            </a>
+            <%
+                }
+            %>
+
+
+        </div>
+
+        <%
 
             }
         %>
