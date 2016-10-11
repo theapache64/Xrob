@@ -90,14 +90,7 @@ public class Contact {
 
         public PhoneNumber(String contactId, String phone, String phoneType) {
             this.contactId = contactId;
-
-            if (phone != null) {
-                this.phone = phone.replaceAll(" ", "");
-            } else {
-                Log.e(X, "Phone is null : type : " + phoneType);
-                this.phone = null;
-            }
-
+            this.phone = phone;
             this.phoneType = phoneType;
         }
 

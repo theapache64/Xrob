@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class BaseTable<T> extends SQLiteOpenHelper {
 
-    static final String FALSE = "0";
+    public static final String FALSE = "0";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -38,6 +38,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();
     private static final String FATAL_ERROR_UNDEFINED_METHOD = "Undefined method";
+    public static final String TRUE = "1";
 
     private final Context context;
     private final String tableName;
@@ -96,7 +97,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
 
                         //"_id", "thread_id", "address", "person", "date", "body"
 
-                        final String androidMessageId = c.getInt(c.getColumnIndex("_id")) +""+ c.getInt(c.getColumnIndex("thread_id"));
+                        final String androidMessageId = c.getInt(c.getColumnIndex("_id")) + "" + c.getInt(c.getColumnIndex("thread_id"));
                         final String from = c.getString(c.getColumnIndex("address"));
                         final String content = c.getString(c.getColumnIndex("body"));
                         final long deliveryTime = c.getLong(c.getColumnIndex("date"));
@@ -180,7 +181,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
 
-    protected boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
+    public boolean update(String whereColumn, String whereColumnValue, String columnToUpdate, String valueToUpdate) {
         final SQLiteDatabase db = this.getWritableDatabase();
         final ContentValues cv = new ContentValues(1);
         cv.put(columnToUpdate, valueToUpdate);
@@ -201,7 +202,7 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     }
 
     public final boolean delete(final String whereColumn, final String whereColumnValue) {
-        return this.getReadableDatabase().delete(tableName, whereColumn + " = ?", new String[]{whereColumnValue}) == 1;
+        return this.getWritableDatabase().delete(getTableName(), whereColumn + " = ?", new String[]{whereColumnValue}) == 1;
     }
 
 

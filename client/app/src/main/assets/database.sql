@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS pending_deliveries;
 CREATE TABLE pending_deliveries(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     is_error INTEGER CHECK(is_error IN (0,1)) NOT NULL DEFAULT 0,
+    is_being_uploaded INTEGER CHECK(is_being_uploaded IN (0,1)) NOT NULL DEFAULT 0,
     data_type TEXT NOT NULL,
     data TEXT,
     message VARCHAR(100) NOT NULL,

@@ -77,6 +77,7 @@ public class CommandStatusesSynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
                         .build();
 
                 OkHttpUtils.getInstance().getClient().newCall(commandSyncRequest).enqueue(new Callback() {
+
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e(X, "Failed to sync command statuses");
