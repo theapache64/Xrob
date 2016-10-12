@@ -19,9 +19,9 @@ public class Media extends BaseTable<MediaNode> {
 
     private static final Media instance = new Media();
     private static final String COLUMN_TYPE = "_type";
-    private static final String COLUMN_DOWNLOAD_LINK = "download_link";
+    public static final String COLUMN_DOWNLOAD_LINK = "download_link";
     private static final String COLUMN_FILE_SIZE_IN_KB = "file_size_in_kb";
-    private static final String COLUMN_CAPTURED_AT = "captured_at";
+    public static final String COLUMN_CAPTURED_AT = "captured_at";
 
     private Media() {
         super("media");

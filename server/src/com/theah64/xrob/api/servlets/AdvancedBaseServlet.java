@@ -112,4 +112,8 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     public HttpServletRequest getHttpServletRequest() {
         return httpServletRequest;
     }
+
+    public long getLongParameter(String key) {
+        return request.getLongParameter(key);
+    }
 }

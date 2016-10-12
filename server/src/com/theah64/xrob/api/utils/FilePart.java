@@ -49,9 +49,8 @@ public class FilePart {
         if (fileExtension == null) {
             fileExtension = getFileExtension(this.contentType);
         }
-        return RandomString.getRandomFilename(FILE_NAME_LENGTH, fileExtension);
+        return System.currentTimeMillis() + "_" + RandomString.getRandomFilename(FILE_NAME_LENGTH, fileExtension);
     }
-
 
 
     /**

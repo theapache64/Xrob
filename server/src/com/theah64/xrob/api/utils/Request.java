@@ -91,4 +91,9 @@ public class Request {
         final String paramValue = this.request.getParameter(paramKey);
         return paramValue != null && !paramValue.trim().isEmpty();
     }
+
+    public long getLongParameter(String key) {
+        final String value = getStringParameter(key);
+        return value != null ? Long.parseLong(value) : -1;
+    }
 }
