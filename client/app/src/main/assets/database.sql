@@ -51,5 +51,6 @@ DROP TABLE IF EXISTS pull_queue;
 CREATE TABLE pull_queue(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     file_path TEXT NOT NULL,
+    is_being_uploaded INTEGER CHECK(is_being_uploaded IN (0,1)) NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );

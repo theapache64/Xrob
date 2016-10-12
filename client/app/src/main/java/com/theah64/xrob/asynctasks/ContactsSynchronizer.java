@@ -10,10 +10,7 @@ import com.theah64.xrob.database.PendingDeliveries;
 import com.theah64.xrob.database.PhoneNumbers;
 import com.theah64.xrob.models.Contact;
 import com.theah64.xrob.models.PendingDelivery;
-import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIRequestGateway;
-import com.theah64.xrob.utils.APIResponse;
-import com.theah64.xrob.utils.OkHttpUtils;
 import com.theah64.xrob.utils.Xrob;
 
 import org.acra.ACRA;
@@ -21,14 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by theapache64 on 12/9/16.

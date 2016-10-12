@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
-import com.theah64.xrob.asynctasks.ContactsSynchronizer;
-import com.theah64.xrob.asynctasks.FCMSynchronizer;
-import com.theah64.xrob.asynctasks.MessagesSynchronizer;
-import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.Xrob;
 

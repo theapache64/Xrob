@@ -44,7 +44,7 @@
     <%
         try {
 
-            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 2, PathInfo.UNLIMITED);
+            final PathInfo pathInfoUtils = new PathInfo(request.getPathInfo(), 1, PathInfo.UNLIMITED);
             final String victimCode = pathInfoUtils.getPart(1);
 
             final Victims victimsTable = Victims.getInstance();
@@ -69,7 +69,6 @@
                 if (fileHash != null) {
                     fileParentId = Files.getInstance().get(Files.COLUMN_FILE_HASH, fileHash, Files.COLUMN_ID);
                 }
-
 
 
                 if (ClientVictimRelations.getInstance().isConnected(clientId.toString(), theVictim.getId())) {

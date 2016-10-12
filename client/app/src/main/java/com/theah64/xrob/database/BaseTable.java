@@ -34,6 +34,8 @@ public class BaseTable<T> extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     private static final String DATABASE_NAME = "xrob.db";
 
+    public static final String COLUMN_IS_BEING_UPLOADED = "is_being_uploaded";
+
     static final String COLUMN_CREATED_AT = "created_at";
     private static final int DATABASE_VERSION = 1;
     private static final String X = BaseTable.class.getSimpleName();

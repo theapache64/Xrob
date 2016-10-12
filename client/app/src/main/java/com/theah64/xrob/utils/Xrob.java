@@ -12,18 +12,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.theah64.xrob.MainActivity;
-import com.theah64.xrob.R;
 import com.theah64.xrob.asynctasks.CommandStatusesSynchronizer;
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
 import com.theah64.xrob.asynctasks.FCMSynchronizer;
 import com.theah64.xrob.asynctasks.MessagesSynchronizer;
 import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
-import com.theah64.xrob.database.BaseTable;
 import com.theah64.xrob.database.Messages;
-import com.theah64.xrob.models.Victim;
 import com.theah64.xrob.services.ContactsWatcherService;
-import com.theah64.xrob.services.FileWalkerService;
 
 import org.acra.ACRA;
 import org.acra.ReportField;

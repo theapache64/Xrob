@@ -3,8 +3,6 @@ package com.theah64.xrob.asynctasks;
 import android.content.Context;
 import android.util.Log;
 
-import com.theah64.xrob.database.BaseTable;
-import com.theah64.xrob.database.Contacts;
 import com.theah64.xrob.database.PendingDeliveries;
 import com.theah64.xrob.models.PendingDelivery;
 import com.theah64.xrob.utils.APIRequestBuilder;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -28,7 +25,7 @@ import okhttp3.Response;
  * To manage deliveries failed due to the save process.
  * Created by theapache64 on 21/9/16.
  */
-public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
+public class PendingDeliverySynchronizer extends BaseQueueSynchronizer<PendingDelivery> {
 
     private static final String X = PendingDeliverySynchronizer.class.getSimpleName();
     private List<PendingDelivery> pendingDeliveryList;

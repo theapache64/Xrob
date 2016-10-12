@@ -20,7 +20,6 @@ public class PendingDeliveries extends BaseTable<PendingDelivery> {
     private static final String COLUMN_MESSAGE = "message";
     private static final String COLUMN_IS_ERROR = "is_error";
     private static final String X = PendingDeliveries.class.getSimpleName();
-    public static final String COLUMN_IS_BEING_UPLOADED = "is_being_uploaded";
     private static PendingDeliveries instance;
 
     private PendingDeliveries(Context context) {
