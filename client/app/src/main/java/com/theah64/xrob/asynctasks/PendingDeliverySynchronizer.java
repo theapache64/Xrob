@@ -25,7 +25,7 @@ import okhttp3.Response;
  * To manage deliveries failed due to the save process.
  * Created by theapache64 on 21/9/16.
  */
-public class PendingDeliverySynchronizer extends BaseQueueSynchronizer<PendingDelivery> {
+public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     private static final String X = PendingDeliverySynchronizer.class.getSimpleName();
     private List<PendingDelivery> pendingDeliveryList;
