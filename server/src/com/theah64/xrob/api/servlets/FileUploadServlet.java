@@ -1,9 +1,12 @@
 package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.Deliveries;
+import com.theah64.xrob.api.database.tables.FTPServers;
 import com.theah64.xrob.api.models.Delivery;
+import com.theah64.xrob.api.models.FTPServer;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
+import org.apache.commons.net.ftp.FTPClient;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -11,7 +14,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by theapache64 on 11/18/2015,12:10 AM.
@@ -20,7 +26,6 @@ import java.io.*;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/upload"})
 @MultipartConfig
 public class FileUploadServlet extends AdvancedBaseServlet {
-
 
 
     @Override
@@ -72,9 +77,7 @@ public class FileUploadServlet extends AdvancedBaseServlet {
                     final String fileName = new FilePart(dataFilePart).getRandomFileName();
                     final long size = dataFilePart.getSize();
 
-                    if (deliveryType.isBinary()) {
-
-                        //The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
+                        /*//The data is binary, so instead of saving the data to the database, we're saving the file into it's specific folder.
                         final String dataStoragePath = deliveryType.getStoragePath();
                         final File dataStorageDir = new File(dataStoragePath);
 
@@ -96,17 +99,21 @@ public class FileUploadServlet extends AdvancedBaseServlet {
                             fos.flush();
                             fos.close();
                             is.close();
-                        }
+                        }*/
 
-                        //TODO: Add the file details to the database
+                    //TODO: Add the file details to the database
 
+                    final FTPServer ftpServer = FTPServers.getInstance().getLeastUsedServer();
+                    final FTPClient ftpClient = new FTPClient();
 
-                        //Success message
-                        getWriter().write(new APIResponse("Binary data saved", null).getResponse());
+                    ftpClient.connect(ftpServer.getFtpDomain());
+                    ftpClient.login(ftpServer.getFtpUsername(), ftpServer.getFtpPassword());
 
-                    } else {
-                        throw new Exception("Only binary should be passed through this gate.");
-                    }
+                    ftpClient.storeFile("/public_html/" + fileName, dataFilePart.getInputStream());
+                    ftpClient.logout();
+
+                    //Success message
+                    getWriter().write(new APIResponse("File uploaded", null).getResponse());
 
 
                 } else {

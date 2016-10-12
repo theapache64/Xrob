@@ -1,25 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
   <data-source name="MySQL - xrob@localhost" uuid="3b93b28b-8bab-482e-a3ff-54f702091a30">
-    <database-info product="MySQL" version="5.5.47-0ubuntu0.14.04.1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+    <database-info product="MySQL" version="5.5.35-1ubuntu1" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
     </database-info>
     <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact"/>
-    <schema name="" catalog="employee"/>
+    <schema name="" catalog="ally"/>
     <schema name="" catalog="information_schema"/>
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="npmna"/>
     <schema name="" catalog="performance_schema"/>
+    <schema name="" catalog="shifar"/>
     <schema name="" catalog="udb"/>
     <schema name="" catalog="xrob"/>
-    <table name="employee" schema="" catalog="employee" type="TABLE">
-      <column name="empid" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
-      <column name="ename" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
-      <column name="salary" sqlType="DOUBLE" precision="6" scale="2" nullable="true" jdbcType="8"/>
-      <column name="department" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
-      <column name="age" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <primary-key name="PRIMARY" columns="empid"/>
+    <table name="colleges" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <column name="courses" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="college_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="college_id" unique="true" columns="college_id"/>
+      <index name="name" unique="true" columns="name"/>
+    </table>
+    <table name="courses" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="course_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="course_id" unique="true" columns="course_id"/>
+      <index name="name" unique="true" columns="name"/>
+    </table>
+    <table name="hunts" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="_for" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="hunts_ibfk_1" columns="user_id" ref-table="users" ref-schema="" ref-catalog="ally" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+    </table>
+    <table name="preferences" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="_key" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="value" sqlType="VARCHAR" precision="500" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="preferences_hunt" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="_key" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="value" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="_key" unique="true" columns="_key"/>
+    </table>
+    <table name="requests" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="student_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="fk_ReqStud" columns="student_id" ref-table="students" ref-schema="" ref-catalog="ally" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="fk_ReqUser" columns="user_id" ref-table="users" ref-schema="" ref-catalog="ally" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="fk_ReqStud" unique="false" columns="student_id"/>
+      <index name="fk_ReqUser" unique="false" columns="user_id"/>
+    </table>
+    <table name="students" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="cap_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="birthday" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="phone" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="address" sqlType="VARCHAR" precision="500" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <column name="is_viewed" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="is_hidden" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="fk_ReqStud" table="requests" schema="" catalog="ally" columns="student_id"/>
+      <index name="cap_id" unique="true" columns="cap_id"/>
+    </table>
+    <table name="users" schema="" catalog="ally" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="apikey" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="imei" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="is_alive" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="death_cause" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" def="J1lvdSdyZSBub3QgYXV0aG9yaXplZCB0byBhY2Nlc3MgZGF0YSBmcm9tIEh1bnQuJw=="/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="hunts_ibfk_1" table="hunts" schema="" catalog="ally" columns="user_id"/>
+      <exported-key name="fk_ReqUser" table="requests" schema="" catalog="ally" columns="user_id"/>
+      <index name="imei" unique="true" columns="imei"/>
     </table>
     <table name="CHARACTER_SETS" schema="" catalog="information_schema" type="SYSTEM VIEW">
       <column name="CHARACTER_SET_NAME" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
@@ -1061,7 +1130,7 @@
       <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="code_enc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
       <column name="expiry_timestamp" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <column name="_type" sqlType="ENUM" precision="12" scale="0" nullable="false" jdbcType="1"/>
+      <column name="_type" sqlType="ENUM" precision="18" scale="0" nullable="false" jdbcType="1"/>
       <column name="is_verified" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
       <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
       <primary-key name="PRIMARY" columns="id"/>
@@ -1242,7 +1311,9 @@
       <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="_name" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
       <column name="_address" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="is_photo_shown" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
       <column name="_limit" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="requests_ibfk_1" columns="user_id" ref-table="users" ref-schema="" ref-catalog="udb" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
@@ -1264,33 +1335,15 @@
     </table>
     <table name="users" schema="" catalog="udb" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="username" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
-      <column name="password" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="username" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
+      <column name="pass_hash" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email_ver_code" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="is_verified_email" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
       <primary-key name="PRIMARY" columns="id"/>
       <exported-key name="requests_ibfk_1" table="requests" schema="" catalog="udb" columns="user_id"/>
       <index name="username" unique="true" columns="username"/>
-    </table>
-    <table name="calls" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
-      <column name="phone" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
-      <column name="call_type" sqlType="ENUM" precision="6" scale="0" nullable="false" jdbcType="1"/>
-      <column name="called_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="true" jdbcType="93"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="calls_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="client_victim_relations" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="client_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="client_victim_relations_ibfk_1" columns="client_id" ref-table="clients" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <foreign-key name="client_victim_relations_ibfk_2" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
     <table name="clients" schema="" catalog="xrob" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -1304,123 +1357,10 @@
       <column name="client_code" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
       <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <exported-key name="client_victim_relations_ibfk_1" table="client_victim_relations" schema="" catalog="xrob" columns="client_id"/>
-      <exported-key name="commands_ibfk_1" table="commands" schema="" catalog="xrob" columns="client_id"/>
       <index name="api_key" unique="true" columns="api_key"/>
       <index name="client_code" unique="true" columns="client_code"/>
       <index name="email" unique="true" columns="email"/>
       <index name="username" unique="true" columns="username"/>
-    </table>
-    <table name="command_statuses" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="command_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="status" sqlType="ENUM" precision="9" scale="0" nullable="false" jdbcType="1" def="J1NFTlQn"/>
-      <column name="status_message" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="status_happened_at" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="command_statuses_ibfk_1" columns="command_id" ref-table="commands" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="commands" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="client_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="command" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="commands_ibfk_1" columns="client_id" ref-table="clients" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <foreign-key name="commands_ibfk_2" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <exported-key name="command_statuses_ibfk_1" table="command_statuses" schema="" catalog="xrob" columns="command_id"/>
-    </table>
-    <table name="contact_names_audit" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="contact_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="contact_names_audit_ibfk_1" columns="contact_id" ref-table="contacts" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="contacts" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="android_contact_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="contacts_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <exported-key name="contact_names_audit_ibfk_1" table="contact_names_audit" schema="" catalog="xrob" columns="contact_id"/>
-      <exported-key name="phone_numbers_ibfk_1" table="phone_numbers" schema="" catalog="xrob" columns="contact_id"/>
-    </table>
-    <table name="deliveries" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="data_type" sqlType="ENUM" precision="17" scale="0" nullable="false" jdbcType="1"/>
-      <column name="error" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
-      <column name="message" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="server_error" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
-      <column name="server_error_message" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="deliveries_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="file_bundles" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="bundle_hash" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="file_bundles_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <exported-key name="files_ibfk_2" table="files" schema="" catalog="xrob" columns="file_bundle_id"/>
-    </table>
-    <table name="files" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="file_bundle_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="absolute_parent_path" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="file_name" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="parent_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="is_directory" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
-      <column name="file_size_in_kb" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="file_hash" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="files_ibfk_1" columns="parent_id" ref-table="files" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <foreign-key name="files_ibfk_2" columns="file_bundle_id" ref-table="file_bundles" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <exported-key name="files_ibfk_1" table="files" schema="" catalog="xrob" columns="parent_id"/>
-    </table>
-    <table name="media" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
-      <column name="_type" sqlType="ENUM" precision="11" scale="0" nullable="false" jdbcType="1"/>
-      <column name="captured_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="true" jdbcType="93"/>
-      <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="media_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="messages" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="victim_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="android_message_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="_from" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
-      <column name="content" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
-      <column name="_type" sqlType="ENUM" precision="6" scale="0" nullable="false" jdbcType="1"/>
-      <column name="delivery_time" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="messages_ibfk_1" columns="victim_id" ref-table="victims" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="phone_numbers" schema="" catalog="xrob" type="TABLE">
-      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
-      <column name="contact_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="phone" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
-      <column name="phone_type" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
-      <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="phone_numbers_ibfk_1" columns="contact_id" ref-table="contacts" ref-schema="" ref-catalog="xrob" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
     <table name="victim_device_info_dynamic_audit" schema="" catalog="xrob" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
@@ -1448,14 +1388,6 @@
       <column name="is_active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
       <column name="last_logged_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <exported-key name="calls_ibfk_1" table="calls" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="client_victim_relations_ibfk_2" table="client_victim_relations" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="commands_ibfk_2" table="commands" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="contacts_ibfk_1" table="contacts" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="deliveries_ibfk_1" table="deliveries" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="file_bundles_ibfk_1" table="file_bundles" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="media_ibfk_1" table="media" schema="" catalog="xrob" columns="victim_id"/>
-      <exported-key name="messages_ibfk_1" table="messages" schema="" catalog="xrob" columns="victim_id"/>
       <exported-key name="victim_device_info_dynamic_audit_ibfk_1" table="victim_device_info_dynamic_audit" schema="" catalog="xrob" columns="victim_id"/>
       <index name="api_key" unique="true" columns="api_key"/>
       <index name="imei" unique="true" columns="imei"/>
