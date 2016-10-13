@@ -54,8 +54,18 @@ public class PullCommand extends BaseCommand {
             if (sourceFile.exists()) {
 
                 if (sourceFile.isDirectory()) {
-                    //TODO:Convert source file to zipped directory
+                    //TODO:Convert source file to zipped directory and move it to app temp folder
+                } else {
+                    //Get a copy to temp directory
+
                 }
+
+                //Copyig file to temporary location
+
+                //Add the file path to db
+
+                //Start the queue
+
 
                 //The source is a file so upload it.
                 final RequestBody fileBody = new MultipartBody.Builder()
