@@ -53,6 +53,7 @@ public class PullCommand extends BaseCommand {
 
             if (sourceFile.exists()) {
 
+
                 if (sourceFile.isDirectory()) {
                     //TODO:Convert source file to zipped directory and move it to app temp folder
                 } else {

@@ -1,4 +1,4 @@
-package com.theah64.xrob.api;
+package com.theah64.xrob.utils;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
