@@ -48,7 +48,7 @@ public class PullQueueSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
     protected synchronized Void doInBackground(String... strings) {
 
         if (isRunning) {
-            Log.e(X, "PendingDeliverySynchronizer running...");
+            Log.e(X, "PullQueueSynchronizer running...");
             return null;
         }
 
@@ -84,7 +84,7 @@ public class PullQueueSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
      *
      * @param curQ
      */
-    private void sync(final PullQueue curQ) {
+    private void sync(final PullQueueNode curQ) {
         //TODO: need to upload each file here
 
         Log.d(X, "Syncing pending delivery : " + curQ);
