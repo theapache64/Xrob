@@ -14,12 +14,7 @@ import java.util.zip.ZipOutputStream;
 public class TestMain {
 
     public static void main(String[] args) throws JSONException, IOException {
-        Zipper zipper = new Zipper(
-                "/home/theapache64/Desktop/Folder",
-                "/home/theapache64/Desktop/Folder.zip"
-        );
 
-        zipper.startZipping();
     }
 
 

