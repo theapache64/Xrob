@@ -33,6 +33,7 @@ public class FTPServers extends BaseTable<FTPServer> {
     public FTPServer getLeastUsedServer() {
 
         FTPServer ftpServer = null;
+
         //Query to calculate least used server
         final String query = "SELECT fs.id, fs.name, fs.storage_folder_path, fs.ftp_domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM ftp_servers fs LEFT JOIN media m ON m.ftp_server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();

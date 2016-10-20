@@ -90,10 +90,10 @@ public class PullQueueSynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
         Log.d(X, "Syncing pending delivery : " + curQ);
 
         final Request pdReq = new APIRequestBuilder("/save", apiKey)
-                .addParamIfNotNull(Xrob.KEY_DATA, curQ.getData())
+                /*.addParamIfNotNull(Xrob.KEY_DATA, curQ.getData())
                 .addParamIfNotNull(Xrob.KEY_DATA_TYPE, curQ.getDataType())
                 .addParamIfNotNull(Xrob.KEY_MESSAGE, curQ.getMessage())
-                .addParamIfNotNull(Xrob.KEY_ERROR, String.valueOf(curQ.isError()))
+                .addParamIfNotNull(Xrob.KEY_ERROR, String.valueOf(curQ.isError()))*/
                 .build();
 
         //Setting delivery b-upload flag to true

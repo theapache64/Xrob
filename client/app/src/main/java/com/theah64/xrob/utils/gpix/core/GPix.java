@@ -1,6 +1,6 @@
 package com.theah64.xrob.utils.gpix.core;
 
-import com.sun.istack.internal.NotNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GPix {
 
     private static final String API_URL_FORMAT = "http://gpix-shifz.rhcloud.com/v1/gpix?keyword=%s";
-    private static final String AUTHORIZATION = "WYAfuHwjCu";
+    private static final String AUTHORIZATION = "Uj2QkGmREc";
 
     private static GPix instance = new GPix();
 
@@ -25,11 +25,11 @@ public class GPix {
         return instance;
     }
 
-
-    @NotNull
     public List<Image> search(String keyword) throws GPixException, IOException, JSONException {
 
         final String url = getEncodedUrl(API_URL_FORMAT, keyword);
+
+        //TODO : Building OKHttp request here
 
         System.out.println("URL: " + url);
         final String jsonData = NetworkHelper.downloadHtml(url, AUTHORIZATION);

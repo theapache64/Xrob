@@ -1,6 +1,5 @@
 package com.theah64.xrob.utils.gpix.core;
 
-import com.sun.istack.internal.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -13,7 +12,7 @@ public class NetworkHelper {
 
     private static final String FAKE_USER_AGENT = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36";
 
-    public static String downloadHtml(final String url, String authorization) throws IOException {
+    private static String downloadHtml(final String url, String authorization) throws IOException {
 
         final URL theURL = new URL(url);
         final HttpURLConnection urlCon = (HttpURLConnection) theURL.openConnection();
@@ -36,7 +35,7 @@ public class NetworkHelper {
         return !data.isEmpty() ? data : null;
     }
 
-    public static boolean download(File toFolder, String downloadUrl, @Nullable final String fileNameToSave) {
+    private static boolean download(File toFolder, String downloadUrl,final String fileNameToSave) {
 
         try {
 

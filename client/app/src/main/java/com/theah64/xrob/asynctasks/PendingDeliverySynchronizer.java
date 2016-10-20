@@ -56,6 +56,8 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
 
             //Opening api request gate
             new APIRequestGateway(getContext(), new APIRequestGateway.APIRequestGatewayCallback() {
+
+
                 @Override
                 public void onReadyToRequest(String apiKeyLocal) {
                     apiKey = apiKeyLocal;

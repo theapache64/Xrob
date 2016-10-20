@@ -1,8 +1,29 @@
 package com.theah64.xrob.commandcenter.commands;
 
+import android.content.Context;
+
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 /**
  * Created by theapache64 on 20/10/16.
  */
 
-public class GPixCommand {
+public class GPixCommand extends BaseCommand {
+
+
+
+    GPixCommand(String command) throws CommandException, ParseException {
+        super(command);
+    }
+
+    @Override
+    public void handle(Context context, Callback callback) {
+
+    }
+
+    @Override
+    public Options getOptions() {
+        return null;
+    }
 }
