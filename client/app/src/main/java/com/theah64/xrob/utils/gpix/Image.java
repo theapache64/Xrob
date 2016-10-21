@@ -1,4 +1,4 @@
-package com.theah64.xrob.utils.gpix.core;
+package com.theah64.xrob.utils.gpix;
 
 /**
  * Created by shifar on 15/10/16.
