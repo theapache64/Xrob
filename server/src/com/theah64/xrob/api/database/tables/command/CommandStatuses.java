@@ -33,6 +33,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
     @Override
     public boolean add(Command.Status status) {
+
         boolean isAdded = false;
         final String addClientQuery = "INSERT INTO command_statuses (command_id,status,status_message,status_happened_at) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
