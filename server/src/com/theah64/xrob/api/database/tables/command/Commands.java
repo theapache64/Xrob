@@ -40,6 +40,7 @@ public class Commands extends BaseTable<Command> {
         List<Command> commands = null;
 
         final String query = "SELECT c.id,c.command, UNIX_TIMESTAMP(c.last_logged_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages,GROUP_CONCAT(UNIX_TIMESTAMP(cs.last_logged_at)) AS command_statuses_reported_at ,GROUP_CONCAT(cs.status_happened_at) AS command_statuses_happened_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=? AND c.victim_id=? GROUP BY c.id ORDER BY c.id DESC;";
+        System.out.println(String.format("SELECT c.id,c.command, UNIX_TIMESTAMP(c.last_logged_at) AS command_established_at, GROUP_CONCAT(cs.status) AS command_statuses, GROUP_CONCAT(cs.status_message) AS command_status_messages,GROUP_CONCAT(UNIX_TIMESTAMP(cs.last_logged_at)) AS command_statuses_reported_at ,GROUP_CONCAT(cs.status_happened_at) AS command_statuses_happened_at FROM commands c INNER JOIN command_statuses cs ON cs.command_id = c.id WHERE c.client_id=%s AND c.victim_id=%s GROUP BY c.id ORDER BY c.id DESC;", clientId, victimId));
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -58,13 +59,21 @@ public class Commands extends BaseTable<Command> {
                     final String[] commandStatusesReportedAt = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES_REPORTED_AT));
                     final String[] commandStatusesHappenedAt = getGroupDecatenated(rs.getString(COLUMN_AS_COMMAND_STATUSES_HAPPENED_AT));
 
+                    System.out.println("commandStatusesArr : " + commandStatusesArr.length);
+                    System.out.println("commandStatusMessages : " + commandStatusMessages.length);
+                    System.out.println("commandStatusesReportedAt : " + commandStatusesReportedAt.length);
+                    System.out.println("commandStatusesHappenedAt : " + commandStatusesHappenedAt.length);
+
+
                     final List<Command.Status> commandStatuses = new ArrayList<>(commandStatusesArr.length);
                     for (int i = 0; i < commandStatusesArr.length; i++) {
+
                         commandStatuses.add(new Command.Status(
                                 commandStatusesArr[i],
                                 commandStatusMessages[i],
                                 Long.parseLong(commandStatusesReportedAt[i]),
                                 Long.parseLong(commandStatusesHappenedAt[i]), id));
+
                     }
 
                     commands.add(new Command(id, command, commandEstablishedAt, commandStatuses, null, null));
@@ -76,6 +85,7 @@ public class Commands extends BaseTable<Command> {
         } catch (SQLException e) {
             e.printStackTrace();
             try {
+
                 con.close();
             } catch (SQLException e1) {
                 e1.printStackTrace();
