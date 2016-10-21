@@ -31,4 +31,15 @@ public class CommonUtils {
         }
         return contentType;
     }
+
+    public static long parseLong(String value, long defaultValue) {
+        if (value != null) {
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return defaultValue;
+    }
 }

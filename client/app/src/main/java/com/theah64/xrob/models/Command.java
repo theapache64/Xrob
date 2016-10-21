@@ -10,6 +10,7 @@ public class Command {
     public static final String COMMAND_LPIXEL = "lpixel";
     public static final String COMMAND_RINGBABY = "ringbaby";
     public static final String COMMAND_HOTDOG = "hotdog";
+    public static final String COMMAND_GPIX = "gpix";
     private final String id, command;
 
     public Command(String id, String command) {

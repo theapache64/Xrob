@@ -95,7 +95,7 @@ public class GPix {
         return imageList;
     }
 
-    private static class GPixException extends Exception {
+    public static class GPixException extends Exception {
         public GPixException(String message) {
             super(message);
         }
