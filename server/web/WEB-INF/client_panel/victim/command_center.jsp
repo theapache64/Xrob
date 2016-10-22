@@ -93,7 +93,7 @@
                             final String command = request.getParameter(Commands.COLUMN_COMMAND);
                             try {
                                 if (command.matches(Command.REGEX_VALID_COMMAND)) {
-                                    
+
                                     final Command commandOb = new Command(null, command, 0, null, theVictim.getId(), clientId.toString());
                                     final String commandId = Commands.getInstance().addv3(commandOb);
                                     if (commandId != null) {
