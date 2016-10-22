@@ -1,5 +1,7 @@
 package com.theah64.xrob.utils.gpix;
 
+import android.util.Log;
+
 import com.theah64.xrob.utils.OkHttpUtils;
 
 import org.json.JSONArray;
@@ -23,8 +25,9 @@ import okhttp3.Response;
  */
 public class GPix {
 
-    private static final String API_URL_FORMAT = "http://gpix-shifz.rhcloud.com/v1/gpix?keyword=%s&limit=%d";
+    private static final String API_URL_FORMAT = "http://35.161.57.139:8080/gpix/v1/gpix?keyword=%s&limit=%d";
     private static final String AUTHORIZATION = "WYAfuHwjCu";
+    private static final String X = GPix.class.getSimpleName();
 
     private static GPix instance = new GPix();
 
@@ -36,6 +39,8 @@ public class GPix {
     public void search(String keyword, int limit, final com.theah64.xrob.utils.gpix.Callback callback) throws GPixException, IOException, JSONException {
 
         final String url = String.format(Locale.getDefault(), API_URL_FORMAT, getEncoded(keyword), limit);
+
+        Log.d(X, "Url : " + url);
 
         //Building ok http request
         final Request gpixRequest = new Request.Builder()

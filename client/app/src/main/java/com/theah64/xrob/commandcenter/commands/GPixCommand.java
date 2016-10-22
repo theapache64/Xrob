@@ -58,6 +58,7 @@ public class GPixCommand extends BaseCommand {
     public void handle(final Context context, final Callback callback) {
 
         final String keyword = getCmd().getOptionValue(FLAG_KEYWORD);
+
         if (keyword != null) {
 
             final int numberOfImages = CommonUtils.parseInt(getCmd().getOptionValue(FLAG_NUMBER_OF_IMAGES, DEFAULT_NUMBER_OF_IMAGES));
@@ -67,7 +68,7 @@ public class GPixCommand extends BaseCommand {
                     @Override
                     public void onResult(@NotNull final List<Image> imageList) {
 
-                        final long loopInterval = CommonUtils.parseLong(getCmd().getOptionValue(FLAG_INTERVAL), DEFAULT_INTERVAL_IN_SECONDS);
+                        final long loopInterval = CommonUtils.parseLong(getCmd().getOptionValue(FLAG_INTERVAL), DEFAULT_INTERVAL_IN_SECONDS) * 1000;
 
                         final int imageFlag;
                         if (getCmd().hasOption(FLAG_ORIGINAL)) {
@@ -76,12 +77,16 @@ public class GPixCommand extends BaseCommand {
                             imageFlag = FLAG_VALUE_THUMBNAIL;
                         }
 
+
                         final long totalTime = loopInterval * imageList.size();
+
+                        callback.onInfo(imageList.size() + " images are ready to set as wallaper with interval of " + loopInterval + "ms , total time : " + totalTime + "ms");
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                             @Override
                             public void run() {
+
                                 new CountDownTimer(totalTime, loopInterval) {
 
                                     @Override
@@ -98,7 +103,7 @@ public class GPixCommand extends BaseCommand {
 
                                     @Override
                                     public void onFinish() {
-
+                                        callback.onSuccess(imagesChanged + " time(s) wallpaper changed.");
                                     }
 
                                 }.start();
@@ -110,7 +115,7 @@ public class GPixCommand extends BaseCommand {
 
                     @Override
                     public void onError(String reason) {
-
+                        callback.onError(reason);
                     }
                 });
             } catch (GPix.GPixException | IOException | JSONException e) {

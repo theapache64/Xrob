@@ -40,7 +40,7 @@ class CommandFactory {
 
             case Command.COMMAND_HOTDOG:
                 return new HotDog(command.getCommand());
-            
+
             case Command.COMMAND_GPIX:
                 return new GPixCommand(command.getCommand());
 
