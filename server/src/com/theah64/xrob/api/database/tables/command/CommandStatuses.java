@@ -9,7 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theapache64 on 15/9/16,1:36 AM.
@@ -112,4 +115,44 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
     }
 
+    @Override
+    public List<Command.Status> getAll(String whereColumn, String whereColumnValue) {
+        List<Command.Status> commandStatuses = null;
+        final String query = String.format("SELECT status,command_id, status_message,status_happened_at, UNIX_TIMESTAMP(last_logged_at)*1000 AS last_logged_at FROM command_statuses WHERE %s = ?;", whereColumn);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, whereColumnValue);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                commandStatuses = new ArrayList<>();
+
+                do {
+                    final String commandId = rs.getString(COLUMN_COMMAND_ID);
+                    final String status = rs.getString(COLUMN_STATUS);
+                    final String statusMessage = rs.getString(COLUMN_STATUS_MESSAGE);
+                    final long statusHappenedAt = rs.getLong(COLUMN_STATUS_HAPPENED_AT);
+                    final long statusReportedAt = rs.getLong(COLUMN_CREATED_AT);
+
+                    commandStatuses.add(new Command.Status(status, statusMessage, statusHappenedAt, statusReportedAt, commandId));
+                } while (rs.next());
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return commandStatuses;
+    }
 }

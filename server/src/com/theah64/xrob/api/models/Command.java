@@ -113,7 +113,7 @@ public class Command {
             this.commandId = commandId;
 
             this.commandReportedAt = commandReportedAt;
-            this.relativeCommandReportTime = TimeUtils.getRelativeTime(false, commandReportedAt);
+            this.relativeCommandReportTime = TimeUtils.getRelativeTime(true, commandReportedAt);
 
             this.commandHappenedAt = commandHappenedAt;
             this.relativeCommandHappenedTime = TimeUtils.getRelativeTime(true, commandHappenedAt);
