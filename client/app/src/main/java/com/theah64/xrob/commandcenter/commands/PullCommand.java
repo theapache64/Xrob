@@ -58,7 +58,6 @@ public class PullCommand extends BaseCommand {
                     //TODO:Convert source file to zipped directory and move it to app temp folder
                 } else {
                     //Get a copy to temp directory
-
                 }
 
                 //Copyig file to temporary location
