@@ -46,18 +46,6 @@ public class Client {
         return clientCode;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", passHash='" + passHash + '\'' +
-                ", apiKey='" + apiKey + '\'' +
-                ", email='" + email + '\'' +
-                ", clientCode='" + clientCode + '\'' +
-                '}';
-    }
-
 
     public void setUsername(String username) {
         this.username = username;
@@ -69,5 +57,17 @@ public class Client {
 
     public void setClientCode(String clientCode) {
         this.clientCode = clientCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", passHash='" + passHash + '\'' +
+                ", apiKey='" + apiKey + '\'' +
+                ", email='" + email + '\'' +
+                ", clientCode='" + clientCode + '\'' +
+                '}';
     }
 }

@@ -45,7 +45,7 @@ public class CommandStatuses extends BaseTable<Command.Status> {
 
             ps.setString(1, status.getCommandId());
             ps.setString(2, status.getStatus());
-            ps.setString(3, status.getStatusMessage());
+            ps.setString(3, status.getStatusMessage().replaceAll(",", "|"));
             ps.setLong(4, status.getCommandHappenedAt());
 
             isAdded = ps.executeUpdate() == 1;

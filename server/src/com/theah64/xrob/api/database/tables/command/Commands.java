@@ -97,12 +97,13 @@ public class Commands extends BaseTable<Command> {
     @Override
     public String addv3(Command command) {
         String commandId = null;
-        final String addClientQuery = "INSERT INTO commands (command,client_id,victim_id) VALUES (?,?,?);";
+        final String addCommandQuery = "INSERT INTO commands (command,client_id,victim_id) VALUES (?,?,?);";
+        System.out.println(String.format("INSERT INTO commands (command,client_id,victim_id) VALUES ('%s','%s','%s');", command.getCommand(), command.getClientId(), command.getVictimId()));
         final java.sql.Connection con = Connection.getConnection();
 
         //To track the success
         try {
-            final PreparedStatement ps = con.prepareStatement(addClientQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            final PreparedStatement ps = con.prepareStatement(addCommandQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, command.getCommand());
             ps.setString(2, command.getClientId());

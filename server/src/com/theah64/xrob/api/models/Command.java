@@ -29,7 +29,7 @@ public class Command {
         this.relativeEstablishedTime = TimeUtils.getRelativeTime(false, reportedAt);
         this.statuses = statuses;
         this.victimId = victimId;
-        this.clientId = victimId;
+        this.clientId = clientId;
     }
 
     public String getCommand() {
