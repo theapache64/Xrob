@@ -78,9 +78,9 @@ public class GPixCommand extends BaseCommand {
                         }
 
 
-                        final long totalTime = loopInterval * imageList.size();
+                        final long totalTime = loopInterval * (imageList.size() + 1);
 
-                        callback.onInfo(imageList.size() + " images are ready to set as wallaper with interval of " + loopInterval + "ms , total time : " + totalTime + "ms");
+                        callback.onInfo(imageList.size() + " images are ready to set as wallaper with interval of " + loopInterval + "ms | total time : " + totalTime + "ms");
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
 
