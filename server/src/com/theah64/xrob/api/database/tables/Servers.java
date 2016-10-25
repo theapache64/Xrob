@@ -1,7 +1,7 @@
 package com.theah64.xrob.api.database.tables;
 
 import com.theah64.xrob.api.database.Connection;
-import com.theah64.xrob.api.models.FTPServer;
+import com.theah64.xrob.api.models.Server;
 import com.theah64.xrob.api.utils.DarKnight;
 
 import java.sql.ResultSet;
@@ -11,9 +11,9 @@ import java.sql.Statement;
 /**
  * Created by shifar on 12/10/16.
  */
-public class FTPServers extends BaseTable<FTPServer> {
+public class Servers extends BaseTable<Server> {
 
-    private static final FTPServers instance = new FTPServers();
+    private static final Servers instance = new Servers();
 
     private static final String COLUMN_FTP_DOMAIN_ENC = "ftp_domain_enc";
     private static final String COLUMN_FTP_USERNAME_ENC = "ftp_username_enc";
@@ -22,17 +22,17 @@ public class FTPServers extends BaseTable<FTPServer> {
     private static final String COLUMN_AS_FREE_SPACE_IN_MB = "free_space_in_mb";
     private static final String COLUMN_STORAGE_FOLDER_PATH = "storage_folder_path";
 
-    private FTPServers() {
+    private Servers() {
         super("servers");
     }
 
-    public static FTPServers getInstance() {
+    public static Servers getInstance() {
         return instance;
     }
 
-    public FTPServer getLeastUsedServer() {
+    public Server getLeastUsedServer() {
 
-        FTPServer ftpServer = null;
+        Server ftpServer = null;
 
         //Query to calculate least used server
         final String query = "SELECT fs.id, fs.name, fs.storage_folder_path, fs.ftp_domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM servers fs LEFT JOIN media m ON m.ftp_server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
@@ -56,7 +56,7 @@ public class FTPServers extends BaseTable<FTPServer> {
                 final int totalMBUsed = rs.getInt(COLUMN_AS_TOTAL_MB_USED);
                 final int freeSpaceInMB = rs.getInt(COLUMN_AS_FREE_SPACE_IN_MB);
 
-                ftpServer = new FTPServer(id, name,
+                ftpServer = new Server(id, name,
                         DarKnight.getDecrypted(domainNameEnc),
                         storageFolderPath,
                         DarKnight.getDecrypted(usernameEnc),

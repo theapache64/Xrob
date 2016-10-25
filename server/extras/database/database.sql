@@ -217,12 +217,16 @@ DROP TABLE IF EXISTS `servers`;
 CREATE TABLE IF NOT EXISTS `servers` (
   `id`                  INT(11)     NOT NULL AUTO_INCREMENT,
   `name`                VARCHAR(10) NOT NULL,
+  `authorization_key`   VARCHAR(20) NOT NULL,
+  `upload_script_file`  VARCHAR(10) NOT NULL DEFAULT 'index.php',
   `ftp_domain_enc`      TEXT        NOT NULL,
   `ftp_username_enc`    TEXT        NOT NULL,
   `ftp_password_enc`    TEXT        NOT NULL,
   `storage_folder_path` VARCHAR(50) NOT NULL DEFAULT '/public_html',
   `size_in_mb`          INT(11)     NOT NULL,
-  PRIMARY KEY (id)
+  `is_active`           TINYINT(4)  NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  UNIQUE KEY (`name`)
 );
 
 INSERT INTO `servers` (name, ftp_domain_enc, ftp_username_enc, ftp_password_enc, size_in_mb) VALUES

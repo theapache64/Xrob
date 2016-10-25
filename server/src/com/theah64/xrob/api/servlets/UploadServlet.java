@@ -1,11 +1,10 @@
 package com.theah64.xrob.api.servlets;
 
 import com.theah64.xrob.api.database.tables.Deliveries;
-import com.theah64.xrob.api.database.tables.FTPServers;
+import com.theah64.xrob.api.database.tables.Servers;
 import com.theah64.xrob.api.database.tables.Media;
 import com.theah64.xrob.api.models.Delivery;
-import com.theah64.xrob.api.models.FTPServer;
-import com.theah64.xrob.api.models.MediaNode;
+import com.theah64.xrob.api.models.Server;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
 import org.apache.commons.net.ftp.FTPClient;
@@ -22,9 +21,9 @@ import java.io.IOException;
  * Created by theapache64 on 11/18/2015,12:10 AM.
  */
 
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/ftp_upload"})
+@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/upload"})
 @MultipartConfig
-public class FTPUploadServlet extends AdvancedBaseServlet {
+public class UploadServlet extends AdvancedBaseServlet {
 
 
     @Override
@@ -61,6 +60,8 @@ public class FTPUploadServlet extends AdvancedBaseServlet {
 
         final Deliveries deliveries = Deliveries.getInstance();
 
+        //TODO: Algorithm modification: fileSize > 50MB ? useFTP : normal;
+
         if (!hasError) {
 
             //Yes,it's a valid data type
@@ -71,7 +72,7 @@ public class FTPUploadServlet extends AdvancedBaseServlet {
                 final FilePart filePart = new FilePart(dataFilePart);
                 final String fileName = filePart.getRandomFileName();
 
-                final FTPServer ftpServer = FTPServers.getInstance().getLeastUsedServer();
+                final Server ftpServer = Servers.getInstance().getLeastUsedServer();
                 final FTPClient ftpClient = new FTPClient();
 
                 ftpClient.connect(ftpServer.getFtpDomain());

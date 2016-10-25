@@ -3,12 +3,12 @@ package com.theah64.xrob.api.models;
 /**
  * Created by shifar on 12/10/16.
  */
-public class FTPServer {
+public class Server {
 
     private final String id, name, ftpDomain, folderToSave, ftpUsername, ftpPassword;
     private final int totalMBUsed, freeSpaceInMb;
 
-    public FTPServer(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, int totalMBUsed, int freeSpaceInMb) {
+    public Server(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, int totalMBUsed, int freeSpaceInMb) {
         this.id = id;
         this.name = name;
         this.ftpDomain = ftpDomain;
