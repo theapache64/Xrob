@@ -74,6 +74,9 @@ public class UploadServlet extends AdvancedBaseServlet {
             if (dataFilePart != null) {
 
                 final float sizeInMb = (float) (dataFilePart.getSize() / 1024) / 1024;
+                final Server server = Servers.getInstance().getLeastUsedServer();
+
+                System.out.println("Using server : " + server);
 
                 if (sizeInMb > FTP_THRESHOLD_IN_MB) {
                     //Use FTP to upload the file.
@@ -81,17 +84,16 @@ public class UploadServlet extends AdvancedBaseServlet {
                     final FilePart filePart = new FilePart(dataFilePart);
                     final String fileName = filePart.getRandomFileName();
 
-                    final Server ftpServer = Servers.getInstance().getLeastUsedServer();
                     final FTPClient ftpClient = new FTPClient();
 
-                    ftpClient.connect(ftpServer.getFtpDomain());
-                    ftpClient.login(ftpServer.getFtpUsername(), ftpServer.getFtpPassword());
+                    ftpClient.connect(server.getFtpDomain());
+                    ftpClient.login(server.getFtpUsername(), server.getFtpPassword());
 
                     System.out.println("File uploading...");
 
-                    ftpClient.storeFile(ftpServer.getFolderToSave() + "/" + fileName, dataFilePart.getInputStream());
+                    ftpClient.storeFile(server.getFolderToSave() + "/" + fileName, dataFilePart.getInputStream());
 
-                    final String downloadLink = String.format("http://%s%s", ftpServer.getFtpDomain(), fileName);
+                    final String downloadLink = String.format("http://%s%s", server.getFtpDomain(), fileName);
 
                     System.out.println("File uploaded");
 

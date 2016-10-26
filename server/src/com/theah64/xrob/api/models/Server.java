@@ -50,4 +50,18 @@ public class Server {
     public int getFreeSpaceInMb() {
         return freeSpaceInMb;
     }
+
+    @Override
+    public String toString() {
+        return "Server{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", ftpDomain='" + ftpDomain + '\'' +
+                ", folderToSave='" + folderToSave + '\'' +
+                ", ftpUsername='" + ftpUsername + '\'' +
+                ", ftpPassword='" + ftpPassword + '\'' +
+                ", totalMBUsed=" + totalMBUsed +
+                ", freeSpaceInMb=" + freeSpaceInMb +
+                '}';
+    }
 }
