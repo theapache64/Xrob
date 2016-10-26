@@ -79,8 +79,10 @@ public class UploadServlet extends AdvancedBaseServlet {
                 System.out.println("Using server : " + server);
 
                 if (sizeInMb > FTP_THRESHOLD_IN_MB) {
-                    //Use FTP to upload the file.
 
+                    System.out.println("Using FTP to host the file...");
+
+                    //Use FTP to upload the file.
                     final FilePart filePart = new FilePart(dataFilePart);
                     final String fileName = filePart.getRandomFileName();
 
@@ -107,6 +109,9 @@ public class UploadServlet extends AdvancedBaseServlet {
 
                 } else {
                     //Use direct HTTP
+                    System.out.println("Using HTTP to host the file");
+
+                    final String uploadUrl = server.getUploadUrl();
                 }
 
             } else {

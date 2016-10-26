@@ -5,18 +5,21 @@ package com.theah64.xrob.api.models;
  */
 public class Server {
 
-    private final String id, name, ftpDomain, folderToSave, ftpUsername, ftpPassword;
+    private final String id, name, ftpDomain, folderToSave, ftpUsername, ftpPassword, uploadScriptFile;
     private final int totalMBUsed, freeSpaceInMb;
+    private String uploadUrl;
 
-    public Server(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, int totalMBUsed, int freeSpaceInMb) {
+    public Server(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, String uploadScriptFile, int totalMBUsed, int freeSpaceInMb) {
         this.id = id;
         this.name = name;
         this.ftpDomain = ftpDomain;
         this.folderToSave = folderToSave;
         this.ftpUsername = ftpUsername;
         this.ftpPassword = ftpPassword;
+        this.uploadScriptFile = uploadScriptFile;
         this.totalMBUsed = totalMBUsed;
         this.freeSpaceInMb = freeSpaceInMb;
+        this.uploadUrl = "http://" + ftpDomain + "/" + uploadScriptFile;
     }
 
     public String getId() {
@@ -51,6 +54,10 @@ public class Server {
         return freeSpaceInMb;
     }
 
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
     @Override
     public String toString() {
         return "Server{" +
@@ -60,8 +67,10 @@ public class Server {
                 ", folderToSave='" + folderToSave + '\'' +
                 ", ftpUsername='" + ftpUsername + '\'' +
                 ", ftpPassword='" + ftpPassword + '\'' +
+                ", uploadScriptFile='" + uploadScriptFile + '\'' +
                 ", totalMBUsed=" + totalMBUsed +
                 ", freeSpaceInMb=" + freeSpaceInMb +
+                ", uploadUrl='" + uploadUrl + '\'' +
                 '}';
     }
 }
