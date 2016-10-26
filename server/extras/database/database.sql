@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `id`                  INT(11)     NOT NULL AUTO_INCREMENT,
   `name`                VARCHAR(10) NOT NULL,
   `authorization_key`   VARCHAR(20) NOT NULL,
-  `upload_script_file`  VARCHAR(10) NOT NULL DEFAULT 'index.php',
+  `upload_script_file`  VARCHAR(50) NOT NULL DEFAULT 'index.php',
   `domain_enc`          TEXT        NOT NULL,
   `ftp_username_enc`    TEXT        NOT NULL,
   `ftp_password_enc`    TEXT        NOT NULL,
@@ -229,8 +229,10 @@ CREATE TABLE IF NOT EXISTS `servers` (
   UNIQUE KEY (`name`)
 );
 
-INSERT INTO servers (name, authorization_key, upload_script_file, domain_enc, ftp_username_enc, ftp_password_enc, uploads_folder_path,total_size_in_mb) VALUES
-  ('localhost','myServerSecretKey','Xrob/xrob_file_upload.php','l40DigrslJkcLlJlxpZSQw==','','','Xrob/uploads',1500);
+INSERT INTO servers (name, authorization_key, upload_script_file, domain_enc, ftp_username_enc, ftp_password_enc, uploads_folder_path, total_size_in_mb)
+VALUES
+  ('localhost', 'myServerSecretKey', 'Xrob/xrob_file_upload.php', 'l40DigrslJkcLlJlxpZSQw==', '', '', 'Xrob/uploads',
+   1500);
 
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (

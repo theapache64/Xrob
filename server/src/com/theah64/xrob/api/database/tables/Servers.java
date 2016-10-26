@@ -40,6 +40,7 @@ public class Servers extends BaseTable<Server> {
         final java.sql.Connection con = Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();
+
             final ResultSet rs = stmt.executeQuery(query);
 
             if (rs.first()) {
