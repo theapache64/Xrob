@@ -7,7 +7,9 @@ import com.theah64.xrob.api.models.Delivery;
 import com.theah64.xrob.api.models.Server;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
+import com.theah64.xrob.api.utils.FileUploader;
 import org.apache.commons.net.ftp.FTPClient;
+import sun.java2d.pipe.BufferedTextPipe;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,7 +17,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by theapache64 on 11/18/2015,12:10 AM.
@@ -111,7 +117,8 @@ public class UploadServlet extends AdvancedBaseServlet {
                     //Use direct HTTP
                     System.out.println("Using HTTP to host the file");
 
-                    final String uploadUrl = server.getUploadUrl();
+                    final boolean isFileUploaded = FileUploader.upload(dataFilePart, server.getUploadUrl());
+
                 }
 
             } else {
