@@ -82,7 +82,7 @@
                     new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode),
 
                     new MenuItem(4, "Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
-                    new MenuItem(5, "File uploads", theVictim.getFileBundleCount(), "/client/victim/" + victimCode),
+                    new MenuItem(5, "File uploads", theVictim.getFileBundleCount(), "/client/victim/media/" + victimCode), //TODO: Build media display.
                     new MenuItem(6, "Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
             };
 
