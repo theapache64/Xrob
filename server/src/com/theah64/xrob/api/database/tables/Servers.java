@@ -37,7 +37,7 @@ public class Servers extends BaseTable<Server> {
         Server ftpServer = null;
 
         //Query to calculate least used server
-        final String query = "SELECT fs.id,fs.authorization_key, fs.upload_script_file, fs.name, fs.uploads_folder_path, fs.domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.total_size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM servers fs LEFT JOIN media m ON m.ftp_server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
+        final String query = "SELECT fs.id,fs.authorization_key, fs.upload_script_file, fs.name, fs.uploads_folder_path, fs.domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.total_size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM servers fs LEFT JOIN media m ON m.server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();

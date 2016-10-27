@@ -37,7 +37,7 @@ public class MediaNode {
         return type;
     }
 
-    public String getFtpServerId() {
+    public String getServerId() {
         return ftpServerId;
     }
 

