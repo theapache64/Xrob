@@ -25,9 +25,8 @@ public class Victim {
     private final String victimCode;
     private final String relativeLastDeliveryTime;
 
-    private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount, mediaCount;
-    private int mediaFileUploadCount;
-    private int mediaScreenShotCount;
+    private int contactCount, deliveryCount, commandCount, fileBundleCount, messageCount;
+    private int mediaFileCount, mediaScreenShotCount, mediaVoiceCount, mediaSelfieCount;
 
     public Victim(String id, String name, String email, String phone, String imei, String deviceHash, String apiKey, String fcmId, String deviceName, String otherDeviceInfo, String deviceInfoDynamic, String actions, String createdAt, boolean isActive, String victimCode, long lastDeliveryEpoch) {
         this.id = id;
@@ -48,17 +47,29 @@ public class Victim {
         this.relativeLastDeliveryTime = lastDeliveryEpoch > 0 ? TimeUtils.getRelativeTime(false, lastDeliveryEpoch) : null;
     }
 
-    public void setCounts(int contactCount, int deliveryCount, int commandCount, int fileBundleCount, int messageCount, int mediaCount) {
+    public void setCounts(int contactCount, int deliveryCount, int commandCount, int fileBundleCount, int messageCount, int mediaFileCount, int mediaScreenShotCount, int mediaSelfieCount, int mediaVoiceCount) {
         this.contactCount = contactCount;
         this.deliveryCount = deliveryCount;
         this.commandCount = commandCount;
         this.fileBundleCount = fileBundleCount;
         this.messageCount = messageCount;
-        this.mediaCount = mediaCount;
+
+        this.mediaFileCount = mediaFileCount;
+        this.mediaScreenShotCount = mediaScreenShotCount;
+        this.mediaSelfieCount = mediaSelfieCount;
+        this.mediaVoiceCount = mediaVoiceCount;
     }
 
     public int getMediaFileCount() {
-        return mediaCount;
+        return mediaFileCount;
+    }
+
+    public int getMediaVoiceCount() {
+        return mediaVoiceCount;
+    }
+
+    public int getMediaSelfieCount() {
+        return mediaSelfieCount;
     }
 
     public int getContactCount() {
@@ -177,11 +188,6 @@ public class Victim {
 
     public String getDeviceInfoDynamic() {
         return deviceInfoDynamic;
-    }
-
-    public int getMediaFileUploadCount() {
-        //TODO: SET
-        return mediaFileUploadCount;
     }
 
     public int getMediaScreenShotCount() {

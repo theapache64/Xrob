@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="1309959555">
-    <data-source source="LOCAL" name="MySQL - xrob@localhost" uuid="3b93b28b-8bab-482e-a3ff-54f702091a30">
+  <component name="DataSourceManagerImpl" format="xml" hash="717505815">
+    <data-source source="LOCAL" name="MySQL - xrob@localhost" uuid="db12e9f9-928f-46bc-b6fd-07ed95b0e0b8">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
@@ -18,20 +18,6 @@
           <url>file:///usr/local/apache-tomcat-7.0.54/lib/mysql-connector-java-5.1.35-bin.jar</url>
         </library>
       </libraries>
-    </data-source>
-    <data-source source="LOCAL" name="MySQL - @localhost" uuid="92b401e6-031e-4213-a8d7-483fe361c9d0">
-      <driver-ref>mysql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
-      <driver-properties>
-        <property name="zeroDateTimeBehavior" value="convertToNull" />
-        <property name="tinyInt1isBit" value="false" />
-        <property name="characterEncoding" value="utf8" />
-        <property name="characterSetResults" value="utf8" />
-        <property name="yearIsDateType" value="false" />
-      </driver-properties>
-      <libraries />
     </data-source>
   </component>
 </project>

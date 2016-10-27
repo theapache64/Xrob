@@ -83,9 +83,11 @@
 
                     new MenuItem(4, "Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
 
-                    //TODO: Build media veiwer
-                    new MenuItem(5, "File uploads", theVictim.getMediaFileCount(), "/client/victim/media/files/" + victimCode),
-                    new MenuItem(6, "Screen shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
+                    //TODO: Build media viewer.
+                    new MenuItem(5, "Files", theVictim.getMediaFileCount(), "/client/victim/media/files/" + victimCode),
+                    new MenuItem(6, "Screen Shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
+                    new MenuItem(7, "Voices", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
+                    new MenuItem(8, "Selfie", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
             };
 
 

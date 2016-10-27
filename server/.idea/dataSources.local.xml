@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="MySQL - xrob@localhost" uuid="3b93b28b-8bab-482e-a3ff-54f702091a30">
-      <user-name>root</user-name>
-      <user-password>dfc7dfc3dfc1dfcf</user-password>
-    </data-source>
-    <data-source name="MySQL - @localhost" uuid="92b401e6-031e-4213-a8d7-483fe361c9d0">
+    <data-source name="MySQL - xrob@localhost" uuid="db12e9f9-928f-46bc-b6fd-07ed95b0e0b8">
       <secret-storage>master_key</secret-storage>
-      <first-sync>true</first-sync>
+      <user-name>root</user-name>
+      <schema-pattern>xrob.*</schema-pattern>
+      <default-schemas>xrob.*</default-schemas>
     </data-source>
   </component>
 </project>

