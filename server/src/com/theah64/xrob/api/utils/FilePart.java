@@ -12,15 +12,16 @@ public class FilePart {
     private static final String KEY_CONTENT_DISPOSITION = "content-disposition";
     private static final String CONTENT_TYPE_IMAGE_JPEG = "image/jpeg";
     private static final String FILE_EXTENSION_JPG = ".jpg";
+
     private static final String FILE_EXTENSION_UNKNOWN = ".unk";
     private static final int FILE_NAME_LENGTH = 10;
+    private final Part filePart;
     private Matcher fileNameMatcher;
 
     private static final Pattern FILE_NAME_MATCHER = Pattern.compile("filename=\"(.+(\\..+))\"");
-    private final String contentType;
 
     public FilePart(Part filePart) {
-        this.contentType = filePart.getContentType();
+        this.filePart = filePart;
         final String conDisHeader = filePart.getHeader(KEY_CONTENT_DISPOSITION);
         if (conDisHeader != null) {
             fileNameMatcher = FILE_NAME_MATCHER.matcher(conDisHeader);
@@ -47,7 +48,7 @@ public class FilePart {
     public String getRandomFileName() {
         String fileExtension = getFileExtension();
         if (fileExtension == null) {
-            fileExtension = getFileExtension(this.contentType);
+            fileExtension = getFileExtension(this.filePart.getContentType());
         }
         return System.currentTimeMillis() + "_" + RandomString.getRandomFilename(FILE_NAME_LENGTH, fileExtension);
     }
@@ -64,5 +65,9 @@ public class FilePart {
             default:
                 return FILE_EXTENSION_UNKNOWN;
         }
+    }
+
+    public Part getDataFilePart() {
+        return filePart;
     }
 }

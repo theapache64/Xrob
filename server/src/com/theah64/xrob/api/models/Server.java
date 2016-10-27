@@ -5,17 +5,18 @@ package com.theah64.xrob.api.models;
  */
 public class Server {
 
-    private final String id, name, ftpDomain, folderToSave, ftpUsername, ftpPassword, uploadScriptFile;
+    private final String id, name, ftpDomain, folderToSave, ftpUsername, ftpPassword, authorization, uploadScriptFile;
     private final int totalMBUsed, freeSpaceInMb;
     private String uploadUrl;
 
-    public Server(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, String uploadScriptFile, int totalMBUsed, int freeSpaceInMb) {
+    public Server(String id, String name, String ftpDomain, String folderToSave, String ftpUsername, String ftpPassword, String authorization, String uploadScriptFile, int totalMBUsed, int freeSpaceInMb) {
         this.id = id;
         this.name = name;
         this.ftpDomain = ftpDomain;
         this.folderToSave = folderToSave;
         this.ftpUsername = ftpUsername;
         this.ftpPassword = ftpPassword;
+        this.authorization = authorization;
         this.uploadScriptFile = uploadScriptFile;
         this.totalMBUsed = totalMBUsed;
         this.freeSpaceInMb = freeSpaceInMb;
@@ -72,5 +73,9 @@ public class Server {
                 ", freeSpaceInMb=" + freeSpaceInMb +
                 ", uploadUrl='" + uploadUrl + '\'' +
                 '}';
+    }
+
+    public String getAuthorization() {
+        return authorization;
     }
 }

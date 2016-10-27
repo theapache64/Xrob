@@ -22,6 +22,7 @@ public class Servers extends BaseTable<Server> {
     private static final String COLUMN_AS_FREE_SPACE_IN_MB = "free_space_in_mb";
     private static final String COLUMN_UPLOADS_FOLDER_PATH = "uploads_folder_path";
     private static final String COLUMN_UPLOAD_SCRIPT_FILE = "upload_script_file";
+    private static final String COLUMN_AUTHORIZATION_KEY = "authorization_key";
 
     private Servers() {
         super("servers");
@@ -36,7 +37,7 @@ public class Servers extends BaseTable<Server> {
         Server ftpServer = null;
 
         //Query to calculate least used server
-        final String query = "SELECT fs.id,fs.upload_script_file, fs.name, fs.uploads_folder_path, fs.domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.total_size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM servers fs LEFT JOIN media m ON m.ftp_server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
+        final String query = "SELECT fs.id,fs.authorization_key, fs.upload_script_file, fs.name, fs.uploads_folder_path, fs.domain_enc, fs.ftp_username_enc, fs.ftp_password_enc, IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS total_mb_used, fs.total_size_in_mb - IFNULL((SUM(m.file_size_in_kb) / 1024), 0) AS free_space_in_mb FROM servers fs LEFT JOIN media m ON m.ftp_server_id = fs.id GROUP BY fs.id ORDER BY free_space_in_mb DESC LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final Statement stmt = con.createStatement();
@@ -58,12 +59,14 @@ public class Servers extends BaseTable<Server> {
                 final int totalMBUsed = rs.getInt(COLUMN_AS_TOTAL_MB_USED);
                 final int freeSpaceInMB = rs.getInt(COLUMN_AS_FREE_SPACE_IN_MB);
 
+                final String authorization = rs.getString(COLUMN_AUTHORIZATION_KEY);
+
                 ftpServer = new Server(id, name,
                         DarKnight.getDecrypted(domainNameEnc),
                         storageFolderPath,
                         DarKnight.getDecrypted(usernameEnc),
                         DarKnight.getDecrypted(passwordEnc),
-                        uploadScriptFile,
+                        authorization, uploadScriptFile,
                         totalMBUsed,
                         freeSpaceInMB
                 );
