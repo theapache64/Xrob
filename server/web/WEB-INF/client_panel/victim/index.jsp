@@ -79,20 +79,19 @@
                     new MenuItem(0, "Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode),
                     new MenuItem(1, "Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode),
                     new MenuItem(2, "Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode),
-                    new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/client/victim/files/" + victimCode),
+                    new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/client/victim/file_manager/" + victimCode),
 
                     new MenuItem(4, "Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
 
                     //TODO: Build media viewer.
                     new MenuItem(5, "Files", theVictim.getMediaFileCount(), "/client/victim/media/files/" + victimCode),
                     new MenuItem(6, "Screen Shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
-                    new MenuItem(7, "Voices", theVictim.getMediaScreenShotCount(), "/client/victim/media/voices/" + victimCode),
-                    new MenuItem(8, "Selfies", theVictim.getMediaScreenShotCount(), "/client/victim/media/selfies/" + victimCode),
+                    new MenuItem(7, "Voices", theVictim.getMediaVoiceCount(), "/client/victim/media/voices/" + victimCode),
+                    new MenuItem(8, "Selfies", theVictim.getMediaSelfieCount(), "/client/victim/media/selfies/" + victimCode),
             };
 
 
             for (int i = 0; i < menuItems.length; i++) {
-
 
                 final MenuItem menuItem = menuItems[i];
         %>
