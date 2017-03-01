@@ -49,7 +49,7 @@ import org.acra.sender.HttpSender;
 public class Xrob extends Application {
 
 
-    public static final boolean IS_DEBUG_MODE = false;
+    public static final boolean IS_DEBUG_MODE = true;
 
     public static final String KEY_ERROR = "error";
     public static final String KEY_MESSAGE = "message";
