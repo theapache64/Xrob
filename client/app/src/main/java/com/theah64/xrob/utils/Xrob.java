@@ -50,7 +50,7 @@ import org.acra.sender.HttpSender;
 public class Xrob extends Application implements PermissionUtils.Callback {
 
 
-    public static final boolean IS_DEBUG_MODE = true;
+    public static final boolean IS_DEBUG_MODE = false;
 
     public static final String KEY_ERROR = "error";
     public static final String KEY_MESSAGE = "message";
