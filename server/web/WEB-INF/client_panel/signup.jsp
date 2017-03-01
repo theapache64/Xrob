@@ -6,7 +6,7 @@
 <%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
 <%
     if (session.getAttribute(Clients.COLUMN_ID) != null) {
-        response.sendRedirect("/client/panel");
+        response.sendRedirect("/xrob/client/panel");
         return;
     }
 
@@ -34,7 +34,7 @@
 
         <div class="col-md-4 content-centered">
             <%--Form - username,password,confirm_password,email,--%>
-            <form data-toggle="validator" action="/client/signup" method="POST" role="form">
+            <form data-toggle="validator" action="/xrob/client/signup" method="POST" role="form">
 
                 <div class="form-group">
                     <label for="iUsername">Username : </label>
@@ -152,7 +152,7 @@
                                         final String clientId = clientsTable.addv3(client);
                                         if (clientId != null) {
                                             session.setAttribute(Clients.COLUMN_ID, clientId);
-                                            response.sendRedirect("/client/panel");
+                                            response.sendRedirect("/xrob/client/panel");
                                         } else {
                                             throw new Exception("Sign up failed");
                                         }
@@ -176,7 +176,7 @@
 
 
                     <div class="col-md-4">
-                        <input name="isFormSubmitted" value="Sign up" type="submit" class="btn btn-primary pull-right"/>
+                        <input name="isFormSubmitted" value="Sign up" type="submit" class="btn btn-primary pull-right"/xrob/>
                     </div>
 
 
@@ -187,7 +187,7 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            Already have an account, <a href="/client/signin">Sign In</a>
+            Already have an account, <a href="/xrob/client/signin">Sign In</a>
         </div>
     </div>
 </div>

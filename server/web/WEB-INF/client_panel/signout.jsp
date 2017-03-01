@@ -1,4 +1,4 @@
 <%
   session.invalidate();
-  response.sendRedirect("/client/signin");
+  response.sendRedirect("/xrob/client/signin");
 %>

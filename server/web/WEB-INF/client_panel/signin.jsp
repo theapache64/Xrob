@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     if (session.getAttribute(Clients.COLUMN_ID) != null) {
-        response.sendRedirect("/client/panel");
+        response.sendRedirect("/xrob/client/panel");
         return;
     }
 %>
@@ -32,19 +32,19 @@
         <div class="col-md-4  content-centered">
 
             <%--Form--%>
-            <form action="/client/signin" method="POST" role="form">
+            <form action="/xrob/client/signin" method="POST" role="form">
 
                 <div class="form-group">
                     <label for="iUsername">Username : </label>
                     <input value="testuser" name="username" type="text" id="iUsername" class="form-control"
-                           placeholder="Username"/>
+                           placeholder="Username"/xrob/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="iPassword">Password : </label>
                     <input value="testpass" name="password" type="password" id="iPassword" class="form-control"
-                           placeholder="Password"/>
+                           placeholder="Password"/xrob/>
                 </div>
 
                 <div class="row">
@@ -63,7 +63,7 @@
 
                                 if (theClient != null) {
                                     session.setAttribute(Clients.COLUMN_ID, theClient.getId());
-                                    response.sendRedirect("/client/panel");
+                                    response.sendRedirect("/xrob/client/panel");
                                 } else {
                         %>
                         <div class="text-danger pull-left">Invalid credentials!!</div>
@@ -76,7 +76,7 @@
 
 
                     <div class="col-md-4">
-                        <input value="Sign in" name="isFormSubmitted" type="submit" class="btn btn-primary pull-right"/>
+                        <input value="Sign in" name="isFormSubmitted" type="submit" class="btn btn-primary pull-right"/xrob/>
                     </div>
 
 
@@ -91,7 +91,7 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            Don't have an account, <a href="/client/signup">Sign up</a>
+            Don't have an account, <a href="/xrob/client/signup">Sign up</a>
         </div>
     </div>
 </div>

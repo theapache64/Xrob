@@ -62,8 +62,8 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
-            <li><a href="/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
+            <li><a href="/xrob/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
             </a></li>
             <li class="active">Command center</li>
         </ul>
@@ -73,7 +73,7 @@
 
         <div class="row">
             <div class="col-md-8 content-centered">
-                <form action="/client/victim/command_center/<%=victimCode%>" method="POST" role="form">
+                <form action="/xrob/client/victim/command_center/<%=victimCode%>" method="POST" role="form">
                     <div class="input-group">
                         <input name="command" type="text"
                                pattern="<%=Command.REGEX_VALID_COMMAND%>"
@@ -81,7 +81,7 @@
                                class="form-control"
                                placeholder="Type your command here" required/>
                         <span class="input-group-btn">
-                        <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/>
+                        <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/xrob/>
                     </span>
                     </div>
                     <div class="help-block">Format: <b>xrob (command_key) '(command_value)'</b>

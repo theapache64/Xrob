@@ -36,7 +36,7 @@
 
             $("select#sMessageTypes").on('change', function () {
                 var msgType = $(this).find(":selected").val();
-                window.location = "/client/victim/messages/" + msgType;
+                window.location = "/xrob/client/victim/messages/" + msgType;
             });
         });
 
@@ -73,8 +73,8 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
-            <li><a href="/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
+            <li><a href="/xrob/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
             </a></li>
             <li class="active">Messages</li>
         </ul>
@@ -102,7 +102,7 @@
                                 for (final String msgTyp : msgTypes) {
                             %>
                             <%--TODO: Add message count :)--%>
-                            <option value="<%=victimCode + "/"+ msgTyp%>" <%=msgTyp.equals(currentMsgType) ? "selected" : ""%> ><%=msgTyp%>
+                            <option value="<%=victimCode + "/xrob/"+ msgTyp%>" <%=msgTyp.equals(currentMsgType) ? "selected" : ""%> ><%=msgTyp%>
                             </option>
 
                             <%

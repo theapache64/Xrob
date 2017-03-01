@@ -30,7 +30,7 @@
 
             $("select#sFileBundles").on('change', function () {
                 var bundleHash = $(this).find(":selected").val();
-                window.location = "/client/victim/files/" + bundleHash;
+                window.location = "/xrob/client/victim/files/" + bundleHash;
             });
         });
 
@@ -79,8 +79,8 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
-            <li><a href="/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
+            <li><a href="/xrob/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/victim/profile/<%=victimCode%>"><%=theVictim.getIdentity()%>
             </a></li>
             <li class="active">File manager</li>
         </ul>
@@ -113,7 +113,7 @@
                                     for (final FileBundle fileBundle : fileBundles) {
 
                             %>
-                            <option value="<%=victimCode+"/"+fileBundle.getBundleHash()%>" <%=fileBundle.getBundleHash().equals(bundleHash) ? " selected" : ""%>><%="#" + fileBundle.getId() + " - " + fileBundle.getRelativeSyncedTime()%>
+                            <option value="<%=victimCode+"/xrob/"+fileBundle.getBundleHash()%>" <%=fileBundle.getBundleHash().equals(bundleHash) ? " selected" : ""%>><%="#" + fileBundle.getId() + " - " + fileBundle.getRelativeSyncedTime()%>
                             </option>
 
                             <%
@@ -165,7 +165,7 @@
                                 %>
 
                                 <a href="<%=file.hasDirectory()  ?
-                                "/client/victim/files/"+victimCode+"/"+bundleHash+"/"+file.getFileHash() :
+                                "/xrob/client/victim/files/"+victimCode+"/xrob/"+bundleHash+"/xrob/"+file.getFileHash() :
                                 "#"
                                 %>"><%=file.getFileName()%>
                                 </a>

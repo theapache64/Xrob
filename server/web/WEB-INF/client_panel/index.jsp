@@ -1,7 +1,7 @@
 <%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -69,7 +69,7 @@
                 <%
                     for (final Victim victim : victims) {
                 %>
-                <tr class="data_row" data-href="/client/victim/profile/<%=victim.getVictimCode()%>">
+                <tr class="data_row" data-href="/xrob/client/victim/profile/<%=victim.getVictimCode()%>">
                     <td class="clickable_data"><%=victim.getName() != null ? victim.getName() : "-"%>
                     </td>
                     <td class="clickable_data"><%=victim.getEmail() != null ? victim.getEmail() : "-"%>

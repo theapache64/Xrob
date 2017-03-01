@@ -12,7 +12,7 @@
     final Object clientId = session.getAttribute(Clients.COLUMN_ID);
     final Client client;
     if (clientId == null) {
-        response.sendRedirect("/client/signup");
+        response.sendRedirect("/xrob/client/signup");
         return;
     } else {
         client = Clients.getInstance().get(Clients.COLUMN_ID, clientId.toString());
@@ -21,7 +21,7 @@
         } else {
             //Expired
             session.invalidate();
-            response.sendRedirect("/client/signin");
+            response.sendRedirect("/xrob/client/signin");
             return;
         }
     }
