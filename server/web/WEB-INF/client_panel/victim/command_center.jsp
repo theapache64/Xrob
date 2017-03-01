@@ -80,7 +80,7 @@
                                id="iCommand"
                                class="form-control"
                                placeholder="Type your command here" required/>
-                    <span class="input-group-btn">
+                        <span class="input-group-btn">
                         <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/>
                     </span>
                     </div>

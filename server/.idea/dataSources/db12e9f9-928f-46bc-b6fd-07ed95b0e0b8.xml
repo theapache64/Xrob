@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - xrob@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.0">
+    <root id="1"/>
+    <schema id="2" parent="1" name="xrob">
+      <Visible>1</Visible>
+    </schema>
+    <table id="3" parent="2" name="calls"/>
+    <table id="4" parent="2" name="client_victim_relations"/>
+    <table id="5" parent="2" name="clients"/>
+    <table id="6" parent="2" name="command_statuses"/>
+    <table id="7" parent="2" name="commands"/>
+    <table id="8" parent="2" name="contact_names_audit"/>
+    <table id="9" parent="2" name="contacts"/>
+    <table id="10" parent="2" name="deliveries"/>
+    <table id="11" parent="2" name="file_bundles"/>
+    <table id="12" parent="2" name="files"/>
+    <table id="13" parent="2" name="ftp_servers"/>
+    <table id="14" parent="2" name="media"/>
+    <table id="15" parent="2" name="messages"/>
+    <table id="16" parent="2" name="phone_numbers"/>
+    <table id="17" parent="2" name="servers"/>
+    <table id="18" parent="2" name="victim_device_info_dynamic_audit"/>
+    <table id="19" parent="2" name="victims"/>
+    <column id="20" parent="3" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="21" parent="3" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="22" parent="3" name="name">
+      <DataType>VARCHAR(100)|12</DataType>
+    </column>
+    <column id="23" parent="3" name="phone">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="24" parent="3" name="call_type">
+      <DataType>ENUM(6)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="25" parent="3" name="called_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+    </column>
+    <column id="26" parent="3" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="27" parent="3" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="28" parent="3" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="29" parent="3" name="calls_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="30" parent="4" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="31" parent="4" name="client_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="32" parent="4" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="33" parent="4" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="34" parent="4" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="35" parent="4" name="client_victim_relations_ibfk_1">
+      <ColNames>client_id</ColNames>
+      <RefTableName>clients</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <foreign-key id="36" parent="4" name="client_victim_relations_ibfk_2">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="37" parent="5" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="38" parent="5" name="username">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="39" parent="5" name="pass_hash">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="40" parent="5" name="api_key">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="41" parent="5" name="email">
+      <DataType>VARCHAR(100)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="5" name="is_verified_email">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="43" parent="5" name="is_premium_client">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="44" parent="5" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="45" parent="5" name="client_code">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="46" parent="5" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <index id="47" parent="5" name="api_key">
+      <ColNames>api_key</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="48" parent="5" name="client_code">
+      <ColNames>client_code</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="49" parent="5" name="email">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="50" parent="5" name="username">
+      <ColNames>username</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="51" parent="5" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="52" parent="6" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="53" parent="6" name="command_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="54" parent="6" name="status">
+      <DataType>ENUM(9)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;SENT&apos;</DefaultExpression>
+    </column>
+    <column id="55" parent="6" name="status_message">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="56" parent="6" name="status_happened_at">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="57" parent="6" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="58" parent="6" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="59" parent="6" name="command_statuses_ibfk_1">
+      <ColNames>command_id</ColNames>
+      <RefTableName>commands</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="60" parent="7" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="61" parent="7" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="62" parent="7" name="client_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="63" parent="7" name="command">
+      <DataType>TEXT(65535)|-1</DataType>
+    </column>
+    <column id="64" parent="7" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="65" parent="7" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="66" parent="7" name="commands_ibfk_1">
+      <ColNames>client_id</ColNames>
+      <RefTableName>clients</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <foreign-key id="67" parent="7" name="commands_ibfk_2">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="68" parent="8" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="69" parent="8" name="contact_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="70" parent="8" name="name">
+      <DataType>VARCHAR(100)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="71" parent="8" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="72" parent="8" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="73" parent="8" name="contact_names_audit_ibfk_1">
+      <ColNames>contact_id</ColNames>
+      <RefTableName>contacts</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="74" parent="9" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="75" parent="9" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="76" parent="9" name="android_contact_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="77" parent="9" name="name">
+      <DataType>VARCHAR(100)|12</DataType>
+    </column>
+    <column id="78" parent="9" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="79" parent="9" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="80" parent="9" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="81" parent="9" name="contacts_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="82" parent="10" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="83" parent="10" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="84" parent="10" name="data_type">
+      <DataType>ENUM(17)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="85" parent="10" name="error">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="86" parent="10" name="message">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="87" parent="10" name="server_error">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="88" parent="10" name="server_error_message">
+      <DataType>TEXT(65535)|-1</DataType>
+    </column>
+    <column id="89" parent="10" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="90" parent="10" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="91" parent="10" name="deliveries_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="92" parent="11" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="93" parent="11" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="94" parent="11" name="bundle_hash">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="95" parent="11" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="96" parent="11" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="97" parent="11" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="98" parent="11" name="file_bundles_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="99" parent="12" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="100" parent="12" name="file_bundle_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="101" parent="12" name="absolute_parent_path">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="102" parent="12" name="file_name">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="103" parent="12" name="parent_id">
+      <DataType>INT(10)|4</DataType>
+    </column>
+    <column id="104" parent="12" name="is_directory">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="105" parent="12" name="file_size_in_kb">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="106" parent="12" name="file_hash">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="107" parent="12" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="108" parent="12" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="109" parent="12" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="110" parent="12" name="files_ibfk_1">
+      <ColNames>parent_id</ColNames>
+      <RefTableName>files</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <foreign-key id="111" parent="12" name="files_ibfk_2">
+      <ColNames>file_bundle_id</ColNames>
+      <RefTableName>file_bundles</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="112" parent="13" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="113" parent="13" name="name">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="114" parent="13" name="ftp_domain_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="115" parent="13" name="ftp_username_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="116" parent="13" name="ftp_password_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="117" parent="13" name="storage_folder_path">
+      <DataType>VARCHAR(50)|12</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;/public_html&apos;</DefaultExpression>
+    </column>
+    <column id="118" parent="13" name="size_in_mb">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="119" parent="13" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="120" parent="14" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="121" parent="14" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="122" parent="14" name="name">
+      <DataType>VARCHAR(100)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="123" parent="14" name="_type">
+      <DataType>ENUM(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="124" parent="14" name="server_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="125" parent="14" name="download_link">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="126" parent="14" name="file_size_in_kb">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="127" parent="14" name="captured_at">
+      <DataType>BIGINT(19)|-5</DataType>
+    </column>
+    <column id="128" parent="14" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="129" parent="14" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="130" parent="14" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="131" parent="14" name="media_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <foreign-key id="132" parent="14" name="media_ibfk_2">
+      <ColNames>server_id</ColNames>
+      <RefTableName>servers</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="133" parent="15" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="134" parent="15" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="135" parent="15" name="android_message_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="136" parent="15" name="_from">
+      <DataType>VARCHAR(50)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="137" parent="15" name="content">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="138" parent="15" name="_type">
+      <DataType>ENUM(6)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="139" parent="15" name="delivery_time">
+      <DataType>BIGINT(19)|-5</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="140" parent="15" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="141" parent="15" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="142" parent="15" name="messages_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="143" parent="16" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="144" parent="16" name="contact_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="145" parent="16" name="phone">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="146" parent="16" name="phone_type">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="147" parent="16" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="148" parent="16" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="149" parent="16" name="phone_numbers_ibfk_1">
+      <ColNames>contact_id</ColNames>
+      <RefTableName>contacts</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="150" parent="17" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="151" parent="17" name="name">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="152" parent="17" name="authorization_key">
+      <DataType>VARCHAR(20)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="153" parent="17" name="upload_script_file">
+      <DataType>VARCHAR(50)|12</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;index.php&apos;</DefaultExpression>
+    </column>
+    <column id="154" parent="17" name="domain_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="155" parent="17" name="ftp_username_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="156" parent="17" name="ftp_password_enc">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="157" parent="17" name="uploads_folder_path">
+      <DataType>VARCHAR(50)|12</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;/public_html/Xrob/uploads&apos;</DefaultExpression>
+    </column>
+    <column id="158" parent="17" name="total_size_in_mb">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="159" parent="17" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <index id="160" parent="17" name="name">
+      <ColNames>name</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="161" parent="17" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="162" parent="18" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="163" parent="18" name="victim_id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="164" parent="18" name="device_info_dynamic">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="165" parent="18" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <key id="166" parent="18" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="167" parent="18" name="victim_device_info_dynamic_audit_ibfk_1">
+      <ColNames>victim_id</ColNames>
+      <RefTableName>victims</RefTableName>
+      <RefKeyName>PRIMARY</RefKeyName>
+      <RefColNames>id</RefColNames>
+      <OnUpdate>update</OnUpdate>
+      <OnDelete>delete</OnDelete>
+    </foreign-key>
+    <column id="168" parent="19" name="id">
+      <DataType>INT(10)|4</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="169" parent="19" name="victim_code">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="170" parent="19" name="name">
+      <DataType>VARCHAR(100)|12</DataType>
+    </column>
+    <column id="171" parent="19" name="email">
+      <DataType>VARCHAR(150)|12</DataType>
+    </column>
+    <column id="172" parent="19" name="phone">
+      <DataType>VARCHAR(20)|12</DataType>
+    </column>
+    <column id="173" parent="19" name="fcm_id">
+      <DataType>TEXT(65535)|-1</DataType>
+    </column>
+    <column id="174" parent="19" name="fcm_updated_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+    </column>
+    <column id="175" parent="19" name="api_key">
+      <DataType>VARCHAR(10)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="176" parent="19" name="imei">
+      <DataType>VARCHAR(16)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="177" parent="19" name="device_name">
+      <DataType>VARCHAR(50)|12</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="178" parent="19" name="device_hash">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="179" parent="19" name="device_info_static">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="180" parent="19" name="device_info_dynamic">
+      <DataType>TEXT(65535)|-1</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="181" parent="19" name="actions">
+      <DataType>VARCHAR(100)|12</DataType>
+    </column>
+    <column id="182" parent="19" name="is_active">
+      <DataType>TINYINT(3)|-6</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="183" parent="19" name="last_logged_at">
+      <DataType>TIMESTAMP(19)|93</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    </column>
+    <index id="184" parent="19" name="api_key">
+      <ColNames>api_key</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="185" parent="19" name="imei">
+      <ColNames>imei</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="186" parent="19" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>
