@@ -1,9 +1,9 @@
-<%@ page import="com.theah64.xrob.api.utils.Request" %>
 <%@ page import="com.theah64.xrob.api.database.tables.Clients" %>
 <%@ page import="com.theah64.xrob.api.models.Client" %>
+<%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
 <%@ page import="com.theah64.xrob.api.utils.DarKnight" %>
 <%@ page import="com.theah64.xrob.api.utils.RandomString" %>
-<%@ page import="com.theah64.xrob.api.utils.CommonUtils" %>
+<%@ page import="com.theah64.xrob.api.utils.Request" %>
 <%
     if (session.getAttribute(Clients.COLUMN_ID) != null) {
         response.sendRedirect("/xrob/client/panel");

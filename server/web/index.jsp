@@ -12,7 +12,7 @@
 </head>
 <body>
 <%
-    response.sendRedirect("/client/signup");
+    response.sendRedirect("/xrob/client/signup");
 %>
 </body>
 </html>

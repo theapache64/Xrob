@@ -2,6 +2,7 @@
 A spy application, designed for android. (Under construction).
 
 ## Pending tasks
+- Remove development-credentials from signin.jsp and signup.jsp
 
 ### Server side
 - ~~Command history and status management~~
