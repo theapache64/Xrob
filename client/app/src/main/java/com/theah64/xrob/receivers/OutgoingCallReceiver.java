@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.theah64.xrob.MainActivity;
+import com.theah64.xrob.activities.MainActivity;
 
 public class OutgoingCallReceiver extends BroadcastReceiver {
 
