@@ -4,7 +4,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -12,7 +11,7 @@ import java.sql.SQLException;
  */
 public class Connection {
 
-    public static final boolean debugMode = false;
+    public static final boolean debugMode = true;
     private static DataSource ds;
 
     public static java.sql.Connection getConnection() {
