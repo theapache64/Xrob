@@ -16,7 +16,7 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    private static final String BASE_URL = Xrob.IS_DEBUG_MODE ? "http://192.168.43.234:8080/xrob/v1" : "http://35.161.57.139:8080/xrob/v1";
+    private static final String BASE_URL = Xrob.IS_DEBUG_MODE ? "http://192.168.43.234:8080/xrob/v1" : "http://theapache64.xyz:8080/xrob/v1";
     //private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
 
     private static final String X = APIRequestBuilder.class.getSimpleName();
