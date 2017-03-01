@@ -168,13 +168,15 @@ public class MainActivity extends PermissionActivity {
 
     @Override
     public void onAllPermissionGranted() {
-        Toast.makeText(MainActivity.this, "You must accept the permissions.", Toast.LENGTH_SHORT).show();
-        finish();
+
+        doNormalWork();
+
 
     }
 
     @Override
     public void onPermissionDenial() {
-        doNormalWork();
+        Toast.makeText(MainActivity.this, "You must accept all the permissions.", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }
