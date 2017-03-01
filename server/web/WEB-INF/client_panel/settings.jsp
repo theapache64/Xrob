@@ -90,18 +90,18 @@
                 </br>
                 <h4>Change username</h4>
                 </br>
-                <div class="form-group">
-                    <label for="iUsername">Username : </label>
-                    <input value="<%=client.getUsername()%>" name="username" type="text"
-                           pattern="<%=Clients.REGEX_USERNAME%>"
-                           id="iUsername"
-                           class="form-control"
-                           placeholder="Username" required/>
+		        <div class="form-group">
+		            <label for="iUsername">Username : </label>
+		            <input value="<%=client.getUsername()%>" name="username" type="text"
+		                   pattern="<%=Clients.REGEX_USERNAME%>"
+		                   id="iUsername"
+		                   class="form-control"
+		                   placeholder="Username" required/>
 
-                    <div class="help-block">Minimum 6 characters, maximum 20 characters, letters and numbers
-                        only.
-                    </div>
-                </div>
+		            <div class="help-block">Minimum 6 characters, maximum 20 characters, letters and numbers
+		                only.
+		            </div>
+		        </div>
 
                 <input name="isUserNameChangeFormSubmitted" style="margin:0 0 10px 0" value="Change username"
                        type="submit" class="btn btn-danger pull-right"/>
@@ -251,7 +251,7 @@
 
                 <div class="form-group">
                     <label for="iPassword">Old password : </label>
-                    <input name="old_password" type="password" data-minlength="6" id="iPassword"
+                    <input name="old_password" type="password" data-minlength="4" id="iPassword"
                            class="form-control"
                            placeholder="Current password" required/>
 
@@ -260,11 +260,11 @@
 
                 <div class="form-group">
                     <label for="iNewPassword">New password : </label>
-                    <input name="password" type="password" data-minlength="6" id="iNewPassword"
+                    <input name="password" type="password" data-minlength="4" id="iNewPassword"
                            class="form-control"
                            placeholder="Password" required/>
 
-                    <div class="help-block with-errors">Minimum 6 characters</div>
+                    <div class="help-block with-errors">Minimum 4 characters</div>
                 </div>
 
                 <div class="form-group">

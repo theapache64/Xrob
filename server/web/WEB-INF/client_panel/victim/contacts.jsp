@@ -73,7 +73,7 @@
 
                 <%=searchTemplate.getTopTemplate(theVictim.getIdentity(),
                         lastUpdatedTime == null ? "(Not yet updated)" : "(last update " + lastUpdatedTime + ")")%>
-
+	
                 <%
                     final List<Contact> contacts = Contacts.getInstance().getAll(theVictim.getId());
                     if (contacts != null) {
