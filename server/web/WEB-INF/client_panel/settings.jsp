@@ -104,7 +104,7 @@
 		        </div>
 
                 <input name="isUserNameChangeFormSubmitted" style="margin:0 0 10px 0" value="Change username"
-                       type="submit" class="btn btn-danger pull-right"/xrob/>
+                       type="submit" class="btn btn-danger pull-right">
             </form>
 
 
@@ -167,7 +167,7 @@
                 </div>
 
                 <input name="isEmailChangeFormSubmitted" style="margin: 0  0 10px 0" value="Change email"
-                       type="submit" class="btn btn-danger pull-right"/xrob/>
+                       type="submit" class="btn btn-danger pull-right"/>
             </form>
         </div>
 
@@ -234,7 +234,7 @@
                 </div>
 
                 <input name="isClientCodeChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change client code"
-                       type="submit" class="btn btn-danger pull-right"/xrob/>
+                       type="submit" class="btn btn-danger pull-right">
             </form>
         </div>
     </div>
@@ -277,7 +277,7 @@
                 </div>
 
                 <input name="isPasswordChangeFormSubmitted" style="margin: 0  0px 10px 0" value="Change password"
-                       type="submit" class="btn btn-danger pull-right"/xrob/>
+                       type="submit" class="btn btn-danger pull-right"/>
 
             </form>
 

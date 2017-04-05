@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -25,7 +24,7 @@ public class SocketMessage {
         joSocketMessage = new JSONObject();
         joSocketMessage.put(Response.KEY_MESSAGE, message);
         joSocketMessage.put(Response.KEY_ERROR, isError);
-        joSocketMessage.put(KEY_DEVICE_TIME, deviceTime);
+        joSocketMessage.put(KEY_DEVICE_TIME, new Date());
 
 
         final JSONObject joData = new JSONObject();

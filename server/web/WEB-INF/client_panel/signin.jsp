@@ -37,14 +37,14 @@
                 <div class="form-group">
                     <label for="iUsername">Username : </label>
                     <input value="testuser" name="username" type="text" id="iUsername" class="form-control"
-                           placeholder="Username"/xrob/>
+                           placeholder="Username"/>
                 </div>
 
 
                 <div class="form-group">
                     <label for="iPassword">Password : </label>
                     <input value="testpass" name="password" type="password" id="iPassword" class="form-control"
-                           placeholder="Password"/xrob/>
+                           placeholder="Password"/>
                 </div>
 
                 <div class="row">
@@ -76,7 +76,7 @@
 
 
                     <div class="col-md-4">
-                        <input value="Sign in" name="isFormSubmitted" type="submit" class="btn btn-primary pull-right"/xrob/>
+                        <input value="Sign in" name="isFormSubmitted" type="submit" class="btn btn-primary pull-right"/>
                     </div>
 
 

@@ -176,7 +176,7 @@
 
 
                     <div class="col-md-4">
-                        <input name="isFormSubmitted" value="Sign up" type="submit" class="btn btn-primary pull-right"/xrob/>
+                        <input name="isFormSubmitted" value="Sign up" type="submit" class="btn btn-primary pull-right"/>
                     </div>
 
 

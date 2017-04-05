@@ -81,7 +81,7 @@
                                class="form-control"
                                placeholder="Type your command here" required/>
                         <span class="input-group-btn">
-                        <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/xrob/>
+                        <input name="isCommandFormSubmitted" type="submit" value="Execute" class="btn btn-primary"/>
                     </span>
                     </div>
                     <div class="help-block">Format: <b>xrob (command_key) '(command_value)'</b>
