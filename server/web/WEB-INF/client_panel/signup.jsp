@@ -38,7 +38,8 @@
 
                 <div class="form-group">
                     <label for="iUsername">Username : </label>
-                    <input value="testuser" name="username" type="text" pattern="<%=Clients.REGEX_USERNAME%>"
+                    <input value="<%=Connection.isDebugMode() ? "testuser" :""%>" name="username" type="text"
+                           pattern="<%=Clients.REGEX_USERNAME%>"
                            id="iUsername"
                            class="form-control"
                            placeholder="Username" required/>
@@ -51,7 +52,8 @@
 
                 <div class="form-group">
                     <label for="iPassword">Password : </label>
-                    <input value="testpass" name="password" type="password" data-minlength="6" id="iPassword"
+                    <input value="<%=Connection.isDebugMode() ? "testpass" :""%>" name="password" type="password"
+                           data-minlength="6" id="iPassword"
                            class="form-control"
                            placeholder="Password" required/>
 
@@ -60,7 +62,8 @@
 
                 <div class="form-group">
                     <label for="iCPassword">Confirm password : </label>
-                    <input value="testpass" name="cpassword" type="password" id="iCPassword" class="form-control"
+                    <input value="<%=Connection.isDebugMode() ? "testpass" :""%>" name="cpassword" type="password"
+                           id="iCPassword" class="form-control"
                            placeholder="Confirm password" data-match="#iPassword"
                            data-match-error="Password doesn't match" required/>
 
@@ -69,7 +72,8 @@
 
                 <div class="form-group">
                     <label for="iEmail">Email : </label>
-                    <input value="theapache64@gmail.com" name="email" type="email" id="iEmail" class="form-control"
+                    <input value="<%=Connection.isDebugMode() ? "theapache64@gmail.com" :""%>" name="email" type="email"
+                           id="iEmail" class="form-control"
                            placeholder="Your email address"
                            data-error="Whooops, that email address is invalid"
                            required/>
@@ -138,7 +142,7 @@
 
                                     if (errorCounter == 0 && error.isEmpty()) {
                                         //Valid data here
-                                        final String clientCode = "1111111111";//TODO: DEBUG : clientsTable.getNewClientCode();
+                                        final String clientCode = Connection.isDebugMode() ? "1111111111" : clientsTable.getNewClientCode();
 
                                         final Client client = new Client(
                                                 null,
