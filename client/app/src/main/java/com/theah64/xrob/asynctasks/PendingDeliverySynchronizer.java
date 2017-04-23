@@ -28,12 +28,11 @@ import okhttp3.Response;
 public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Void> {
 
     private static final String X = PendingDeliverySynchronizer.class.getSimpleName();
+    private static boolean isRunning = false;
     private List<PendingDelivery> pendingDeliveryList;
     private int i = -1;
     private PendingDeliveries pendingDeliveriesTable;
     private String apiKey;
-
-    private static boolean isRunning = false;
 
     public PendingDeliverySynchronizer(Context context, final String apiKey) {
         super(context, apiKey);
@@ -43,8 +42,10 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
     protected synchronized Void doInBackground(String... strings) {
 
         if (isRunning) {
-            Log.e(X, "PendingDeliverySynchronizer running...");
+            Log.e(X, "PendingDeliverySynchronizer already running...");
             return null;
+        } else {
+            Log.i(X, "PendingDeliverySynchronizer started");
         }
 
         isRunning = true;
@@ -72,6 +73,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
             });
         } else {
             Log.d(X, "No pending deliveries found");
+            isRunning = false;
         }
 
         return null;
@@ -101,6 +103,7 @@ public class PendingDeliverySynchronizer extends BaseJSONPostNetworkAsyncTask<Vo
             public void onFailure(Call call, IOException e) {
                 pendingDeliveriesTable.update(PendingDeliveries.COLUMN_ID, curDel.getId(), PendingDeliveries.COLUMN_IS_BEING_UPLOADED, PendingDeliveries.FALSE);
                 e.printStackTrace();
+                isRunning = false;
             }
 
             @Override

