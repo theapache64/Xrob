@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +128,7 @@ public class BaseTable<T> {
 
             if (rs.first()) {
                 resultValue = rs.getString(columnToReturn);
+                System.out.println("Returning bundle : " + resultValue);
             }
             rs.close();
             ps.close();

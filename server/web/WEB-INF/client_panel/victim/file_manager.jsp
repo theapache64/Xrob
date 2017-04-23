@@ -1,8 +1,11 @@
+<%@ page import="com.theah64.xrob.api.database.tables.*" %>
+<%@ page import="com.theah64.xrob.api.models.Delivery" %>
+<%@ page import="com.theah64.xrob.api.models.File" %>
+<%@ page import="com.theah64.xrob.api.models.FileBundle" %>
+<%@ page import="com.theah64.xrob.api.models.Victim" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.HtmlTemplates" %>
 <%@ page import="com.theah64.xrob.api.utils.clientpanel.PathInfo" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.xrob.api.models.*" %>
-<%@ page import="com.theah64.xrob.api.database.tables.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -53,6 +56,8 @@
             if (theVictim != null) {
 
                 final String bundleHash = pathInfoUtils.getPart(2);
+
+                System.out.println("Bundle hash : " + bundleHash);
                 final String fileHash = pathInfoUtils.getLastPart(null);
 
                 String bundleId = null, fileParentId = null;
@@ -64,6 +69,7 @@
                 if (bundleId == null) {
                     //Getting last bundle of the victim
                     bundleId = FileBundles.getInstance().get(FileBundles.COLUMN_VICTIM_ID, theVictim.getId(), FileBundles.COLUMN_ID);
+
                 }
 
                 if (fileHash != null) {
@@ -165,7 +171,7 @@
                                 %>
 
                                 <a href="<%=file.hasDirectory()  ?
-                                "/xrob/client/victim/files/"+victimCode+"/xrob/"+bundleHash+"/xrob/"+file.getFileHash() :
+                                "/xrob/client/victim/file_manager/"+victimCode+"/xrob/"+bundleHash+"/xrob/"+file.getFileHash() :
                                 "#"
                                 %>"><%=file.getFileName()%>
                                 </a>

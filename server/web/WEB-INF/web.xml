@@ -113,7 +113,7 @@
 
     <servlet-mapping>
         <servlet-name>VictimFileManager</servlet-name>
-        <url-pattern>/client/victim/files_manager/*</url-pattern>
+        <url-pattern>/client/victim/file_manager/*</url-pattern>
     </servlet-mapping>
 
     <!-- Messages-->
